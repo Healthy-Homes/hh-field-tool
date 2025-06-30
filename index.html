@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Healthy Homes Practitioner App</title>
+  <title data-i18n="app.title">Healthy Homes Practitioner App</title>
   <link rel="stylesheet" href="style.css" />
 
   <!-- jsPDF for PDF export -->
@@ -12,106 +12,86 @@
   <!-- Leaflet map CSS + JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-  <!-- Language and app logic -->
-  <script src="lang.js"></script>
 </head>
 <body>
   <main>
-    <div style="text-align: right; margin-bottom: 1rem;">
-      🌐 <span data-i18n="language_label">Language:</span>
-      <select id="languageToggle" onchange="setLanguage(this.value)">
-        <option value="en">English</option>
-        <option value="zh">中文</option>
-      </select>
-    </div>
+    <h1 data-i18n="app.title">Healthy Homes Practitioner App</h1>
+    <p data-i18n="app.intro">This tool helps field workers assess housing-related health risks and social needs.</p>
 
-    <h1 data-i18n="title">Healthy Homes Practitioner App</h1>
-    <p data-i18n="intro">This tool helps field workers assess housing-related health risks and social needs.</p>
+    <!-- Language Toggle -->
+    <label for="langSelect" data-i18n="language.label">Language:</label>
+    <select id="langSelect">
+      <option value="en">English</option>
+      <option value="zh">中文</option>
+    </select>
 
     <section>
-      <h2 data-i18n="checklist_header">🏠 Home Inspection Checklist</h2>
+      <h2>🏠 <span data-i18n="app.title">Home Inspection Checklist</span></h2>
       <form id="inspectionForm">
-        <label><input type="checkbox" name="mold" /> <span data-i18n="mold">Visible mold</span></label><br />
-        <label><input type="checkbox" name="pests" /> <span data-i18n="pests">Pest infestation</span></label><br />
-        <label><input type="checkbox" name="leaks" /> <span data-i18n="leaks">Water leaks or dampness</span></label><br />
-        <label><input type="checkbox" name="lead" /> <span data-i18n="lead">House built before 1978 (possible lead paint)</span></label><br />
-        <label><input type="checkbox" name="noHVAC" /> <span data-i18n="noHVAC">Inadequate heating or cooling</span></label><br />
-        <label><input type="checkbox" name="noVent" /> <span data-i18n="noVent">No kitchen or bathroom ventilation</span></label><br />
-        <label><input type="checkbox" name="tripHazards" /> <span data-i18n="tripHazards">Trip/slip hazards (stairs, cords, flooring)</span></label><br />
-        <label><input type="checkbox" name="asthmaTriggers" /> <span data-i18n="asthmaTriggers">Known asthma triggers present (dust, smoke, etc.)</span></label><br />
+        <label><input type="checkbox" name="mold" /> <span data-i18n="checklist.mold"></span></label><br />
+        <label><input type="checkbox" name="pests" /> <span data-i18n="checklist.pests"></span></label><br />
+        <label><input type="checkbox" name="leaks" /> <span data-i18n="checklist.leaks"></span></label><br />
+        <label><input type="checkbox" name="lead" /> <span data-i18n="checklist.lead"></span></label><br />
+        <label><input type="checkbox" name="noHVAC" /> <span data-i18n="checklist.noHVAC"></span></label><br />
+        <label><input type="checkbox" name="noVent" /> <span data-i18n="checklist.noVent"></span></label><br />
+        <label><input type="checkbox" name="tripHazards" /> <span data-i18n="checklist.tripHazards"></span></label><br />
+        <label><input type="checkbox" name="asthmaTriggers" /> <span data-i18n="checklist.asthmaTriggers"></span></label><br />
       </form>
     </section>
 
     <section>
-      <h2 data-i18n="sdoh_header">🧍 Resident SDOH Questionnaire</h2>
+      <h2>🧍 <span data-i18n="sdoh.title">Resident SDOH Questionnaire</span></h2>
       <form id="sdohForm">
-        <label>
-          <span data-i18n="housingStable">Do you have stable housing?</span><br />
-          <select name="housingStable">
-            <option value="">Select</option>
-            <option value="yes" data-i18n="yes">Yes</option>
-            <option value="no" data-i18n="no">No</option>
-          </select>
-        </label><br />
+        <label data-i18n="sdoh.housingStable"></label><br />
+        <select name="housingStable">
+          <option value="">Select</option>
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+        </select><br />
 
-        <label>
-          <span data-i18n="utilityShutoff">Has your electricity, water, or gas been shut off in the past year?</span><br />
-          <select name="utilityShutoff">
-            <option value="">Select</option>
-            <option value="yes" data-i18n="yes">Yes</option>
-            <option value="no" data-i18n="no">No</option>
-          </select>
-        </label><br />
+        <label data-i18n="sdoh.utilityShutoff"></label><br />
+        <select name="utilityShutoff">
+          <option value="">Select</option>
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+        </select><br />
 
-        <label>
-          <span data-i18n="foodInsecurity">Do you worry about running out of food?</span><br />
-          <select name="foodInsecurity">
-            <option value="">Select</option>
-            <option value="yes" data-i18n="yes">Yes</option>
-            <option value="no" data-i18n="no">No</option>
-          </select>
-        </label><br />
+        <label data-i18n="sdoh.foodInsecurity"></label><br />
+        <select name="foodInsecurity">
+          <option value="">Select</option>
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+        </select><br />
 
-        <label>
-          <span data-i18n="languagePref">What language do you prefer for services?</span><br />
-          <input type="text" name="languagePref" placeholder="Language" data-i18n="language_placeholder" />
-        </label><br />
+        <label data-i18n="sdoh.languagePref"></label><br />
+        <input type="text" name="languagePref" />
       </form>
     </section>
 
     <section>
-      <h2 data-i18n="consent_header">📝 Consent & Signature</h2>
-
+      <h2>📝 <span data-i18n="consent.title">Consent & Signature</span></h2>
       <label>
         <input type="checkbox" id="consentCheckbox" />
-        <span data-i18n="consent_text">
-          I have explained the purpose of this screening to the resident and obtained their consent to record responses and share results with authorized personnel.
-        </span>
+        <span data-i18n="consent.text"></span>
       </label><br /><br />
 
-      <label>
-        <span data-i18n="residentName">Resident Name (optional):</span><br />
-        <input type="text" id="residentName" placeholder="Resident's full name" data-i18n="name_placeholder" />
-      </label><br />
+      <label data-i18n="consent.name"></label><br />
+      <input type="text" id="residentName" /><br />
 
-      <label>
-        <span data-i18n="residentSignature">Resident Signature (optional):</span><br />
-        <input type="text" id="residentSignature" placeholder="Type full name as digital signature" data-i18n="signature_placeholder" />
-      </label><br /><br />
+      <label data-i18n="consent.signature"></label><br />
+      <input type="text" id="residentSignature" /><br />
     </section>
 
     <section>
-      <h2 data-i18n="map_header">📍 Map of Inspection Location</h2>
+      <h2>📍 <span data-i18n="map.header"></span></h2>
       <div id="map" style="height: 300px; margin-bottom: 1rem;"></div>
     </section>
 
-    <button onclick="generateFHIR()" data-i18n="generate_btn">Generate FHIR Report</button>
+    <button onclick="generateFHIR()" data-i18n="buttons.generate"></button>
 
-    <h3 data-i18n="output_header">📄 FHIR JSON Output:</h3>
-    <button onclick="downloadJSON()" data-i18n="download_json">Download JSON</button>
-    <button onclick="downloadPDF()" data-i18n="download_pdf">Download PDF</button>
-
+    <h3 data-i18n="output.header">FHIR JSON Output:</h3>
+    <button onclick="downloadJSON()" data-i18n="buttons.download_json"></button>
+    <button onclick="downloadPDF()" data-i18n="buttons.download_pdf"></button>
     <pre id="output"></pre>
   </main>
 
