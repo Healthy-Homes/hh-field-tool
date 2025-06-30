@@ -1,39 +1,45 @@
 let lastFHIRBundle = null;
-let geoCoords = null;
+let translations = {};
+let currentLang = 'en';
 
-// Load geolocation + map after page loads
-window.onload = function () {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        geoCoords = {
-          lat: pos.coords.latitude,
-          lng: pos.coords.longitude
-        };
-        initMap(geoCoords);
-      },
-      (err) => {
-        console.warn("Geolocation failed:", err.message);
-        document.getElementById("map").innerHTML = "<p>Location unavailable.</p>";
-      }
-    );
-  }
-};
-
-function initMap(coords) {
-  const map = L.map('map').setView([coords.lat, coords.lng], 16);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: 'Map data © OpenStreetMap contributors'
-  }).addTo(map);
-  L.marker([coords.lat, coords.lng]).addTo(map)
-    .bindPopup("You are here").openPopup();
+// Load language file based on selected value
+async function loadLanguage(lang) {
+  const response = await fetch(`lang/${lang}.json`);
+  translations = await response.json();
+  currentLang = lang;
+  applyTranslations();
+  document.documentElement.setAttribute("lang", lang);
 }
 
+// Apply translation to all elements with data-i18n attribute
+function applyTranslations() {
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const keys = el.getAttribute("data-i18n").split(".");
+    let text = translations;
+    for (const k of keys) text = text?.[k];
+    if (text) el.textContent = text;
+  });
+}
+
+// Language selector and map init
+document.addEventListener("DOMContentLoaded", () => {
+  loadLanguage("en"); // Default language
+  document.getElementById("langSelect").addEventListener("change", (e) => {
+    loadLanguage(e.target.value);
+  });
+
+  const map = L.map('map').setView([25.032969, 121.565418], 13);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
+  }).addTo(map);
+});
+
+// FHIR generation
 function generateFHIR() {
   const inspection = document.forms['inspectionForm'];
   const sdoh = document.forms['sdohForm'];
 
-  // ✅ Step 3B: Consent & signature validation
   const consentGiven = document.getElementById("consentCheckbox").checked;
   const residentName = document.getElementById("residentName").value.trim();
   const residentSignature = document.getElementById("residentSignature").value.trim();
@@ -46,16 +52,35 @@ function generateFHIR() {
   const observations = [];
 
   if (inspection.mold.checked) {
-    observations.push({ code: "93041-2", description: "Visible mold", value: true });
+    observations.push({
+      code: "93041-2",
+      description: "Visible mold",
+      value: true
+    });
   }
+
   if (inspection.pests.checked) {
-    observations.push({ code: "93043-8", description: "Pest infestation", value: true });
+    observations.push({
+      code: "93043-8",
+      description: "Pest infestation",
+      value: true
+    });
   }
+
   if (inspection.leaks.checked) {
-    observations.push({ code: "99999-9", description: "Water leaks or dampness", value: true });
+    observations.push({
+      code: "99999-9",
+      description: "Water leaks or dampness",
+      value: true
+    });
   }
+
   if (inspection.lead.checked) {
-    observations.push({ code: "93044-6", description: "Lead paint risk (pre-1978 home)", value: true });
+    observations.push({
+      code: "93044-6",
+      description: "Lead paint risk (pre-1978 home)",
+      value: true
+    });
   }
 
   const socialNeeds = {
@@ -79,16 +104,7 @@ function generateFHIR() {
             display: obs.description
           }]
         },
-        valueBoolean: obs.value,
-        ...(geoCoords && {
-          extension: [{
-            url: "http://hl7.org/fhir/StructureDefinition/geolocation",
-            extension: [
-              { url: "latitude", valueDecimal: geoCoords.lat },
-              { url: "longitude", valueDecimal: geoCoords.lng }
-            ]
-          }]
-        })
+        valueBoolean: obs.value
       }
     }))
     .concat({
@@ -141,6 +157,7 @@ function downloadJSON() {
 
 async function downloadPDF() {
   if (!lastFHIRBundle) return alert("Run the assessment first.");
+
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
@@ -171,6 +188,7 @@ async function downloadPDF() {
   if (consent) {
     const ext = consent.resource.extension;
     const get = (key) => ext.find(e => e.url === key)?.valueString || "N/A";
+
     y += 10;
     doc.text("Resident Consent:", 10, y);
     y += 6;
