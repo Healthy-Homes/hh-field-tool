@@ -1,3 +1,5 @@
+let lastFHIRBundle = null;
+
 function generateFHIR() {
   const inspection = document.forms['inspectionForm'];
   const sdoh = document.forms['sdohForm'];
@@ -74,4 +76,50 @@ function generateFHIR() {
   };
 
   document.getElementById("output").textContent = JSON.stringify(fhirBundle, null, 2);
+  lastFHIRBundle = fhirBundle; // Store for download
+}
+
+function downloadJSON() {
+  if (!lastFHIRBundle) return alert("Run the assessment first.");
+  const blob = new Blob([JSON.stringify(lastFHIRBundle, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "healthy-home-assessment.json";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+async function downloadPDF() {
+  if (!lastFHIRBundle) return alert("Run the assessment first.");
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.setFontSize(14);
+  doc.text("Healthy Homes Assessment Summary", 10, 10);
+  doc.setFontSize(10);
+
+  let y = 20;
+  lastFHIRBundle.entry.forEach((entry, i) => {
+    const res = entry.resource;
+    if (res.resourceType === "Observation") {
+      doc.text(`• ${res.code.coding[0].display}: ${res.valueBoolean ? "Yes" : "No"}`, 10, y);
+      y += 7;
+    }
+  });
+
+  const sdoh = lastFHIRBundle.entry.find(e => e.resource.resourceType === "QuestionnaireResponse");
+  if (sdoh) {
+    doc.text("Resident SDOH Responses:", 10, y + 5);
+    y += 12;
+    sdoh.resource.item.forEach(item => {
+      doc.text(`• ${item.text}: ${item.answer[0].valueString}`, 10, y);
+      y += 7;
+    });
+  }
+
+  doc.save("healthy-home-assessment.pdf");
 }
