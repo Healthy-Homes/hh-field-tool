@@ -1,15 +1,44 @@
 {
-  "title": "健康住宅評估工具",
-  "intro": "本工具協助實地工作者評估住房健康風險與社會需求。",
-  "inspection_heading": "🏠 居家檢查清單",
-  "sdoh_heading": "🧍 居民社會決定因素問卷",
-  "consent_heading": "📝 同意與簽名",
-  "consent_text": "我已向居民說明本次評估目的，並取得其同意記錄回答並與授權人員分享結果。",
-  "resident_name": "居民姓名（可選）：",
-  "resident_signature": "居民簽名（可選）：",
-  "map_heading": "📍 評估地點地圖",
-  "generate_button": "產生 FHIR 報告",
-  "json_button": "下載 JSON",
-  "pdf_button": "下載 PDF",
-  "output_heading": "📄 FHIR JSON 輸出："
+  "app": {
+    "title": "健康住宅實務工具",
+    "intro": "本工具協助現場工作者評估住宅相關的健康風險與社會需求。"
+  },
+  "checklist": {
+    "mold": "可見黴菌",
+    "pests": "害蟲感染",
+    "leaks": "水管漏水或潮濕",
+    "lead": "1978年前建造的房屋（可能含鉛漆）",
+    "noHVAC": "暖氣或冷氣設備不足",
+    "noVent": "廚房或浴室無通風設備",
+    "tripHazards": "容易絆倒或滑倒的危險（樓梯、電線、地板）",
+    "asthmaTriggers": "已知哮喘誘因存在（灰塵、煙霧等）"
+  },
+  "sdoh": {
+    "housingStable": "您目前的住房穩定嗎？",
+    "utilityShutoff": "過去一年中，您的電、水或瓦斯有被中斷嗎？",
+    "foodInsecurity": "您是否擔心食物不足？",
+    "languagePref": "您偏好的服務語言是什麼？"
+  },
+  "consent": {
+    "text": "我已向住戶解釋此評估的目的，並取得其同意記錄回應並與授權人員分享結果。",
+    "name": "住戶姓名（可選）：",
+    "signature": "住戶簽名（可選）："
+  },
+  "map": {
+    "header": "檢查地點地圖"
+  },
+  "buttons": {
+    "generate": "產生 FHIR 報告",
+    "download_json": "下載 JSON",
+    "download_pdf": "下載 PDF"
+  },
+  "output": {
+    "header": "FHIR JSON 輸出："
+  },
+  "language": {
+    "label": "語言："
+  },
+  "meta": {
+    "direction": "ltr"
+  }
 }
