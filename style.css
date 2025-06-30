@@ -1,0 +1,17 @@
+body {
+  font-family: sans-serif;
+  margin: 2rem;
+  background-color: #f6f6f6;
+  color: #333;
+}
+button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+pre {
+  background: #eee;
+  padding: 1rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}
