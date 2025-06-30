@@ -3,116 +3,118 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title data-i18n="title">Healthy Homes Practitioner App</title>
+  <title>Healthy Homes Practitioner App</title>
   <link rel="stylesheet" href="style.css" />
 
-  <!-- jsPDF -->
+  <!-- jsPDF for PDF export -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-  <!-- Leaflet -->
+  <!-- Leaflet map CSS + JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Language and app logic -->
+  <script src="lang.js"></script>
 </head>
 <body>
-  <!-- Language Toggle -->
-  <div style="text-align:right; padding: 10px;">
-    <button onclick="setLanguage('en')">English</button>
-    <button onclick="setLanguage('zh')">繁體中文</button>
-  </div>
-
   <main>
+    <div style="text-align: right; margin-bottom: 1rem;">
+      🌐 <span data-i18n="language_label">Language:</span>
+      <select id="languageToggle" onchange="setLanguage(this.value)">
+        <option value="en">English</option>
+        <option value="zh">中文</option>
+      </select>
+    </div>
+
     <h1 data-i18n="title">Healthy Homes Practitioner App</h1>
     <p data-i18n="intro">This tool helps field workers assess housing-related health risks and social needs.</p>
 
     <section>
-      <h2 data-i18n="inspection_heading">Home Inspection Checklist</h2>
+      <h2 data-i18n="checklist_header">🏠 Home Inspection Checklist</h2>
       <form id="inspectionForm">
-        <label><input type="checkbox" name="mold" /> Visible mold</label><br />
-        <label><input type="checkbox" name="pests" /> Pest infestation</label><br />
-        <label><input type="checkbox" name="leaks" /> Water leaks or dampness</label><br />
-        <label><input type="checkbox" name="lead" /> House built before 1978 (possible lead paint)</label><br />
-        <label><input type="checkbox" name="noHVAC" /> Inadequate heating or cooling</label><br />
-        <label><input type="checkbox" name="noVent" /> No kitchen or bathroom ventilation</label><br />
-        <label><input type="checkbox" name="tripHazards" /> Trip/slip hazards (stairs, cords, flooring)</label><br />
-        <label><input type="checkbox" name="asthmaTriggers" /> Known asthma triggers present (dust, smoke, etc.)</label><br />
+        <label><input type="checkbox" name="mold" /> <span data-i18n="mold">Visible mold</span></label><br />
+        <label><input type="checkbox" name="pests" /> <span data-i18n="pests">Pest infestation</span></label><br />
+        <label><input type="checkbox" name="leaks" /> <span data-i18n="leaks">Water leaks or dampness</span></label><br />
+        <label><input type="checkbox" name="lead" /> <span data-i18n="lead">House built before 1978 (possible lead paint)</span></label><br />
+        <label><input type="checkbox" name="noHVAC" /> <span data-i18n="noHVAC">Inadequate heating or cooling</span></label><br />
+        <label><input type="checkbox" name="noVent" /> <span data-i18n="noVent">No kitchen or bathroom ventilation</span></label><br />
+        <label><input type="checkbox" name="tripHazards" /> <span data-i18n="tripHazards">Trip/slip hazards (stairs, cords, flooring)</span></label><br />
+        <label><input type="checkbox" name="asthmaTriggers" /> <span data-i18n="asthmaTriggers">Known asthma triggers present (dust, smoke, etc.)</span></label><br />
       </form>
     </section>
 
     <section>
-      <h2 data-i18n="sdoh_heading">Resident SDOH Questionnaire</h2>
+      <h2 data-i18n="sdoh_header">🧍 Resident SDOH Questionnaire</h2>
       <form id="sdohForm">
-        <label>Do you have stable housing? <br />
+        <label>
+          <span data-i18n="housingStable">Do you have stable housing?</span><br />
           <select name="housingStable">
             <option value="">Select</option>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
+            <option value="yes" data-i18n="yes">Yes</option>
+            <option value="no" data-i18n="no">No</option>
           </select>
         </label><br />
 
-        <label>Has your electricity, water, or gas been shut off in the past year?<br />
+        <label>
+          <span data-i18n="utilityShutoff">Has your electricity, water, or gas been shut off in the past year?</span><br />
           <select name="utilityShutoff">
             <option value="">Select</option>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
+            <option value="yes" data-i18n="yes">Yes</option>
+            <option value="no" data-i18n="no">No</option>
           </select>
         </label><br />
 
-        <label>Do you worry about running out of food?<br />
+        <label>
+          <span data-i18n="foodInsecurity">Do you worry about running out of food?</span><br />
           <select name="foodInsecurity">
             <option value="">Select</option>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
+            <option value="yes" data-i18n="yes">Yes</option>
+            <option value="no" data-i18n="no">No</option>
           </select>
         </label><br />
 
-        <label>What language do you prefer for services?<br />
-          <input type="text" name="languagePref" />
+        <label>
+          <span data-i18n="languagePref">What language do you prefer for services?</span><br />
+          <input type="text" name="languagePref" placeholder="Language" data-i18n="language_placeholder" />
         </label><br />
       </form>
     </section>
 
     <section>
-      <h2 data-i18n="consent_heading">Consent & Signature</h2>
+      <h2 data-i18n="consent_header">📝 Consent & Signature</h2>
+
       <label>
         <input type="checkbox" id="consentCheckbox" />
-        <span data-i18n="consent_text">Consent text...</span>
+        <span data-i18n="consent_text">
+          I have explained the purpose of this screening to the resident and obtained their consent to record responses and share results with authorized personnel.
+        </span>
       </label><br /><br />
-      <label data-i18n="resident_name">Resident Name:</label><br />
-      <input type="text" id="residentName" /><br />
 
-      <label data-i18n="resident_signature">Resident Signature:</label><br />
-      <input type="text" id="residentSignature" /><br />
+      <label>
+        <span data-i18n="residentName">Resident Name (optional):</span><br />
+        <input type="text" id="residentName" placeholder="Resident's full name" data-i18n="name_placeholder" />
+      </label><br />
+
+      <label>
+        <span data-i18n="residentSignature">Resident Signature (optional):</span><br />
+        <input type="text" id="residentSignature" placeholder="Type full name as digital signature" data-i18n="signature_placeholder" />
+      </label><br /><br />
     </section>
 
     <section>
-      <h2 data-i18n="map_heading">Map of Inspection Location</h2>
+      <h2 data-i18n="map_header">📍 Map of Inspection Location</h2>
       <div id="map" style="height: 300px; margin-bottom: 1rem;"></div>
     </section>
 
-    <button onclick="generateFHIR()" data-i18n="generate_button">Generate FHIR Report</button>
-    <h3 data-i18n="output_heading">FHIR JSON Output:</h3>
-    <button onclick="downloadJSON()" data-i18n="json_button">Download JSON</button>
-    <button onclick="downloadPDF()" data-i18n="pdf_button">Download PDF</button>
+    <button onclick="generateFHIR()" data-i18n="generate_btn">Generate FHIR Report</button>
+
+    <h3 data-i18n="output_header">📄 FHIR JSON Output:</h3>
+    <button onclick="downloadJSON()" data-i18n="download_json">Download JSON</button>
+    <button onclick="downloadPDF()" data-i18n="download_pdf">Download PDF</button>
+
     <pre id="output"></pre>
   </main>
 
   <script src="app.js"></script>
-  <script>
-    async function setLanguage(lang) {
-      const res = await fetch(`lang/${lang}.json`);
-      const strings = await res.json();
-      document.querySelectorAll("[data-i18n]").forEach(el => {
-        const key = el.getAttribute("data-i18n");
-        if (strings[key]) {
-          if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
-            el.placeholder = strings[key];
-          } else {
-            el.textContent = strings[key];
-          }
-        }
-      });
-    }
-    setLanguage('en'); // default
-  </script>
 </body>
 </html>
