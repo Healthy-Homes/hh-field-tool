@@ -1,0 +1,15 @@
+{
+  "title": "Healthy Homes Practitioner App",
+  "intro": "This tool helps field workers assess housing-related health risks and social needs.",
+  "inspection_heading": "🏠 Home Inspection Checklist",
+  "sdoh_heading": "🧍 Resident SDOH Questionnaire",
+  "consent_heading": "📝 Consent & Signature",
+  "consent_text": "I have explained the purpose of this screening to the resident and obtained their consent to record responses and share results with authorized personnel.",
+  "resident_name": "Resident Name (optional):",
+  "resident_signature": "Resident Signature (optional):",
+  "map_heading": "📍 Map of Inspection Location",
+  "generate_button": "Generate FHIR Report",
+  "json_button": "Download JSON",
+  "pdf_button": "Download PDF",
+  "output_heading": "📄 FHIR JSON Output:"
+}
