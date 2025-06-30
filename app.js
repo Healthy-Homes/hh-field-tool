@@ -1,4 +1,33 @@
 let lastFHIRBundle = null;
+let geoCoords = null;
+
+// Load geolocation + map after page loads
+window.onload = function () {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        geoCoords = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude
+        };
+        initMap(geoCoords);
+      },
+      (err) => {
+        console.warn("Geolocation failed:", err.message);
+        document.getElementById("map").innerHTML = "<p>Location unavailable.</p>";
+      }
+    );
+  }
+};
+
+function initMap(coords) {
+  const map = L.map('map').setView([coords.lat, coords.lng], 16);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: 'Map data © OpenStreetMap contributors'
+  }).addTo(map);
+  L.marker([coords.lat, coords.lng]).addTo(map)
+    .bindPopup("You are here").openPopup();
+}
 
 function generateFHIR() {
   const inspection = document.forms['inspectionForm'];
@@ -17,35 +46,16 @@ function generateFHIR() {
   const observations = [];
 
   if (inspection.mold.checked) {
-    observations.push({
-      code: "93041-2",
-      description: "Visible mold",
-      value: true
-    });
+    observations.push({ code: "93041-2", description: "Visible mold", value: true });
   }
-
   if (inspection.pests.checked) {
-    observations.push({
-      code: "93043-8",
-      description: "Pest infestation",
-      value: true
-    });
+    observations.push({ code: "93043-8", description: "Pest infestation", value: true });
   }
-
   if (inspection.leaks.checked) {
-    observations.push({
-      code: "99999-9",
-      description: "Water leaks or dampness",
-      value: true
-    });
+    observations.push({ code: "99999-9", description: "Water leaks or dampness", value: true });
   }
-
   if (inspection.lead.checked) {
-    observations.push({
-      code: "93044-6",
-      description: "Lead paint risk (pre-1978 home)",
-      value: true
-    });
+    observations.push({ code: "93044-6", description: "Lead paint risk (pre-1978 home)", value: true });
   }
 
   const socialNeeds = {
@@ -69,7 +79,16 @@ function generateFHIR() {
             display: obs.description
           }]
         },
-        valueBoolean: obs.value
+        valueBoolean: obs.value,
+        ...(geoCoords && {
+          extension: [{
+            url: "http://hl7.org/fhir/StructureDefinition/geolocation",
+            extension: [
+              { url: "latitude", valueDecimal: geoCoords.lat },
+              { url: "longitude", valueDecimal: geoCoords.lng }
+            ]
+          }]
+        })
       }
     }))
     .concat({
@@ -104,7 +123,7 @@ function generateFHIR() {
   };
 
   document.getElementById("output").textContent = JSON.stringify(fhirBundle, null, 2);
-  lastFHIRBundle = fhirBundle; // Store for download
+  lastFHIRBundle = fhirBundle;
 }
 
 function downloadJSON() {
@@ -122,7 +141,6 @@ function downloadJSON() {
 
 async function downloadPDF() {
   if (!lastFHIRBundle) return alert("Run the assessment first.");
-
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
@@ -153,7 +171,6 @@ async function downloadPDF() {
   if (consent) {
     const ext = consent.resource.extension;
     const get = (key) => ext.find(e => e.url === key)?.valueString || "N/A";
-
     y += 10;
     doc.text("Resident Consent:", 10, y);
     y += 6;
