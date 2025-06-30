@@ -5,8 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Healthy Homes Practitioner App</title>
   <link rel="stylesheet" href="style.css" />
+  
+  <!-- jsPDF for PDF export -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
+  
+  <!-- Leaflet map CSS + JS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+  </script>
 </head>
 <body>
   <main>
@@ -60,11 +70,16 @@
       </form>
     </section>
 
+    <section>
+      <h2>📍 Map of Inspection Location</h2>
+      <div id="map" style="height: 300px; margin-bottom: 1rem;"></div>
+    </section>
+
     <button onclick="generateFHIR()">Generate FHIR Report</button>
 
     <h3>📄 FHIR JSON Output:</h3>
     <button onclick="downloadJSON()">Download JSON</button>
-<button onclick="downloadPDF()">Download PDF</button>
+    <button onclick="downloadPDF()">Download PDF</button>
     <pre id="output"></pre>
   </main>
   <script src="app.js"></script>
