@@ -4,6 +4,16 @@ function generateFHIR() {
   const inspection = document.forms['inspectionForm'];
   const sdoh = document.forms['sdohForm'];
 
+  // ✅ Step 3B: Consent & signature validation
+  const consentGiven = document.getElementById("consentCheckbox").checked;
+  const residentName = document.getElementById("residentName").value.trim();
+  const residentSignature = document.getElementById("residentSignature").value.trim();
+
+  if (!consentGiven) {
+    alert("You must obtain resident consent before generating the report.");
+    return;
+  }
+
   const observations = [];
 
   if (inspection.mold.checked) {
@@ -73,6 +83,24 @@ function generateFHIR() {
         }))
       }
     })
+    .concat({
+      resource: {
+        resourceType: "Basic",
+        id: "consent-info",
+        code: {
+          coding: [{
+            system: "http://hl7.org/fhir/basic-resource-type",
+            code: "consent-info",
+            display: "Resident Consent Info"
+          }]
+        },
+        extension: [
+          { url: "residentName", valueString: residentName || "N/A" },
+          { url: "residentSignature", valueString: residentSignature || "N/A" },
+          { url: "consentGiven", valueBoolean: true }
+        ]
+      }
+    })
   };
 
   document.getElementById("output").textContent = JSON.stringify(fhirBundle, null, 2);
@@ -103,7 +131,7 @@ async function downloadPDF() {
   doc.setFontSize(10);
 
   let y = 20;
-  lastFHIRBundle.entry.forEach((entry, i) => {
+  lastFHIRBundle.entry.forEach(entry => {
     const res = entry.resource;
     if (res.resourceType === "Observation") {
       doc.text(`• ${res.code.coding[0].display}: ${res.valueBoolean ? "Yes" : "No"}`, 10, y);
@@ -119,6 +147,21 @@ async function downloadPDF() {
       doc.text(`• ${item.text}: ${item.answer[0].valueString}`, 10, y);
       y += 7;
     });
+  }
+
+  const consent = lastFHIRBundle.entry.find(e => e.resource.id === "consent-info");
+  if (consent) {
+    const ext = consent.resource.extension;
+    const get = (key) => ext.find(e => e.url === key)?.valueString || "N/A";
+
+    y += 10;
+    doc.text("Resident Consent:", 10, y);
+    y += 6;
+    doc.text(`Name: ${get("residentName")}`, 10, y);
+    y += 6;
+    doc.text(`Signature: ${get("residentSignature")}`, 10, y);
+    y += 6;
+    doc.text(`Consent Given: Yes`, 10, y);
   }
 
   doc.save("healthy-home-assessment.pdf");
