@@ -3,28 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Healthy Homes Practitioner App</title>
+  <title data-i18n="title">Healthy Homes Practitioner App</title>
   <link rel="stylesheet" href="style.css" />
-  
-  <!-- jsPDF for PDF export -->
+
+  <!-- jsPDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  
-  <!-- Leaflet map CSS + JS -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-  </script>
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
+  <!-- Language Toggle -->
+  <div style="text-align:right; padding: 10px;">
+    <button onclick="setLanguage('en')">English</button>
+    <button onclick="setLanguage('zh')">繁體中文</button>
+  </div>
+
   <main>
-    <h1>Healthy Homes Practitioner App</h1>
-    <p>This tool helps field workers assess housing-related health risks and social needs.</p>
+    <h1 data-i18n="title">Healthy Homes Practitioner App</h1>
+    <p data-i18n="intro">This tool helps field workers assess housing-related health risks and social needs.</p>
 
     <section>
-      <h2>🏠 Home Inspection Checklist</h2>
+      <h2 data-i18n="inspection_heading">Home Inspection Checklist</h2>
       <form id="inspectionForm">
         <label><input type="checkbox" name="mold" /> Visible mold</label><br />
         <label><input type="checkbox" name="pests" /> Pest infestation</label><br />
@@ -38,7 +39,7 @@
     </section>
 
     <section>
-      <h2>🧍 Resident SDOH Questionnaire</h2>
+      <h2 data-i18n="sdoh_heading">Resident SDOH Questionnaire</h2>
       <form id="sdohForm">
         <label>Do you have stable housing? <br />
           <select name="housingStable">
@@ -69,36 +70,49 @@
         </label><br />
       </form>
     </section>
-<section>
-  <h2>📝 Consent & Signature</h2>
 
-  <label>
-    <input type="checkbox" id="consentCheckbox" />
-    I have explained the purpose of this screening to the resident and obtained their consent to record responses and share results with authorized personnel.
-  </label><br /><br />
-
-  <label>
-    Resident Name (optional):<br />
-    <input type="text" id="residentName" placeholder="Resident's full name" />
-  </label><br />
-
-  <label>
-    Resident Signature (optional):<br />
-    <input type="text" id="residentSignature" placeholder="Type full name as digital signature" />
-  </label><br /><br />
-</section>
     <section>
-      <h2>📍 Map of Inspection Location</h2>
+      <h2 data-i18n="consent_heading">Consent & Signature</h2>
+      <label>
+        <input type="checkbox" id="consentCheckbox" />
+        <span data-i18n="consent_text">Consent text...</span>
+      </label><br /><br />
+      <label data-i18n="resident_name">Resident Name:</label><br />
+      <input type="text" id="residentName" /><br />
+
+      <label data-i18n="resident_signature">Resident Signature:</label><br />
+      <input type="text" id="residentSignature" /><br />
+    </section>
+
+    <section>
+      <h2 data-i18n="map_heading">Map of Inspection Location</h2>
       <div id="map" style="height: 300px; margin-bottom: 1rem;"></div>
     </section>
 
-    <button onclick="generateFHIR()">Generate FHIR Report</button>
-
-    <h3>📄 FHIR JSON Output:</h3>
-    <button onclick="downloadJSON()">Download JSON</button>
-    <button onclick="downloadPDF()">Download PDF</button>
+    <button onclick="generateFHIR()" data-i18n="generate_button">Generate FHIR Report</button>
+    <h3 data-i18n="output_heading">FHIR JSON Output:</h3>
+    <button onclick="downloadJSON()" data-i18n="json_button">Download JSON</button>
+    <button onclick="downloadPDF()" data-i18n="pdf_button">Download PDF</button>
     <pre id="output"></pre>
   </main>
+
   <script src="app.js"></script>
+  <script>
+    async function setLanguage(lang) {
+      const res = await fetch(`lang/${lang}.json`);
+      const strings = await res.json();
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        if (strings[key]) {
+          if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+            el.placeholder = strings[key];
+          } else {
+            el.textContent = strings[key];
+          }
+        }
+      });
+    }
+    setLanguage('en'); // default
+  </script>
 </body>
 </html>
