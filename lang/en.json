@@ -1,15 +1,44 @@
 {
-  "title": "Healthy Homes Practitioner App",
-  "intro": "This tool helps field workers assess housing-related health risks and social needs.",
-  "inspection_heading": "🏠 Home Inspection Checklist",
-  "sdoh_heading": "🧍 Resident SDOH Questionnaire",
-  "consent_heading": "📝 Consent & Signature",
-  "consent_text": "I have explained the purpose of this screening to the resident and obtained their consent to record responses and share results with authorized personnel.",
-  "resident_name": "Resident Name (optional):",
-  "resident_signature": "Resident Signature (optional):",
-  "map_heading": "📍 Map of Inspection Location",
-  "generate_button": "Generate FHIR Report",
-  "json_button": "Download JSON",
-  "pdf_button": "Download PDF",
-  "output_heading": "📄 FHIR JSON Output:"
+  "app": {
+    "title": "Healthy Homes Practitioner App",
+    "intro": "This tool helps field workers assess housing-related health risks and social needs."
+  },
+  "checklist": {
+    "mold": "Visible mold",
+    "pests": "Pest infestation",
+    "leaks": "Water leaks or dampness",
+    "lead": "House built before 1978 (possible lead paint)",
+    "noHVAC": "Inadequate heating or cooling",
+    "noVent": "No kitchen or bathroom ventilation",
+    "tripHazards": "Trip/slip hazards (stairs, cords, flooring)",
+    "asthmaTriggers": "Known asthma triggers present (dust, smoke, etc.)"
+  },
+  "sdoh": {
+    "housingStable": "Do you have stable housing?",
+    "utilityShutoff": "Has your electricity, water, or gas been shut off in the past year?",
+    "foodInsecurity": "Do you worry about running out of food?",
+    "languagePref": "What language do you prefer for services?"
+  },
+  "consent": {
+    "text": "I have explained the purpose of this screening to the resident and obtained their consent to record responses and share results with authorized personnel.",
+    "name": "Resident Name (optional):",
+    "signature": "Resident Signature (optional):"
+  },
+  "map": {
+    "header": "Map of Inspection Location"
+  },
+  "buttons": {
+    "generate": "Generate FHIR Report",
+    "download_json": "Download JSON",
+    "download_pdf": "Download PDF"
+  },
+  "output": {
+    "header": "FHIR JSON Output:"
+  },
+  "language": {
+    "label": "Language:"
+  },
+  "meta": {
+    "direction": "ltr"
+  }
 }
