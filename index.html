@@ -9,8 +9,58 @@
 <body>
   <main>
     <h1>Healthy Homes Practitioner App</h1>
-    <p>This is a prototype tool to help field workers identify and act on housing-related health risks.</p>
-    <button onclick="loadEJData()">Load Sample EJScreen Data</button>
+    <p>This tool helps field workers assess housing-related health risks and social needs.</p>
+
+    <section>
+      <h2>🏠 Home Inspection Checklist</h2>
+      <form id="inspectionForm">
+        <label><input type="checkbox" name="mold" /> Visible mold</label><br />
+        <label><input type="checkbox" name="pests" /> Pest infestation</label><br />
+        <label><input type="checkbox" name="leaks" /> Water leaks or dampness</label><br />
+        <label><input type="checkbox" name="lead" /> House built before 1978 (possible lead paint)</label><br />
+        <label><input type="checkbox" name="noHVAC" /> Inadequate heating or cooling</label><br />
+        <label><input type="checkbox" name="noVent" /> No kitchen or bathroom ventilation</label><br />
+        <label><input type="checkbox" name="tripHazards" /> Trip/slip hazards (stairs, cords, flooring)</label><br />
+        <label><input type="checkbox" name="asthmaTriggers" /> Known asthma triggers present (dust, smoke, etc.)</label><br />
+      </form>
+    </section>
+
+    <section>
+      <h2>🧍 Resident SDOH Questionnaire</h2>
+      <form id="sdohForm">
+        <label>Do you have stable housing? <br />
+          <select name="housingStable">
+            <option value="">Select</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+        </label><br />
+
+        <label>Has your electricity, water, or gas been shut off in the past year?<br />
+          <select name="utilityShutoff">
+            <option value="">Select</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+        </label><br />
+
+        <label>Do you worry about running out of food?<br />
+          <select name="foodInsecurity">
+            <option value="">Select</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+        </label><br />
+
+        <label>What language do you prefer for services?<br />
+          <input type="text" name="languagePref" />
+        </label><br />
+      </form>
+    </section>
+
+    <button onclick="generateFHIR()">Generate FHIR Report</button>
+
+    <h3>📄 FHIR JSON Output:</h3>
     <pre id="output"></pre>
   </main>
   <script src="app.js"></script>
