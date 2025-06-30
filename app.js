@@ -22,13 +22,14 @@ function applyTranslations() {
 }
 
 // Language selector and map init
+let map;
 document.addEventListener("DOMContentLoaded", () => {
   loadLanguage("en"); // Default language
   document.getElementById("langSelect").addEventListener("change", (e) => {
     loadLanguage(e.target.value);
   });
 
-  const map = L.map('map').setView([25.032969, 121.565418], 13);
+  map = L.map('map').setView([25.032969, 121.565418], 13);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '© OpenStreetMap'
@@ -45,10 +46,12 @@ async function getLocation() {
   navigator.geolocation.getCurrentPosition(async (position) => {
     const { latitude, longitude } = position.coords;
 
+    // Show coordinates or reverse-geocoded address
     const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
     const data = await response.json();
     document.getElementById("userAddress").textContent = data.display_name || `${latitude}, ${longitude}`;
 
+    // 🧪 Simulate EJScreen-like environmental data (replace with API later)
     const mockData = {
       asthmaRisk: "High",
       leadRisk: "Moderate",
@@ -59,6 +62,7 @@ async function getLocation() {
     document.getElementById("leadRisk").textContent = mockData.leadRisk;
     document.getElementById("pm25").textContent = mockData.pm25;
 
+    // Optional: Store for PDF / JSON
     window.ejScreenInfo = {
       coords: { latitude, longitude },
       address: data.display_name,
@@ -105,79 +109,59 @@ function generateFHIR() {
     languagePref: sdoh.languagePref.value
   };
 
-  const entries = observations.map(obs => ({
-    resource: {
-      resourceType: "Observation",
-      status: "final",
-      code: {
-        coding: [{
-          system: "http://loinc.org",
-          code: obs.code,
-          display: obs.description
-        }]
-      },
-      valueBoolean: obs.value
-    }
-  }));
-
-  entries.push({
-    resource: {
-      resourceType: "QuestionnaireResponse",
-      status: "completed",
-      item: Object.keys(socialNeeds).map(key => ({
-        linkId: key,
-        text: key,
-        answer: [{ valueString: socialNeeds[key] }]
-      }))
-    }
-  });
-
-  entries.push({
-    resource: {
-      resourceType: "Basic",
-      id: "consent-info",
-      code: {
-        coding: [{
-          system: "http://hl7.org/fhir/basic-resource-type",
-          code: "consent-info",
-          display: "Resident Consent Info"
-        }]
-      },
-      extension: [
-        { url: "residentName", valueString: residentName || "N/A" },
-        { url: "residentSignature", valueString: residentSignature || "N/A" },
-        { url: "consentGiven", valueBoolean: true }
-      ]
-    }
-  });
-
-  if (window.ejScreenInfo) {
-    entries.push({
-      resource: {
-        resourceType: "Observation",
-        id: "ejscreen",
-        status: "final",
-        code: {
-          coding: [{
-            system: "https://epa.gov/ejscreen",
-            code: "environmental-context",
-            display: "Environmental Context (EJScreen)"
-          }]
-        },
-        component: [
-          { code: { text: "Address" }, valueString: window.ejScreenInfo.address },
-          { code: { text: "Asthma Risk" }, valueString: window.ejScreenInfo.asthmaRisk },
-          { code: { text: "Lead Risk" }, valueString: window.ejScreenInfo.leadRisk },
-          { code: { text: "PM2.5" }, valueString: window.ejScreenInfo.pm25 }
-        ]
-      }
-    });
-  }
+  const ej = window.ejScreenInfo || {};
 
   const fhirBundle = {
     resourceType: "Bundle",
     type: "collection",
-    entry: entries
+    entry: observations.map(obs => ({
+      resource: {
+        resourceType: "Observation",
+        status: "final",
+        code: {
+          coding: [{ system: "http://loinc.org", code: obs.code, display: obs.description }]
+        },
+        valueBoolean: obs.value
+      }
+    }))
+    .concat({
+      resource: {
+        resourceType: "QuestionnaireResponse",
+        status: "completed",
+        item: Object.keys(socialNeeds).map(key => ({
+          linkId: key,
+          text: key,
+          answer: [{ valueString: socialNeeds[key] }]
+        }))
+      }
+    })
+    .concat({
+      resource: {
+        resourceType: "Basic",
+        id: "consent-info",
+        code: {
+          coding: [{ system: "http://hl7.org/fhir/basic-resource-type", code: "consent-info", display: "Resident Consent Info" }]
+        },
+        extension: [
+          { url: "residentName", valueString: residentName || "N/A" },
+          { url: "residentSignature", valueString: residentSignature || "N/A" },
+          { url: "consentGiven", valueBoolean: true }
+        ]
+      }
+    })
+    .concat({
+      resource: {
+        resourceType: "Observation",
+        status: "final",
+        code: { coding: [{ system: "https://example.org", code: "ejscreen-summary", display: "Environmental Context" }] },
+        component: [
+          { code: { text: "Asthma Risk" }, valueString: ej.asthmaRisk || "N/A" },
+          { code: { text: "Lead Risk" }, valueString: ej.leadRisk || "N/A" },
+          { code: { text: "PM2.5" }, valueString: ej.pm25 || "N/A" },
+          { code: { text: "Address" }, valueString: ej.address || "N/A" }
+        ]
+      }
+    })
   };
 
   document.getElementById("output").textContent = JSON.stringify(fhirBundle, null, 2);
@@ -199,7 +183,6 @@ function downloadJSON() {
 
 async function downloadPDF() {
   if (!lastFHIRBundle) return alert("Run the assessment first.");
-
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
@@ -210,7 +193,7 @@ async function downloadPDF() {
   let y = 20;
   lastFHIRBundle.entry.forEach(entry => {
     const res = entry.resource;
-    if (res.resourceType === "Observation" && !res.id) {
+    if (res.resourceType === "Observation" && res.code?.coding?.[0]?.code !== "ejscreen-summary") {
       doc.text(`• ${res.code.coding[0].display}: ${res.valueBoolean ? "Yes" : "No"}`, 10, y);
       y += 7;
     }
@@ -241,16 +224,18 @@ async function downloadPDF() {
     doc.text(`Consent Given: Yes`, 10, y);
   }
 
-  const ejs = lastFHIRBundle.entry.find(e => e.resource.id === "ejscreen");
-  if (ejs) {
-    const comps = ejs.resource.component;
+  const ej = window.ejScreenInfo;
+  if (ej) {
     y += 10;
     doc.text("Environmental Context (EJScreen):", 10, y);
     y += 6;
-    comps.forEach(comp => {
-      doc.text(`• ${comp.code.text}: ${comp.valueString}`, 10, y);
-      y += 6;
-    });
+    doc.text(`Address: ${ej.address}`, 10, y);
+    y += 6;
+    doc.text(`Asthma Risk: ${ej.asthmaRisk}`, 10, y);
+    y += 6;
+    doc.text(`Lead Risk: ${ej.leadRisk}`, 10, y);
+    y += 6;
+    doc.text(`PM2.5: ${ej.pm25}`, 10, y);
   }
 
   doc.save("healthy-home-assessment.pdf");
