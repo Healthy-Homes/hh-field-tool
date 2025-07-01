@@ -1,39 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;">
-
-  <title data-i18n="app.title">Healthy Homes Practitioner App</title>
-
-  <!-- Styles -->
-  <link rel="stylesheet" href="style.css" />
-
-  <!-- Leaflet map CSS + JS (via Cloudflare CDN for CSP compatibility) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
-
-  <!-- PDF + Snapshot -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Healthy Homes Assessment Tool</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script defer src="app.js"></script>
 </head>
-
-
 <body>
   <main>
     <h1 data-i18n="app.title">Healthy Homes Practitioner App</h1>
     <p data-i18n="app.intro">This tool helps field workers assess housing-related health risks and social needs.</p>
 
-    <!-- Language Toggle -->
-    <label for="langSelect" data-i18n="language.label">Language:</label>
+    <label for="langSelect" style="margin-top: 30px; display: block;">🌐 <span data-i18n="language.label">Language:</span></label>
     <select id="langSelect">
       <option value="en">English</option>
       <option value="zh">中文</option>
     </select>
 
     <section>
-      <h2>🏠 <span data-i18n="app.title">Home Inspection Checklist</span></h2>
+      <h2>🏠 <span data-i18n="checklist.title">Home Inspection Checklist</span></h2>
       <form id="inspectionForm">
         <label><input type="checkbox" name="mold" /> <span data-i18n="checklist.mold"></span></label><br />
         <label><input type="checkbox" name="pests" /> <span data-i18n="checklist.pests"></span></label><br />
@@ -47,79 +36,53 @@
     </section>
 
     <section>
-      <h2>🧍 <span data-i18n="sdoh.title">Resident SDOH Questionnaire</span></h2>
+      <h2 data-i18n="sdoh.title">🧍 Resident SDOH Questionnaire</h2>
       <form id="sdohForm">
-        <label data-i18n="sdoh.housingStable"></label><br />
-        <select name="housingStable">
-          <option value="">Select</option>
-          <option value="yes">Yes</option>
-          <option value="no">No</option>
-        </select><br />
+        <label for="housingStable" data-i18n="sdoh.housingStable"></label>
+        <select id="housingStable" name="housingStable" data-i18n-options="sdoh.housingStableOptions"></select>
 
-        <label data-i18n="sdoh.utilityShutoff"></label><br />
-        <select name="utilityShutoff">
-          <option value="">Select</option>
-          <option value="yes">Yes</option>
-          <option value="no">No</option>
-        </select><br />
+        <label for="utilityShutoff" data-i18n="sdoh.utilityShutoff"></label>
+        <select id="utilityShutoff" name="utilityShutoff" data-i18n-options="sdoh.utilityShutoffOptions"></select>
 
-        <label data-i18n="sdoh.foodInsecurity"></label><br />
-        <select name="foodInsecurity">
-          <option value="">Select</option>
-          <option value="yes">Yes</option>
-          <option value="no">No</option>
-        </select><br />
+        <label for="foodInsecurity" data-i18n="sdoh.foodInsecurity"></label>
+        <select id="foodInsecurity" name="foodInsecurity" data-i18n-options="sdoh.foodInsecurityOptions"></select>
 
-        <label data-i18n="sdoh.languagePref"></label><br />
-        <input type="text" name="languagePref" />
+        <label for="languagePref" data-i18n="sdoh.languagePref"></label>
+        <input type="text" id="languagePref" name="languagePref">
       </form>
     </section>
 
     <section>
       <h2>📝 <span data-i18n="consent.title">Consent & Signature</span></h2>
-      <label>
-        <input type="checkbox" id="consentCheckbox" />
-        <span data-i18n="consent.text"></span>
-      </label><br /><br />
+      <input type="checkbox" id="consentCheckbox">
+      <label for="consentCheckbox" data-i18n="consent.explained"></label>
 
-      <label data-i18n="consent.name"></label><br />
-      <input type="text" id="residentName" /><br />
+      <label for="residentName" data-i18n="consent.name"></label>
+      <input type="text" id="residentName">
 
-      <label data-i18n="consent.signature"></label><br />
-      <input type="text" id="residentSignature" /><br />
+      <label for="residentSignature" data-i18n="consent.signature"></label>
+      <input type="text" id="residentSignature">
     </section>
 
     <section>
-      <h2>📍 <span data-i18n="map.header"></span></h2>
+      <h2>📍 <span data-i18n="location.title">Inspection Map Location</span></h2>
       <div id="map" style="height: 300px; margin-bottom: 1rem;"></div>
-
-      <!-- ✅ Mock warning inserted here -->
-      <p id="mockWarning" style="display:none; color:orange; font-weight:bold;">
-        ⚠️ EJScreen data is currently mocked. Replace with real API before production use.
-      </p>
     </section>
 
     <section>
-      <h2 data-i18n="ejscreen.title">🌍 Environmental Context (EJScreen)</h2>
-
-      <button onclick="getLocation()">📍 Use My Location</button>
-      <p><strong>Address:</strong> <span id="userAddress">N/A</span></p>
-
-      <div id="ejscreenData">
-        <p><strong>Asthma Risk:</strong> <span id="asthmaRisk">--</span></p>
-        <p><strong>Lead Exposure Risk:</strong> <span id="leadRisk">--</span></p>
-        <p><strong>Air Quality Index (PM2.5):</strong> <span id="pm25">--</span></p>
-      </div>
+      <h2 data-i18n="env.title">🌍 Environmental Context (EJScreen)</h2>
+      <button onclick="getLocation()" data-i18n="env.useLocation">📍 Use My Location</button>
+      <p><strong data-i18n="env.address">Address:</strong> <span id="userAddress">--</span></p>
+      <p><strong data-i18n="env.asthmaRisk">Asthma Risk:</strong> <span id="asthmaRisk">--</span></p>
+      <p><strong data-i18n="env.leadRisk">Lead Exposure Risk:</strong> <span id="leadRisk">--</span></p>
+      <p><strong data-i18n="env.pm25">Air Quality Index (PM2.5):</strong> <span id="pm25">--</span></p>
     </section>
 
-    <button onclick="generateFHIR()" data-i18n="buttons.generate"></button>
-
-    <h3 data-i18n="output.header">FHIR JSON Output:</h3>
-    <button onclick="downloadJSON()" data-i18n="buttons.download_json"></button>
-    <button onclick="downloadPDF()" data-i18n="buttons.download_pdf"></button>
+    <button onclick="generateFHIR()" data-i18n="fhir.generate">Generate FHIR Report</button>
+    <h3 data-i18n="fhir.outputTitle">FHIR JSON Output:</h3>
     <pre id="output"></pre>
+    <button onclick="downloadJSON()" data-i18n="fhir.downloadJson">Download JSON</button>
+    <button onclick="downloadPDF()" data-i18n="fhir.downloadPdf">Download PDF</button>
   </main>
-
-  <script src="app.js"></script>
 </body>
 </html>
