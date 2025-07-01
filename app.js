@@ -1,17 +1,23 @@
+// ✅ app.js – Fully updated and synced with index.html and i18n logic
 console.log("✅ app.js loaded and running");
+
 let lastFHIRBundle = null;
 let translations = {};
 let currentLang = 'en';
 let map;
-let base64Photos = []; // Array for multiple base64 images
+let base64Photos = [];
 
-// Load and apply language translations
+// 🌐 Load and apply language translations
 async function loadLanguage(lang) {
-  const response = await fetch(`lang/${lang}.json`);
-  translations = await response.json();
-  currentLang = lang;
-  applyTranslations();
-  document.documentElement.setAttribute("lang", lang);
+  try {
+    const response = await fetch(`lang/${lang}.json`);
+    translations = await response.json();
+    currentLang = lang;
+    applyTranslations();
+    document.documentElement.setAttribute("lang", lang);
+  } catch (err) {
+    console.error("❌ Failed to load language file:", err);
+  }
 }
 
 function applyTranslations() {
@@ -21,59 +27,9 @@ function applyTranslations() {
     for (const k of keys) text = text?.[k];
     if (text) el.textContent = text;
   });
-
-  document.querySelectorAll("select[data-i18n-options]").forEach(select => {
-    const optionsKey = select.getAttribute("data-i18n-options");
-    const keys = optionsKey.split(".");
-    let optionSet = translations;
-    for (const k of keys) optionSet = optionSet?.[k];
-
-    if (optionSet) {
-      const currentValue = select.value;
-      select.innerHTML = "";
-      for (const [value, label] of Object.entries(optionSet)) {
-        const option = document.createElement("option");
-        option.value = value;
-        option.textContent = label;
-        select.appendChild(option);
-      }
-      if (select.querySelector(`option[value="${currentValue}"]`)) {
-        select.value = currentValue;
-      }
-    }
-  });
-
-  const checklistItems = [
-    "moldVisible", "dampSmell", "leakingPipes", "pestDroppings",
-    "openEntryPoints", "brokenStairs", "tripHazards", "noVentilation",
-    "hvacInadequate", "pre1978Paint", "gasSmell", "noRunningWater",
-    "visibleTrash", "asthmaTriggers", "otherHazards"
-  ];
-
-  checklistItems.forEach(id => {
-    const label = document.querySelector(`label[for='${id}'] span[data-i18n]`);
-    const key = `inspection.${id}`;
-    const keys = key.split(".");
-    let text = translations;
-    for (const k of keys) text = text?.[k];
-    if (label && text) label.textContent = text;
-  });
-
-  const consentLabels = {
-    name: "consent.name",
-    signature: "consent.signature"
-  };
-
-  for (const [id, keyPath] of Object.entries(consentLabels)) {
-    const label = document.querySelector(`label[for='${id}']`);
-    const keys = keyPath.split(".");
-    let text = translations;
-    for (const k of keys) text = text?.[k];
-    if (label && text) label.textContent = text;
-  }
 }
 
-// 🌍 EJScreen Mock API
+// 🗺️ Geolocation + mock EJScreen data
 async function getEJScreenData(lat, lon) {
   const banner = document.createElement("div");
   banner.textContent = "🧪 Using MOCK EJScreen data";
@@ -89,7 +45,6 @@ async function getEJScreenData(lat, lon) {
   };
 }
 
-// 📍 Geolocation
 async function getLocation() {
   if (!navigator.geolocation) return alert("Geolocation not supported.");
   navigator.geolocation.getCurrentPosition(async ({ coords }) => {
@@ -97,17 +52,15 @@ async function getLocation() {
     const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
     const data = await response.json();
     document.getElementById("userAddress").textContent = data.display_name || `${latitude}, ${longitude}`;
-
     const env = await getEJScreenData(latitude, longitude);
     document.getElementById("asthmaRisk").textContent = env.asthmaRisk;
     document.getElementById("leadRisk").textContent = env.leadRisk;
     document.getElementById("pm25").textContent = env.pm25;
-
     window.ejScreenInfo = { coords, address: data.display_name, ...env };
   }, () => alert("Unable to retrieve location."));
 }
 
-// 🖼️ Handle photo upload
+// 🖼️ Photo upload
 function handlePhotoUpload(event) {
   const files = Array.from(event.target.files || []);
   const previewGrid = document.getElementById("photoPreview");
@@ -136,7 +89,7 @@ function handlePhotoUpload(event) {
   });
 }
 
-// 🧬 Generate FHIR
+// 🧬 FHIR export
 function generateFHIR() {
   const inspection = document.forms['inspectionForm'];
   const sdoh = document.forms['sdohForm'];
@@ -148,35 +101,25 @@ function generateFHIR() {
 
   const fieldMap = {
     moldVisible: "Visible mold",
-    dampSmell: "Musty odors",
-    leakingPipes: "Plumbing/roof leaks",
-    pestDroppings: "Pest droppings",
-    openEntryPoints: "Unsealed cracks",
-    brokenStairs: "Broken steps",
+    leakingPipes: "Water damage or leaks",
+    noVentilation: "Poor ventilation",
+    pestDroppings: "Signs of pests",
+    electrical: "Unsafe electrical systems",
     tripHazards: "Trip hazards",
-    noVentilation: "No ventilation",
-    hvacInadequate: "No HVAC",
-    pre1978Paint: "Lead paint risk",
-    gasSmell: "Smell of gas",
-    noRunningWater: "No water/toilet",
-    visibleTrash: "Trash/sewage",
-    asthmaTriggers: "Asthma triggers",
     otherHazards: "Other risks"
   };
 
-  const observations = Object.keys(fieldMap).filter(name => {
-    return inspection.elements[name]?.checked;
-  }).map(name => ({
+  const observations = Object.keys(fieldMap).filter(id => {
+    return inspection.elements[id]?.checked;
+  }).map(id => ({
     code: "99999-0",
-    description: fieldMap[name],
+    description: fieldMap[id],
     value: true
   }));
 
   const socialNeeds = {
-    housingStable: sdoh.housingStable.value,
-    utilityShutoff: sdoh.utilityShutoff.value,
-    foodInsecurity: sdoh.foodInsecurity.value,
-    languagePref: sdoh.languagePref.value
+    incomeLevel: sdoh.incomeLevel.value,
+    housingStability: sdoh.housingStability.value
   };
 
   const ej = window.ejScreenInfo || {};
@@ -239,7 +182,6 @@ function generateFHIR() {
     }
   });
 
-  // Add uploaded photos
   base64Photos.forEach(photo => {
     fhirBundle.entry.push({
       resource: {
@@ -257,30 +199,7 @@ function generateFHIR() {
   lastFHIRBundle = fhirBundle;
 }
 
-// Init
-document.addEventListener("DOMContentLoaded", () => {
-  loadLanguage("en");
-  document.getElementById("langSelect").addEventListener("change", e => {
-    loadLanguage(e.target.value);
-  });
-
-  const photoInput = document.getElementById("photoInput");
-  if (photoInput) {
-    photoInput.addEventListener("change", handlePhotoUpload);
-  }
-
-  try {
-    map = L.map('map').setView([25.032969, 121.565418], 13);
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '© OpenStreetMap'
-    }).addTo(map);
-  } catch (err) {
-    console.error("❌ Map error:", err);
-  }
-});
-
-// 📦 Download JSON
+// 📦 JSON download
 function downloadJSON() {
   if (!lastFHIRBundle) return alert("Generate the FHIR report first.");
   const blob = new Blob([JSON.stringify(lastFHIRBundle, null, 2)], { type: "application/json" });
@@ -292,7 +211,7 @@ function downloadJSON() {
   URL.revokeObjectURL(url);
 }
 
-// 🧾 Download PDF
+// 📄 PDF download
 function downloadPDF() {
   if (!lastFHIRBundle) return alert("Generate the FHIR report first.");
   const { jsPDF } = window.jspdf;
@@ -302,3 +221,22 @@ function downloadPDF() {
   doc.text(lines, 10, 10);
   doc.save("fhir-report.pdf");
 }
+
+// 🚀 Init
+window.addEventListener("DOMContentLoaded", () => {
+  loadLanguage("en");
+  document.getElementById("langSelect").addEventListener("change", e => {
+    loadLanguage(e.target.value);
+  });
+  const photoInput = document.getElementById("photoUpload");
+  if (photoInput) photoInput.addEventListener("change", handlePhotoUpload);
+  try {
+    map = L.map('map').setView([25.032969, 121.565418], 13);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+  } catch (err) {
+    console.error("❌ Map error:", err);
+  }
+});
