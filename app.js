@@ -85,6 +85,50 @@ document.getElementById('langSelect').addEventListener('change', async e => {
   currentLang = e.target.value;
   await loadTranslations(currentLang);
 });
+// Safe map loading
+let mapInstance;
+
+function getLocation() {
+  if (!navigator.geolocation) {
+    alert("Geolocation is not supported by your browser.");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    async position => {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+
+      // Avoid reinitializing the map if it already exists
+      if (mapInstance) {
+        mapInstance.setView([lat, lng], 13);
+      } else {
+        mapInstance = L.map('map').setView([lat, lng], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '© OpenStreetMap contributors'
+        }).addTo(mapInstance);
+      }
+
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`);
+        const data = await res.json();
+        const address = data.display_name;
+        document.getElementById("userAddress").textContent = `📍 ${address}`;
+      } catch (err) {
+        console.error("Reverse geocoding failed:", err);
+      }
+
+      // Placeholder values for environmental context
+      document.getElementById("asthmaRisk").textContent = "Moderate (mock)";
+      document.getElementById("leadRisk").textContent = "Low (mock)";
+      document.getElementById("pm25").textContent = "12 µg/m³ (mock)";
+    },
+    error => {
+      alert("Unable to retrieve your location.");
+      console.error(error);
+    }
+  );
+}
 
 // ✅ DOM Ready
 window.addEventListener('DOMContentLoaded', async () => {
