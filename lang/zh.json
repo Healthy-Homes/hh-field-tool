@@ -1,6 +1,34 @@
 {
+  "app": {
+    "title": "健康住宅評估工具",
+    "intro": "本工具協助現場工作人員評估住房相關的健康風險與社會需求。"
+  },
+  "inspection": {
+    "title": "居家檢查清單",
+    "moldVisible": "可見黴菌",
+    "leakingPipes": "漏水或水損",
+    "noVentilation": "通風不良",
+    "pestDroppings": "有害生物跡象",
+    "electrical": "電力系統不安全",
+    "tripHazards": "絆倒危險",
+    "otherHazards": "其他風險"
+  },
+  "sdoh": {
+    "title": "居民社會決定因素問卷",
+    "housingStable": "您的住房是否穩定？",
+    "disabilityStatus": "您或家中有人有殘疾嗎？",
+    "utilityShutoff": "您在過去一年中有被斷水電的情況嗎？",
+    "foodInsecurity": "您有多常擔心食物不足？",
+    "languagePref": "您偏好的聯絡語言？",
+    "incomeLevel": "您的家庭每月收入是多少？（可選）"
+  },
   "sdohOptions": {
     "housingStable": {
+      "": "請選擇",
+      "yes": "是",
+      "no": "否"
+    },
+    "disabilityStatus": {
       "": "請選擇",
       "yes": "是",
       "no": "否"
@@ -14,14 +42,40 @@
       "": "請選擇",
       "always": "總是",
       "sometimes": "有時",
-      "rarely": "很少",
       "never": "從不"
     },
     "languagePref": {
       "": "請選擇",
       "en": "英文",
       "zh": "繁體中文",
-      "other": "其他（請於下方填寫）"
+      "es": "西班牙文",
+      "vi": "越南文",
+      "tl": "菲律賓文",
+      "other": "其他（請輸入）"
     }
+  },
+  "consent": {
+    "title": "同意與簽名",
+    "explained": "我同意進行居家檢查以評估健康與安全條件，並了解這是自願的，同意拍照作為紀錄用途。",
+    "name": "住戶姓名（作為同意確認）："
+  },
+  "location": {
+    "title": "檢查地點地圖"
+  },
+  "env": {
+    "title": "環境背景資訊",
+    "asthmaRisk": "氣喘風險",
+    "leadRisk": "鉛暴露風險",
+    "pm25": "PM2.5",
+    "useLocation": "📍 使用我的位置"
+  },
+  "photo": {
+    "label": "上傳照片（可選）"
+  },
+  "fhir": {
+    "outputTitle": "FHIR JSON 輸出",
+    "generate": "產生 FHIR 報告",
+    "downloadJson": "下載 JSON",
+    "downloadPdf": "下載 PDF"
   }
 }
