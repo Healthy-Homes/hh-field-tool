@@ -72,14 +72,16 @@
       <p class="text-sm"><strong data-i18n="env.pm25">PM2.5:</strong> <span id="pm25">-</span></p>
     </section>
 
-    <div class="mb-4">
-      <label for="photoUpload" class="block text-sm font-medium text-gray-700">Upload Photos (optional)</label>
-      <input type="file" id="photoUpload" name="photos" accept="image/*" multiple
-        class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
-        file:rounded-full file:border-0 file:text-sm file:font-semibold
-        file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
-      <div id="photoPreview" class="mt-4 grid grid-cols-2 gap-2"></div>
-    </div>
+<section class="mb-4">
+  <label for="photoUpload" class="block text-sm font-medium text-gray-700">Upload Photos (optional)</label>
+  <input type="file" id="photoUpload" name="photos" accept="image/*" multiple
+    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
+    file:rounded-full file:border-0 file:text-sm file:font-semibold
+    file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+  <div id="photoPreview" class="mt-4 grid grid-cols-2 gap-2"></div>
+  <div id="uploadStatus" class="text-sm text-gray-600 mt-2"></div>
+</section>
+
 
     <section>
       <h2 class="text-lg font-semibold text-green-700" data-i18n="fhir.outputTitle">FHIR JSON Output</h2>
