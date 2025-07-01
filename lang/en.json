@@ -47,30 +47,5 @@
       "chinese": "Chinese",
       "other": "Other"
     }
-  },
-  "consent": {
-    "title": "Consent & Signature",
-    "explained": "I consent to a home inspection to assess health and safety conditions, understand this is voluntary, and agree that photos may be taken for documentation purposes.",
-    "name": "Resident Name (serves as consent confirmation):"
-  },
-  "location": {
-    "title": "Inspection Map Location"
-  },
-  "env": {
-    "title": "Environmental Context",
-    "useLocation": "📍 Use My Location",
-    "address": "Address:",
-    "asthmaRisk": "Asthma Risk:",
-    "leadRisk": "Lead Risk:",
-    "pm25": "PM2.5:"
-  },
-  "photo": {
-    "label": "Upload Photos (optional)"
-  },
-  "fhir": {
-    "generate": "Generate FHIR Report",
-    "outputTitle": "FHIR JSON Output",
-    "downloadJson": "Download JSON",
-    "downloadPdf": "Download PDF"
   }
 }
