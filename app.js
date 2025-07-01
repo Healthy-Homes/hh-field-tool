@@ -2,7 +2,7 @@ console.log("✅ app.js loaded and running");
 let lastFHIRBundle = null;
 let translations = {};
 let currentLang = 'en';
-let map;
+let map; 
 
 // Load and apply language translations
 async function loadLanguage(lang) {
