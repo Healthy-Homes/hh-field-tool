@@ -1,29 +1,4 @@
 {
-  "app": {
-    "title": "Healthy Homes Practitioner App",
-    "intro": "This tool helps field workers assess housing-related health risks and social needs."
-  },
-  "language": {
-    "label": "Language:"
-  },
-  "inspection": {
-    "title": "Home Inspection Checklist",
-    "moldVisible": "Visible mold",
-    "leakingPipes": "Water damage or leaks",
-    "noVentilation": "Poor ventilation",
-    "pestDroppings": "Signs of pests",
-    "electrical": "Unsafe electrical systems",
-    "tripHazards": "Trip hazards",
-    "otherHazards": "Other risks"
-  },
-  "sdoh": {
-    "title": "Resident SDOH Questionnaire",
-    "housingStable": "Is your housing stable?",
-    "utilityShutoff": "Have your utilities been shut off in the past year?",
-    "foodInsecurity": "How often do you worry about running out of food?",
-    "languagePref": "Preferred language for communication?",
-    "incomeLevel": "What is your monthly household income?"
-  },
   "sdohOptions": {
     "housingStable": {
       "": "Select",
@@ -39,38 +14,14 @@
       "": "Select",
       "always": "Always",
       "sometimes": "Sometimes",
+      "rarely": "Rarely",
       "never": "Never"
     },
     "languagePref": {
       "": "Select",
-      "english": "English",
-      "chinese": "Chinese",
-      "other": "Other"
+      "en": "English",
+      "zh": "Traditional Chinese",
+      "other": "Other (please specify below)"
     }
-  },
-  "consent": {
-    "title": "Consent & Signature",
-    "explained": "I consent to a home inspection to assess health and safety conditions, understand this is voluntary, and agree that photos may be taken for documentation purposes.",
-    "name": "Resident Name (serves as consent confirmation):"
-  },
-  "location": {
-    "title": "Inspection Map Location"
-  },
-  "env": {
-    "title": "Environmental Context",
-    "useLocation": "\ud83d\udccd Use My Location",
-    "address": "Address:",
-    "asthmaRisk": "Asthma Risk:",
-    "leadRisk": "Lead Risk:",
-    "pm25": "PM2.5:"
-  },
-  "photo": {
-    "label": "Upload Photos (optional)"
-  },
-  "fhir": {
-    "generate": "Generate FHIR Report",
-    "outputTitle": "FHIR JSON Output",
-    "downloadJson": "Download JSON",
-    "downloadPdf": "Download PDF"
   }
 }
