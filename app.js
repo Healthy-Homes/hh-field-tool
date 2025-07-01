@@ -12,7 +12,6 @@ async function loadLanguage(lang) {
   document.documentElement.setAttribute("lang", lang);
 }
 
-// Apply translation to all elements with data-i18n attribute
 function applyTranslations() {
   document.querySelectorAll("[data-i18n]").forEach(el => {
     const keys = el.getAttribute("data-i18n").split(".");
@@ -22,21 +21,31 @@ function applyTranslations() {
   });
 }
 
-// Language selector and map init
-document.addEventListener("DOMContentLoaded", () => {
-  loadLanguage("en"); // Default language
-  document.getElementById("langSelect").addEventListener("change", (e) => {
-    loadLanguage(e.target.value);
-  });
+// 🌍 EJScreen (Mock for Now — Easily Upgradable)
+async function getEJScreenData(lat, lon) {
+  // TODO: Replace with real EPA EJScreen API call once back in the U.S.
+  // Example:
+  // const response = await fetch(`https://ejscreen.epa.gov/arcgis/rest/services/EJSCREEN/MapServer/identify?geometry=${lon},${lat}&...`);
+  // const data = await response.json();
+  // return {
+  //   asthmaRisk: data.attributes.ASTM_RATE,
+  //   leadRisk: data.attributes.LEAD_BASED_PAINT,
+  //   pm25: data.attributes.PM25,
+  //   ...
+  // };
 
-  map = L.map('map').setView([25.032969, 121.565418], 13);
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '© OpenStreetMap'
-  }).addTo(map);
-});
+  console.warn("🧪 Using MOCK EJScreen data — replace this for real deployment.");
 
-// 🌍 EJScreen Integration (mocked for now)
+  return {
+    asthmaRisk: "High",
+    leadRisk: "Moderate",
+    pm25: "21.3 μg/m³",
+    proximityToTraffic: "Low",
+    dieselPM: "7.8 μg/m³"
+  };
+}
+
+// Geolocation + EJScreen Wrapper
 async function getLocation() {
   if (!navigator.geolocation) {
     alert("Geolocation not supported by your browser.");
@@ -50,27 +59,27 @@ async function getLocation() {
     const data = await response.json();
     document.getElementById("userAddress").textContent = data.display_name || `${latitude}, ${longitude}`;
 
-    const mockData = {
-      asthmaRisk: "High",
-      leadRisk: "Moderate",
-      pm25: "21.3 μg/m³"
-    };
+    const env = await getEJScreenData(latitude, longitude);
 
-    document.getElementById("asthmaRisk").textContent = mockData.asthmaRisk;
-    document.getElementById("leadRisk").textContent = mockData.leadRisk;
-    document.getElementById("pm25").textContent = mockData.pm25;
+    document.getElementById("asthmaRisk").textContent = env.asthmaRisk;
+    document.getElementById("leadRisk").textContent = env.leadRisk;
+    document.getElementById("pm25").textContent = env.pm25;
+
+    // Optional warning banner for mock
+    const mockWarning = document.getElementById("mockWarning");
+    if (mockWarning) mockWarning.style.display = "block";
 
     window.ejScreenInfo = {
       coords: { latitude, longitude },
       address: data.display_name,
-      ...mockData
+      ...env
     };
   }, () => {
     alert("Unable to retrieve your location.");
   });
 }
 
-// 📸 Capture Leaflet map image for export
+// 📸 Leaflet map snapshot
 function captureMapImage(callback) {
   html2canvas(document.getElementById("map")).then(canvas => {
     const imgData = canvas.toDataURL("image/png");
@@ -78,7 +87,7 @@ function captureMapImage(callback) {
   });
 }
 
-// FHIR generation
+// 🧬 FHIR Bundle Construction
 function generateFHIR() {
   const inspection = document.forms['inspectionForm'];
   const sdoh = document.forms['sdohForm'];
@@ -246,3 +255,17 @@ async function downloadPDF() {
     doc.save("healthy-home-assessment.pdf");
   });
 }
+
+// 🗺️ Init on page load
+document.addEventListener("DOMContentLoaded", () => {
+  loadLanguage("en");
+  document.getElementById("langSelect").addEventListener("change", (e) => {
+    loadLanguage(e.target.value);
+  });
+
+  map = L.map('map').setView([25.032969, 121.565418], 13);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
+  }).addTo(map);
+});
