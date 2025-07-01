@@ -3,29 +3,37 @@
     "title": "Healthy Homes Practitioner App",
     "intro": "This tool helps field workers assess housing-related health risks and social needs."
   },
+  "language": {
+    "label": "Language:"
+  },
   "checklist": {
     "mold": "Visible mold",
     "pests": "Pest infestation",
-    "leaks": "Water leaks or dampness",
-    "lead": "House built before 1978 (possible lead paint)",
-    "noHVAC": "Inadequate heating or cooling",
-    "noVent": "No kitchen or bathroom ventilation",
-    "tripHazards": "Trip/slip hazards (stairs, cords, flooring)",
-    "asthmaTriggers": "Known asthma triggers present (dust, smoke, etc.)"
+    "leaks": "Leaks or dampness",
+    "lead": "Lead paint risk (pre-1978 home)",
+    "noHVAC": "No heating or air conditioning",
+    "noVent": "No bathroom/kitchen ventilation",
+    "tripHazards": "Trip hazards",
+    "asthmaTriggers": "Asthma triggers (e.g., dust, pets)"
   },
   "sdoh": {
-    "housingStable": "Do you have stable housing?",
-    "utilityShutoff": "Has your electricity, water, or gas been shut off in the past year?",
-    "foodInsecurity": "Do you worry about running out of food?",
-    "languagePref": "What language do you prefer for services?"
+    "title": "Resident SDOH Questionnaire",
+    "housingStable": "Is your housing stable?",
+    "utilityShutoff": "Have your utilities been shut off in the last year?",
+    "foodInsecurity": "Do you ever worry about running out of food?",
+    "languagePref": "What language do you prefer to speak?"
   },
   "consent": {
-    "text": "I have explained the purpose of this screening to the resident and obtained their consent to record responses and share results with authorized personnel.",
-    "name": "Resident Name (optional):",
-    "signature": "Resident Signature (optional):"
+    "title": "Consent & Signature",
+    "text": "I consent to this assessment and data collection.",
+    "name": "Resident Full Name",
+    "signature": "Resident Signature"
   },
   "map": {
-    "header": "Map of Inspection Location"
+    "header": "Location Map"
+  },
+  "ejscreen": {
+    "title": "Environmental Context (EJScreen)"
   },
   "buttons": {
     "generate": "Generate FHIR Report",
@@ -34,11 +42,5 @@
   },
   "output": {
     "header": "FHIR JSON Output:"
-  },
-  "language": {
-    "label": "Language:"
-  },
-  "meta": {
-    "direction": "ltr"
   }
 }
