@@ -70,11 +70,33 @@ async function getLocation() {
 
 // 📸 Leaflet map snapshot
 function captureMapImage(callback) {
-  html2canvas(document.getElementById("map")).then(canvas => {
-    const imgData = canvas.toDataURL("image/png");
-    callback(imgData);
-  });
+  const { latitude, longitude } = window.ejScreenInfo?.coords || {
+    latitude: 25.032969,
+    longitude: 121.565418
+  };
+
+  const mapboxToken = 'pk.eyJ1IjoibXd1bHNoIiwiYSI6ImNtY2p1M2RzbDA3ZWgybXB6OHdua3l0OGUifQ.mOwY0FB4d5wvQ6vmijQF4g';
+  const zoom = 13;
+  const width = 600;
+  const height = 400;
+
+  const url = `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${longitude},${latitude},${zoom}/${width}x${height}?access_token=${mapboxToken}`;
+
+  fetch(url)
+    .then(res => res.blob())
+    .then(blob => {
+      const reader = new FileReader();
+      reader.onload = function () {
+        callback(reader.result); // base64 image data
+      };
+      reader.readAsDataURL(blob);
+    })
+    .catch(err => {
+      console.error("Mapbox Static API error:", err);
+      callback(null);
+    });
 }
+
 
 // 🧬 FHIR Bundle Construction
 function generateFHIR() {
