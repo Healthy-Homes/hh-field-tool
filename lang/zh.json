@@ -1,41 +1,37 @@
 {
-  "sdoh": {
-    "title": "🧍‍♂️ 住戶社會決定因素問卷",
-    "housingStable": "您目前的住房穩定嗎？",
-    "housingStableOptions": {
-      "": "請選擇",
-      "yes": "是",
-      "no": "否"
-    },
-    "utilityShutoff": "過去一年中，您的電、水或瓦斯有被中斷嗎？",
-    "utilityShutoffOptions": {
-      "": "請選擇",
-      "yes": "是",
-      "no": "否"
-    },
-    "foodInsecurity": "您是否曾擔心食物不足？",
-    "foodInsecurityOptions": {
-      "": "請選擇",
-      "yes": "是",
-      "no": "否"
-    },
-    "languagePref": "您偏好的服務語言是什麼？"
+  "app": {
+    "title": "健康住宅評估工具",
+    "intro": "此工具協助外勤人員評估與居住相關的健康風險與社會需求。"
+  },
+  "language": {
+    "label": "語言："
   },
   "inspection": {
     "title": "🏠 居家檢查清單",
     "mold": "可見黴菌",
     "pests": "害蟲侵擾",
     "leaks": "漏水或潮濕",
-    "lead": "鉛漆風險"
+    "lead": "鉛漆風險（1978年前）",
+    "noHVAC": "無暖氣或冷氣",
+    "noVent": "無廁所／廚房通風",
+    "tripHazards": "絆倒風險（地毯、電線）",
+    "asthmaTriggers": "氣喘誘因（灰塵、寵物等）"
+  },
+  "sdoh": {
+    "title": "🧍 住戶社會決定因素問卷",
+    "housingStable": "您目前的住房穩定嗎？",
+    "utilityShutoff": "過去一年中，您的電、水或瓦斯有被中斷嗎？",
+    "foodInsecurity": "您是否能穩定取得健康食物？",
+    "languagePref": "偏好的服務語言："
   },
   "consent": {
-    "title": "📝 同意與簽名",
-    "explained": "我已向住戶解釋此評估的目的，並取得其同意記錄回應並與授權人員分享結果。",
-    "name": "住戶姓名（可選）：",
-    "signature": "住戶簽名（可選）："
+    "title": "同意與簽名",
+    "explained": "我已向住戶解釋此評估的目的，並取得其同意。",
+    "name": "住戶姓名：",
+    "signature": "住戶簽名："
   },
   "location": {
-    "title": "📍 檢查地點地圖"
+    "title": "檢查地點地圖"
   },
   "env": {
     "title": "🌍 環境背景資訊（EJScreen）",
