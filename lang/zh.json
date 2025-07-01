@@ -1,27 +1,34 @@
 {
-  "app": { 
-    "title": "健康住宅實務應用程式",
-    "intro": "本工具協助外展工作者評估與住房相關的健康風險與社會需求。"
+  "app": {
+    "title": "健康住宅從業人員應用程式",
+    "intro": "本工具協助現場工作人員評估與住房相關的健康風險和社會需求。"
   },
   "language": {
     "label": "語言："
   },
   "inspection": {
-    "title": "居家檢查清單",
-    "mold": "可見黴菌（天花板、牆面、浴室）",
-    "pests": "蟲害或鼠患（蟑螂、老鼠等）",
-    "leaks": "屋內有滲水或潮濕區域",
-    "lead": "油漆含鉛風險（1978年前建造）",
-    "noHVAC": "無暖氣或冷氣設備",
-    "noVent": "浴室或廚房無通風設施",
-    "tripHazards": "絆倒危險（鬆散地毯、電線等）",
-    "asthmaTriggers": "可能誘發氣喘的因素（灰塵、寵物等）"
+    "title": "住房檢查清單",
+    "moldVisible": "牆壁、天花板或窗戶上可見黴菌",
+    "dampSmell": "持續的潮濕或霉味",
+    "leakingPipes": "管線或屋頂漏水",
+    "pestDroppings": "害蟲排泄物（蟑螂、老鼠等）",
+    "openEntryPoints": "未封閉的裂縫、洞口或通風口",
+    "brokenStairs": "破損的樓梯、欄杆或地板",
+    "tripHazards": "絆倒危險（鬆動地毯、電線、雜物）",
+    "noVentilation": "廚房或浴室無通風設備",
+    "hvacInadequate": "無暖氣或冷氣系統",
+    "pre1978Paint": "1978 年以前建造房屋的油漆表面",
+    "gasSmell": "室內有瓦斯或燃料氣味",
+    "noRunningWater": "無自來水或無法使用的馬桶",
+    "visibleTrash": "可見的垃圾、污水或生物危害",
+    "asthmaTriggers": "誘發氣喘的因素（灰塵、煙霧、寵物）",
+    "otherHazards": "其他可觀察到的健康／安全風險"
   },
   "sdoh": {
-    "title": "居民社會決定因素（SDOH）問卷",
-    "housingStable": "您目前的住房是否穩定？",
-    "utilityShutoff": "您在過去一年內是否有被停水或停電的情況？",
-    "foodInsecurity": "您是否有穩定獲得健康食物的途徑？",
+    "title": "居民社會決定因素問卷",
+    "housingStable": "您的住房情況穩定嗎？",
+    "utilityShutoff": "過去一年內您的水電服務有被中斷嗎？",
+    "foodInsecurity": "您是否有穩定獲得健康食物的管道？",
     "languagePref": "偏好的溝通語言："
   },
   "options": {
@@ -33,12 +40,12 @@
   },
   "consent": {
     "title": "同意與簽名",
-    "explained": "我已說明本表單內容並取得居民同意。",
+    "explained": "我已解釋本表單並取得居民同意。",
     "name": "居民姓名：",
     "signature": "簽名："
   },
   "location": {
-    "title": "檢查地點地圖"
+    "title": "檢查地圖位置"
   },
   "env": {
     "title": "環境背景（EJScreen）",
