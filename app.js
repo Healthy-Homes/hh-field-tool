@@ -4,7 +4,7 @@ let translations = {};
 let currentLang = 'en';
 let map;
 
-// Load language file based on selected value
+// Load and apply language translations
 async function loadLanguage(lang) {
   const response = await fetch(`lang/${lang}.json`);
   translations = await response.json();
@@ -14,7 +14,7 @@ async function loadLanguage(lang) {
 }
 
 function applyTranslations() {
-  // Apply text translations
+  // Static text translations
   document.querySelectorAll("[data-i18n]").forEach(el => {
     const keys = el.getAttribute("data-i18n").split(".");
     let text = translations;
@@ -22,15 +22,22 @@ function applyTranslations() {
     if (text) el.textContent = text;
   });
 
-  // Apply dropdown options
-  document.querySelectorAll("[data-i18n-options]").forEach(select => {
-    const keys = select.getAttribute("data-i18n-options").split(".");
-    let optionsData = translations;
-    for (const k of keys) optionsData = optionsData?.[k];
+  // Select dropdown translations
+  const selectFields = [
+    { id: "housingStable", optionsKey: "sdoh.options.stable" },
+    { id: "utilityShutoff", optionsKey: "sdoh.options.utility" },
+    { id: "foodInsecurity", optionsKey: "sdoh.options.food" }
+  ];
 
-    if (optionsData) {
-      select.innerHTML = ""; // clear existing
-      for (const [value, label] of Object.entries(optionsData)) {
+  selectFields.forEach(field => {
+    const select = document.getElementById(field.id);
+    const keys = field.optionsKey.split(".");
+    let options = translations;
+    for (const k of keys) options = options?.[k];
+
+    if (select && options) {
+      select.innerHTML = ""; // Clear existing
+      for (const [value, label] of Object.entries(options)) {
         const option = document.createElement("option");
         option.value = value;
         option.textContent = label;
@@ -40,11 +47,9 @@ function applyTranslations() {
   });
 }
 
-
-// 🌍 EJScreen (Mock for Now — Easily Upgradable)
+// 🌍 EJScreen Mock API
 async function getEJScreenData(lat, lon) {
-  console.warn("🧪 Using MOCK EJScreen data — replace this for real deployment.");
-
+  console.warn("🧪 Using MOCK EJScreen data");
   return {
     asthmaRisk: "High",
     leadRisk: "Moderate",
@@ -54,89 +59,65 @@ async function getEJScreenData(lat, lon) {
   };
 }
 
-// Geolocation + EJScreen Wrapper
+// 📍 Geolocation with Address and EJ Data
 async function getLocation() {
-  if (!navigator.geolocation) {
-    alert("Geolocation not supported by your browser.");
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(async (position) => {
-    const { latitude, longitude } = position.coords;
-
+  if (!navigator.geolocation) return alert("Geolocation not supported.");
+  navigator.geolocation.getCurrentPosition(async ({ coords }) => {
+    const { latitude, longitude } = coords;
     const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
     const data = await response.json();
     document.getElementById("userAddress").textContent = data.display_name || `${latitude}, ${longitude}`;
 
     const env = await getEJScreenData(latitude, longitude);
-
     document.getElementById("asthmaRisk").textContent = env.asthmaRisk;
     document.getElementById("leadRisk").textContent = env.leadRisk;
     document.getElementById("pm25").textContent = env.pm25;
 
-    const mockWarning = document.getElementById("mockWarning");
-    if (mockWarning) mockWarning.style.display = "block";
-
-    window.ejScreenInfo = {
-      coords: { latitude, longitude },
-      address: data.display_name,
-      ...env
-    };
-  }, () => {
-    alert("Unable to retrieve your location.");
-  });
+    window.ejScreenInfo = { coords, address: data.display_name, ...env };
+  }, () => alert("Unable to retrieve location."));
 }
 
-// 📸 Leaflet map snapshot
+// 🗺️ Static Map Snapshot (Mapbox)
 function captureMapImage(callback) {
   const { latitude, longitude } = window.ejScreenInfo?.coords || {
     latitude: 25.032969,
     longitude: 121.565418
   };
-
   const mapboxToken = 'pk.eyJ1IjoibXd1bHNoIiwiYSI6ImNtY2p1M2RzbDA3ZWgybXB6OHdua3l0OGUifQ.mOwY0FB4d5wvQ6vmijQF4g';
   const zoom = 13;
   const width = 600;
   const height = 400;
-
   const url = `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${longitude},${latitude},${zoom}/${width}x${height}?access_token=${mapboxToken}`;
 
   fetch(url)
     .then(res => res.blob())
     .then(blob => {
       const reader = new FileReader();
-      reader.onload = function () {
-        callback(reader.result); // base64 image data
-      };
+      reader.onload = () => callback(reader.result);
       reader.readAsDataURL(blob);
     })
     .catch(err => {
-      console.error("Mapbox Static API error:", err);
+      console.error("❌ Map snapshot failed:", err);
       callback(null);
     });
 }
 
-
-// 🧬 FHIR Bundle Construction
+// 🧬 Generate FHIR Output
 function generateFHIR() {
   const inspection = document.forms['inspectionForm'];
   const sdoh = document.forms['sdohForm'];
-
   const consentGiven = document.getElementById("consentCheckbox").checked;
   const residentName = document.getElementById("residentName").value.trim();
   const residentSignature = document.getElementById("residentSignature").value.trim();
 
-  if (!consentGiven) {
-    alert("You must obtain resident consent before generating the report.");
-    return;
-  }
+  if (!consentGiven) return alert("Resident consent is required.");
 
   const observations = [];
 
   if (inspection.mold.checked) observations.push({ code: "93041-2", description: "Visible mold", value: true });
   if (inspection.pests.checked) observations.push({ code: "93043-8", description: "Pest infestation", value: true });
-  if (inspection.leaks.checked) observations.push({ code: "99999-9", description: "Water leaks or dampness", value: true });
-  if (inspection.lead.checked) observations.push({ code: "93044-6", description: "Lead paint risk (pre-1978 home)", value: true });
+  if (inspection.leaks.checked) observations.push({ code: "99999-9", description: "Leaks or dampness", value: true });
+  if (inspection.lead.checked) observations.push({ code: "93044-6", description: "Lead paint risk", value: true });
 
   const socialNeeds = {
     housingStable: sdoh.housingStable.value,
@@ -204,6 +185,7 @@ function generateFHIR() {
   lastFHIRBundle = fhirBundle;
 }
 
+// 💾 Export Functions
 function downloadJSON() {
   if (!lastFHIRBundle) return alert("Run the assessment first.");
   const blob = new Blob([JSON.stringify(lastFHIRBundle, null, 2)], { type: "application/json" });
@@ -219,16 +201,14 @@ function downloadJSON() {
 
 async function downloadPDF() {
   if (!lastFHIRBundle) return alert("Run the assessment first.");
-
   captureMapImage((imgData) => {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
-
     doc.setFontSize(14);
     doc.text("Healthy Homes Assessment Summary", 10, 10);
     doc.setFontSize(10);
-
     let y = 20;
+
     lastFHIRBundle.entry.forEach(entry => {
       const res = entry.resource;
       if (res.resourceType === "Observation" && res.code?.coding?.[0]?.code !== "ejscreen-summary") {
@@ -251,7 +231,6 @@ async function downloadPDF() {
     if (consent) {
       const ext = consent.resource.extension;
       const get = (key) => ext.find(e => e.url === key)?.valueString || "N/A";
-
       y += 10;
       doc.text("Resident Consent:", 10, y);
       y += 6;
@@ -286,10 +265,10 @@ async function downloadPDF() {
   });
 }
 
-// 🗺️ Init on page load
+// 🗺️ Map + Language Init
 document.addEventListener("DOMContentLoaded", () => {
   loadLanguage("en");
-  document.getElementById("langSelect").addEventListener("change", (e) => {
+  document.getElementById("langSelect").addEventListener("change", e => {
     loadLanguage(e.target.value);
   });
 
@@ -299,9 +278,7 @@ document.addEventListener("DOMContentLoaded", () => {
       maxZoom: 19,
       attribution: '© OpenStreetMap'
     }).addTo(map);
-    console.log("✅ Leaflet map initialized.");
   } catch (err) {
-    console.error("❌ Error initializing Leaflet:", err);
+    console.error("❌ Map error:", err);
   }
 });
-
