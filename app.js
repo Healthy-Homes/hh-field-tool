@@ -7,7 +7,8 @@ const translations = {
 
 // Load translation files
 async function loadTranslations(lang) {
-  const response = await fetch(`${lang}.json`);
+const response = await fetch(`lang/${lang}.json`);
+
   translations[lang] = await response.json();
   applyTranslations();
   populateSelectOptions();
