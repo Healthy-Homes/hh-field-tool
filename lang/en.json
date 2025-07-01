@@ -40,3 +40,10 @@
   },
   "fhir": {
     "generate": "Generate FHIR Report",
+"options": {
+  "yesNo": {
+    "": "Select",
+    "yes": "Yes",
+    "no": "No"
+  }
+}
