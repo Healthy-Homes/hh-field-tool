@@ -22,30 +22,30 @@
     "utilityShutoff": "Have your utilities been shut off in the past year?",
     "foodInsecurity": "How often do you worry about running out of food?",
     "languagePref": "Preferred language for communication?",
-    "incomeLevel": "What is your monthly household income? (optional)",
-    "options": {
-      "housingStable": {
-        "": "Select",
-        "yes": "Yes",
-        "no": "No"
-      },
-      "utilityShutoff": {
-        "": "Select",
-        "yes": "Yes",
-        "no": "No"
-      },
-      "foodInsecurity": {
-        "": "Select",
-        "always": "Always",
-        "sometimes": "Sometimes",
-        "never": "Never"
-      },
-      "languagePref": {
-        "": "Select",
-        "english": "English",
-        "chinese": "Chinese",
-        "other": "Other"
-      }
+    "incomeLevel": "What is your monthly household income? (optional)"
+  },
+  "sdohOptions": {
+    "housingStable": {
+      "": "Select",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "utilityShutoff": {
+      "": "Select",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "foodInsecurity": {
+      "": "Select",
+      "always": "Always",
+      "sometimes": "Sometimes",
+      "never": "Never"
+    },
+    "languagePref": {
+      "": "Select",
+      "english": "English",
+      "chinese": "Chinese",
+      "other": "Other"
     }
   }
 }
