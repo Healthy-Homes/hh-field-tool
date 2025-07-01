@@ -1,11 +1,9 @@
-// ✅ Updated app.js with Photo Upload Support in FHIR Bundle
-
 console.log("✅ app.js loaded and running");
 let lastFHIRBundle = null;
 let translations = {};
 let currentLang = 'en';
 let map;
-let base64Photo = null; // Stores encoded image
+let base64Photos = []; // Array for multiple base64 images
 
 // Load and apply language translations
 async function loadLanguage(lang) {
@@ -46,21 +44,10 @@ function applyTranslations() {
   });
 
   const checklistItems = [
-    "moldVisible",
-    "dampSmell",
-    "leakingPipes",
-    "pestDroppings",
-    "openEntryPoints",
-    "brokenStairs",
-    "tripHazards",
-    "noVentilation",
-    "hvacInadequate",
-    "pre1978Paint",
-    "gasSmell",
-    "noRunningWater",
-    "visibleTrash",
-    "asthmaTriggers",
-    "otherHazards"
+    "moldVisible", "dampSmell", "leakingPipes", "pestDroppings",
+    "openEntryPoints", "brokenStairs", "tripHazards", "noVentilation",
+    "hvacInadequate", "pre1978Paint", "gasSmell", "noRunningWater",
+    "visibleTrash", "asthmaTriggers", "otherHazards"
   ];
 
   checklistItems.forEach(id => {
@@ -102,7 +89,7 @@ async function getEJScreenData(lat, lon) {
   };
 }
 
-// 📍 Geolocation with Address and EJ Data
+// 📍 Geolocation
 async function getLocation() {
   if (!navigator.geolocation) return alert("Geolocation not supported.");
   navigator.geolocation.getCurrentPosition(async ({ coords }) => {
@@ -122,19 +109,34 @@ async function getLocation() {
 
 // 🖼️ Handle photo upload
 function handlePhotoUpload(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    base64Photo = e.target.result.split(',')[1];
-    const preview = document.getElementById("photoPreview");
-    preview.src = e.target.result;
-    preview.classList.remove("hidden");
-  };
-  reader.readAsDataURL(file);
+  const files = Array.from(event.target.files || []);
+  const previewGrid = document.getElementById("photoPreview");
+  const status = document.getElementById("uploadStatus");
+  previewGrid.innerHTML = "";
+  base64Photos = [];
+
+  if (files.length === 0) {
+    status.textContent = "No photos selected.";
+    return;
+  }
+
+  files.forEach((file, index) => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = document.createElement("img");
+      img.src = e.target.result;
+      img.className = "w-full h-auto border border-gray-300 rounded";
+      previewGrid.appendChild(img);
+      base64Photos.push(e.target.result.split(",")[1]);
+      if (index === files.length - 1) {
+        status.textContent = `✅ ${files.length} photo(s) loaded.`;
+      }
+    };
+    reader.readAsDataURL(file);
+  });
 }
 
-// 🧬 Generate FHIR Output
+// 🧬 Generate FHIR
 function generateFHIR() {
   const inspection = document.forms['inspectionForm'];
   const sdoh = document.forms['sdohForm'];
@@ -191,71 +193,78 @@ function generateFHIR() {
         },
         valueBoolean: obs.value
       }
-    })).concat({
-      resource: {
-        resourceType: "QuestionnaireResponse",
-        status: "completed",
-        item: Object.keys(socialNeeds).map(key => ({
-          linkId: key,
-          text: key,
-          answer: [{ valueString: socialNeeds[key] }]
-        }))
-      }
-    }).concat({
-      resource: {
-        resourceType: "Basic",
-        id: "consent-info",
-        code: {
-          coding: [{ system: "http://hl7.org/fhir/basic-resource-type", code: "consent-info", display: "Resident Consent Info" }]
-        },
-        extension: [
-          { url: "residentName", valueString: residentName || "N/A" },
-          { url: "residentSignature", valueString: residentSignature || "N/A" },
-          { url: "consentGiven", valueBoolean: true }
-        ]
-      }
-    }).concat({
-      resource: {
-        resourceType: "Observation",
-        status: "final",
-        code: { coding: [{ system: "https://example.org", code: "ejscreen-summary", display: "Environmental Context" }] },
-        component: [
-          { code: { text: "Asthma Risk" }, valueString: ej.asthmaRisk || "N/A" },
-          { code: { text: "Lead Risk" }, valueString: ej.leadRisk || "N/A" },
-          { code: { text: "PM2.5" }, valueString: ej.pm25 || "N/A" },
-          { code: { text: "Address" }, valueString: ej.address || "N/A" }
-        ]
-      }
-    })
+    }))
   };
 
-  if (base64Photo) {
+  fhirBundle.entry.push({
+    resource: {
+      resourceType: "QuestionnaireResponse",
+      status: "completed",
+      item: Object.keys(socialNeeds).map(key => ({
+        linkId: key,
+        text: key,
+        answer: [{ valueString: socialNeeds[key] }]
+      }))
+    }
+  });
+
+  fhirBundle.entry.push({
+    resource: {
+      resourceType: "Basic",
+      id: "consent-info",
+      code: {
+        coding: [{ system: "http://hl7.org/fhir/basic-resource-type", code: "consent-info", display: "Resident Consent Info" }]
+      },
+      extension: [
+        { url: "residentName", valueString: residentName || "N/A" },
+        { url: "residentSignature", valueString: residentSignature || "N/A" },
+        { url: "consentGiven", valueBoolean: true }
+      ]
+    }
+  });
+
+  fhirBundle.entry.push({
+    resource: {
+      resourceType: "Observation",
+      status: "final",
+      code: {
+        coding: [{ system: "https://example.org", code: "ejscreen-summary", display: "Environmental Context" }]
+      },
+      component: [
+        { code: { text: "Asthma Risk" }, valueString: ej.asthmaRisk || "N/A" },
+        { code: { text: "Lead Risk" }, valueString: ej.leadRisk || "N/A" },
+        { code: { text: "PM2.5" }, valueString: ej.pm25 || "N/A" },
+        { code: { text: "Address" }, valueString: ej.address || "N/A" }
+      ]
+    }
+  });
+
+  // Add uploaded photos
+  base64Photos.forEach(photo => {
     fhirBundle.entry.push({
       resource: {
         resourceType: "Media",
         type: "photo",
         content: {
           contentType: "image/png",
-          data: base64Photo
-        }  
+          data: photo
+        }
       }
     });
-  }
+  });
 
   document.getElementById("output").textContent = JSON.stringify(fhirBundle, null, 2);
   lastFHIRBundle = fhirBundle;
 }
 
 // Init
-
 document.addEventListener("DOMContentLoaded", () => {
   loadLanguage("en");
   document.getElementById("langSelect").addEventListener("change", e => {
     loadLanguage(e.target.value);
   });
 
-const photoInput = document.getElementById("photoUpload");
-
+  const photoInput = document.getElementById("photoInput");
   if (photoInput) {
     photoInput.addEventListener("change", handlePhotoUpload);
   }
@@ -270,6 +279,8 @@ const photoInput = document.getElementById("photoUpload");
     console.error("❌ Map error:", err);
   }
 });
+
+// 📦 Download JSON
 function downloadJSON() {
   if (!lastFHIRBundle) return alert("Generate the FHIR report first.");
   const blob = new Blob([JSON.stringify(lastFHIRBundle, null, 2)], { type: "application/json" });
@@ -281,6 +292,7 @@ function downloadJSON() {
   URL.revokeObjectURL(url);
 }
 
+// 🧾 Download PDF
 function downloadPDF() {
   if (!lastFHIRBundle) return alert("Generate the FHIR report first.");
   const { jsPDF } = window.jspdf;
