@@ -11,7 +11,6 @@
 </head>
 <body class="bg-gray-50 text-gray-800">
   <div class="max-w-3xl mx-auto px-4 py-6 space-y-8">
-
     <header class="space-y-2">
       <h1 class="text-2xl font-bold text-green-700" data-i18n="app.title">Healthy Homes Practitioner App</h1>
       <p class="text-sm text-gray-600" data-i18n="app.intro">
@@ -32,13 +31,13 @@
     <form id="inspectionForm" class="space-y-4">
       <h2 class="text-lg font-semibold text-green-700" data-i18n="inspection.title">Home Inspection Checklist</h2>
       <div class="grid grid-cols-1 gap-3">
-        <label class="flex items-center space-x-2"><input type="checkbox" id="mold" /><span data-i18n="inspection.mold">Visible mold</span></label>
-        <label class="flex items-center space-x-2"><input type="checkbox" id="leaks" /><span data-i18n="inspection.leaks">Water damage or leaks</span></label>
-        <label class="flex items-center space-x-2"><input type="checkbox" id="ventilation" /><span data-i18n="inspection.ventilation">Poor ventilation</span></label>
-        <label class="flex items-center space-x-2"><input type="checkbox" id="pests" /><span data-i18n="inspection.pests">Signs of pests</span></label>
-        <label class="flex items-center space-x-2"><input type="checkbox" id="electrical" /><span data-i18n="inspection.electrical">Unsafe electrical systems</span></label>
-        <label class="flex items-center space-x-2"><input type="checkbox" id="tripHazards" /><span data-i18n="inspection.tripHazards">Trip hazards</span></label>
-        <label class="flex items-center space-x-2"><input type="checkbox" id="otherHazards" /><span data-i18n="inspection.otherHazards">Other risks</span></label>
+        <label class="flex items-center space-x-2" for="moldVisible"><input type="checkbox" id="moldVisible" /><span data-i18n="inspection.moldVisible">Visible mold</span></label>
+        <label class="flex items-center space-x-2" for="leakingPipes"><input type="checkbox" id="leakingPipes" /><span data-i18n="inspection.leakingPipes">Water damage or leaks</span></label>
+        <label class="flex items-center space-x-2" for="noVentilation"><input type="checkbox" id="noVentilation" /><span data-i18n="inspection.noVentilation">Poor ventilation</span></label>
+        <label class="flex items-center space-x-2" for="pestDroppings"><input type="checkbox" id="pestDroppings" /><span data-i18n="inspection.pestDroppings">Signs of pests</span></label>
+        <label class="flex items-center space-x-2" for="electrical"><input type="checkbox" id="electrical" /><span data-i18n="inspection.electrical">Unsafe electrical systems</span></label>
+        <label class="flex items-center space-x-2" for="tripHazards"><input type="checkbox" id="tripHazards" /><span data-i18n="inspection.tripHazards">Trip hazards</span></label>
+        <label class="flex items-center space-x-2" for="otherHazards"><input type="checkbox" id="otherHazards" /><span data-i18n="inspection.otherHazards">Other risks</span></label>
       </div>
     </form>
 
@@ -86,7 +85,7 @@
     </section>
 
     <section class="mb-4">
-      <label for="photoUpload" class="block text-sm font-medium text-gray-700">Upload Photos (optional)</label>
+      <label for="photoUpload" class="block text-sm font-medium text-gray-700" data-i18n="photo.label">Upload Photos (optional)</label>
       <input type="file" id="photoUpload" name="photos" accept="image/*" multiple
         class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
         file:rounded-full file:border-0 file:text-sm file:font-semibold
@@ -104,9 +103,7 @@
         <button onclick="downloadPDF()" type="button" class="px-4 py-2 bg-gray-800 text-white rounded shadow hover:bg-gray-900" data-i18n="fhir.downloadPdf">Download PDF</button>
       </div>
     </section>
-
   </div>
-
   <script src="app.js"></script>
 </body>
 </html>
