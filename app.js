@@ -1,3 +1,4 @@
+// ✅ Full app.js (corrected, ready to paste)
 console.log("✅ app.js loaded and running");
 let lastFHIRBundle = null;
 let translations = {};
@@ -22,7 +23,7 @@ function applyTranslations() {
     if (text) el.textContent = text;
   });
 
-  // Select dropdown translations
+  // Dropdown translations — including "Select", "Yes", "No"
   const selectFields = [
     { id: "housingStable", optionsKey: "sdoh.options.stable" },
     { id: "utilityShutoff", optionsKey: "sdoh.options.utility" },
@@ -36,12 +37,23 @@ function applyTranslations() {
     for (const k of keys) options = options?.[k];
 
     if (select && options) {
-      select.innerHTML = ""; // Clear existing
+      const selectedValue = select.value;
+      select.innerHTML = "";
+
+      const defaultOption = document.createElement("option");
+      defaultOption.value = "";
+      defaultOption.textContent = translations.sdoh.options.select || "Select";
+      select.appendChild(defaultOption);
+
       for (const [value, label] of Object.entries(options)) {
         const option = document.createElement("option");
         option.value = value;
         option.textContent = label;
         select.appendChild(option);
+      }
+
+      if (select.querySelector(`option[value="${selectedValue}"]`)) {
+        select.value = selectedValue;
       }
     }
   });
