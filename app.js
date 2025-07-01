@@ -1,19 +1,18 @@
 let currentLang = 'en';
 
 const translations = {
-  en: {}, // loaded dynamically
+  en: {},
   zh: {}
 };
 
 // Load translation files
 async function loadTranslations(lang) {
-const response = await fetch(`lang/${lang}.json`);
-
+  const response = await fetch(`lang/${lang}.json`);
   translations[lang] = await response.json();
   applyTranslations();
-  populateSelectOptions();
 }
 
+// Apply translation text to elements
 function applyTranslations() {
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const keys = el.getAttribute('data-i18n').split('.');
@@ -23,6 +22,7 @@ function applyTranslations() {
   });
 }
 
+// Populate dropdowns from sdohOptions
 function populateSelectOptions() {
   document.querySelectorAll('[data-i18n-options]').forEach(select => {
     const key = select.getAttribute('data-i18n-options');
@@ -38,19 +38,22 @@ function populateSelectOptions() {
   });
 }
 
-// Initial translation load
-document.getElementById('langSelect').addEventListener('change', e => {
+// Handle language change
+document.getElementById('langSelect').addEventListener('change', async e => {
   currentLang = e.target.value;
-  loadTranslations(currentLang);
+  await loadTranslations(currentLang);
+  populateSelectOptions();
 });
-loadTranslations(currentLang);
 
-// Auto-load the map and dummy data banner
-window.addEventListener('DOMContentLoaded', () => {
+// Wait for DOM, then initialize
+window.addEventListener('DOMContentLoaded', async () => {
+  await loadTranslations(currentLang);
+  populateSelectOptions();
   getLocation();
   document.getElementById('dummyBanner').style.display = 'block';
 });
 
+// Get and show location on map
 function getLocation() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(showPosition, () => {
@@ -73,7 +76,7 @@ function showPosition(position) {
   document.getElementById("userAddress").textContent = `Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`;
 }
 
-// Handle photo uploads
+// Photo uploads
 const uploadedImages = [];
 
 document.getElementById('photoUpload').addEventListener('change', function (e) {
@@ -98,7 +101,7 @@ document.getElementById('photoUpload').addEventListener('change', function (e) {
   uploadStatus.textContent = `${e.target.files.length} image(s) uploaded.`;
 });
 
-// Generate FHIR Report
+// Generate FHIR Observation
 function generateFHIR() {
   const formData = {
     housingStable: document.getElementById('housingStable').value,
@@ -130,7 +133,7 @@ function generateFHIR() {
   document.getElementById('output').textContent = JSON.stringify(obs, null, 2);
 }
 
-// Download JSON
+// JSON export
 function downloadJSON() {
   const blob = new Blob([document.getElementById('output').textContent], { type: 'application/json' });
   const a = document.createElement('a');
@@ -139,7 +142,7 @@ function downloadJSON() {
   a.click();
 }
 
-// Download PDF
+// PDF export
 function downloadPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
