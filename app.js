@@ -14,13 +14,32 @@ async function loadLanguage(lang) {
 }
 
 function applyTranslations() {
+  // Apply text translations
   document.querySelectorAll("[data-i18n]").forEach(el => {
     const keys = el.getAttribute("data-i18n").split(".");
     let text = translations;
     for (const k of keys) text = text?.[k];
     if (text) el.textContent = text;
   });
+
+  // Apply dropdown options
+  document.querySelectorAll("[data-i18n-options]").forEach(select => {
+    const keys = select.getAttribute("data-i18n-options").split(".");
+    let optionsData = translations;
+    for (const k of keys) optionsData = optionsData?.[k];
+
+    if (optionsData) {
+      select.innerHTML = ""; // clear existing
+      for (const [value, label] of Object.entries(optionsData)) {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = label;
+        select.appendChild(option);
+      }
+    }
+  });
 }
+
 
 // 🌍 EJScreen (Mock for Now — Easily Upgradable)
 async function getEJScreenData(lat, lon) {
