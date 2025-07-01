@@ -18,20 +18,14 @@
   },
   "sdoh": {
     "title": "Resident SDOH Questionnaire",
-    "housingStability": "Is your housing stable?",
-    "disabilityStatus": "Do you or anyone in your household have a disability?",
+    "housingStable": "Is your housing stable?",
     "utilityShutoff": "Have your utilities been shut off in the past year?",
     "foodInsecurity": "How often do you worry about running out of food?",
     "languagePref": "Preferred language for communication?",
-    "incomeLevel": "What is your monthly household income? (optional)"
+    "incomeLevel": "What is your monthly household income?"
   },
   "sdohOptions": {
-    "housingStability": {
-      "": "Select",
-      "yes": "Yes",
-      "no": "No"
-    },
-    "disabilityStatus": {
+    "housingStable": {
       "": "Select",
       "yes": "Yes",
       "no": "No"
@@ -43,9 +37,8 @@
     },
     "foodInsecurity": {
       "": "Select",
-      "often": "Often",
+      "always": "Always",
       "sometimes": "Sometimes",
-      "rarely": "Rarely",
       "never": "Never"
     },
     "languagePref": {
@@ -57,11 +50,27 @@
   },
   "consent": {
     "title": "Consent & Signature",
-    "explained": "I have explained and received consent.",
-    "name": "Resident Name:",
-    "signature": "Signature:"
+    "explained": "I consent to a home inspection to assess health and safety conditions, understand this is voluntary, and agree that photos may be taken for documentation purposes.",
+    "name": "Resident Name (serves as consent confirmation):"
   },
   "location": {
     "title": "Inspection Map Location"
   },
-  "en
+  "env": {
+    "title": "Environmental Context",
+    "useLocation": "\ud83d\udccd Use My Location",
+    "address": "Address:",
+    "asthmaRisk": "Asthma Risk:",
+    "leadRisk": "Lead Risk:",
+    "pm25": "PM2.5:"
+  },
+  "photo": {
+    "label": "Upload Photos (optional)"
+  },
+  "fhir": {
+    "generate": "Generate FHIR Report",
+    "outputTitle": "FHIR JSON Output",
+    "downloadJson": "Download JSON",
+    "downloadPdf": "Download PDF"
+  }
+}
