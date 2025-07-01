@@ -22,16 +22,31 @@
     </select>
 
     <section>
-      <h2>🏠 <span data-i18n="checklist.title">Home Inspection Checklist</span></h2>
+      <h2 data-i18n="inspection.title">🏠 Home Inspection Checklist</h2>
       <form id="inspectionForm">
-        <label><input type="checkbox" name="mold" /> <span data-i18n="checklist.mold">Visible mold</span></label><br />
-        <label><input type="checkbox" name="pests" /> <span data-i18n="checklist.pests">Pest infestation</span></label><br />
-        <label><input type="checkbox" name="leaks" /> <span data-i18n="checklist.leaks">Leaks or dampness</span></label><br />
-        <label><input type="checkbox" name="lead" /> <span data-i18n="checklist.lead">Lead paint risk (pre-1978)</span></label><br />
-        <label><input type="checkbox" name="noHVAC" /> <span data-i18n="checklist.noHVAC">No heating or cooling</span></label><br />
-        <label><input type="checkbox" name="noVent" /> <span data-i18n="checklist.noVent">No bathroom/kitchen ventilation</span></label><br />
-        <label><input type="checkbox" name="tripHazards" /> <span data-i18n="checklist.tripHazards">Trip hazards (loose rugs, cords)</span></label><br />
-        <label><input type="checkbox" name="asthmaTriggers" /> <span data-i18n="checklist.asthmaTriggers">Asthma triggers (dust, pets, etc.)</span></label><br />
+        <label for="mold" data-i18n="inspection.mold">Visible mold</label>
+        <input type="checkbox" name="mold" id="mold"><br />
+
+        <label for="pests" data-i18n="inspection.pests">Pest infestation</label>
+        <input type="checkbox" name="pests" id="pests"><br />
+
+        <label for="leaks" data-i18n="inspection.leaks">Leaks or dampness</label>
+        <input type="checkbox" name="leaks" id="leaks"><br />
+
+        <label for="lead" data-i18n="inspection.lead">Lead paint risk (pre-1978)</label>
+        <input type="checkbox" name="lead" id="lead"><br />
+
+        <label for="noHVAC" data-i18n="inspection.noHVAC">No heating or cooling</label>
+        <input type="checkbox" name="noHVAC" id="noHVAC"><br />
+
+        <label for="noVent" data-i18n="inspection.noVent">No bathroom/kitchen ventilation</label>
+        <input type="checkbox" name="noVent" id="noVent"><br />
+
+        <label for="tripHazards" data-i18n="inspection.tripHazards">Trip hazards (loose rugs, cords)</label>
+        <input type="checkbox" name="tripHazards" id="tripHazards"><br />
+
+        <label for="asthmaTriggers" data-i18n="inspection.asthmaTriggers">Asthma triggers (dust, pets, etc.)</label>
+        <input type="checkbox" name="asthmaTriggers" id="asthmaTriggers"><br />
       </form>
     </section>
 
