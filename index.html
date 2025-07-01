@@ -8,6 +8,9 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- ✅ Add i18next (REQUIRED for dropdown translations) -->
+  <script src="https://unpkg.com/i18next@21.10.0/dist/umd/i18next.min.js"></script>
 </head>
 <body class="bg-gray-50 text-gray-800">
   <div class="max-w-3xl mx-auto px-4 py-6 space-y-8">
@@ -105,6 +108,8 @@
       </div>
     </section>
   </div>
+
+  <!-- ✅ App logic (runs after i18next is loaded) -->
   <script src="app.js"></script>
 </body>
 </html>
