@@ -7,7 +7,7 @@
     "label": "Language:"
   },
   "inspection": {
-    "title": "🏠 Home Inspection Checklist",
+    "title": "Home Inspection Checklist",
     "mold": "Visible mold",
     "pests": "Pest infestation",
     "leaks": "Leaks or dampness",
@@ -18,11 +18,18 @@
     "asthmaTriggers": "Asthma triggers (dust, pets, etc.)"
   },
   "sdoh": {
-    "title": "🧍 Resident SDOH Questionnaire",
+    "title": "Resident SDOH Questionnaire",
     "housingStable": "Is your housing stable?",
     "utilityShutoff": "Has your utility service been shut off in the last year?",
     "foodInsecurity": "Do you have consistent access to healthy food?",
     "languagePref": "Preferred language for communication:"
+  },
+  "options": {
+    "yesNo": {
+      "": "Select",
+      "yes": "Yes",
+      "no": "No"
+    }
   },
   "consent": {
     "title": "Consent & Signature",
@@ -34,7 +41,7 @@
     "title": "Inspection Map Location"
   },
   "env": {
-    "title": "🌍 Environmental Context (EJScreen)",
+    "title": "Environmental Context (EJScreen)",
     "useLocation": "📍 Use My Location",
     "address": "Address:",
     "asthmaRisk": "Asthma Risk:",
@@ -46,12 +53,5 @@
     "outputTitle": "FHIR JSON Output:",
     "downloadJson": "Download JSON",
     "downloadPdf": "Download PDF"
-  },
-  "options": {
-    "yesNo": {
-      "": "Select",
-      "yes": "Yes",
-      "no": "No"
-    }
   }
 }
