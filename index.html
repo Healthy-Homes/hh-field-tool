@@ -1,178 +1,240 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Healthy Homes Assessment Tool</title>
-  <link rel="stylesheet" href="style.css">
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script defer src="app.js"></script>
-</head>
-<body class="bg-gray-50 text-gray-900">
-  <main class="max-w-4xl mx-auto px-4 py-8 space-y-10">
-    <header class="space-y-2">
-      <h1 class="text-3xl font-bold" data-i18n="app.title">Healthy Homes Practitioner App</h1>
-      <p class="text-lg" data-i18n="app.intro">This tool helps field workers assess housing-related health risks and social needs.</p>
-      <label for="langSelect" class="block mt-4 font-semibold">🌐 <span data-i18n="language.label">Language:</span></label>
-      <select id="langSelect" class="mt-1 border p-2 rounded">
-        <option value="en">English</option>
-        <option value="zh">中文</option>
-      </select>
-    </header>
+// ✅ Updated app.js for Healthy Homes App (with Tailwind styling polish)
 
-   <section class="space-y-4">
-  <h2 class="text-2xl font-semibold" data-i18n="inspection.title">🏠 Home Inspection Checklist</h2>
-  <form id="inspectionForm" class="grid grid-cols-1 gap-3">
+console.log("✅ app.js loaded and running");
+let lastFHIRBundle = null;
+let translations = {};
+let currentLang = 'en';
+let map;
 
-    <!-- Moisture & Mold -->
-    <label class="flex items-center gap-3">
-      <input type="checkbox" name="moldVisible" class="w-5 h-5">
-      <span data-i18n="inspection.moldVisible">Visible mold on walls, ceilings, or windows</span>
-    </label>
-    <label class="flex items-center gap-3">
-      <input type="checkbox" name="dampSmell" class="w-5 h-5">
-      <span data-i18n="inspection.dampSmell">Persistent damp or musty odors</span>
-    </label>
-    <label class="flex items-center gap-3">
-      <input type="checkbox" name="leakingPipes" class="w-5 h-5">
-      <span data-i18n="inspection.leakingPipes">Leaks from plumbing or roof</span>
-    </label>
+// Load and apply language translations
+async function loadLanguage(lang) {
+  const response = await fetch(`lang/${lang}.json`);
+  translations = await response.json();
+  currentLang = lang;
+  applyTranslations();
+  document.documentElement.setAttribute("lang", lang);
+}
 
-    <!-- Pests -->
-    <label class="flex items-center gap-3">
-      <input type="checkbox" name="pestDroppings" class="w-5 h-5">
-      <span data-i18n="inspection.pestDroppings">Pest droppings (cockroaches, rodents)</span>
-    </label>
-    <label class="flex items-center gap-3">
-      <input type="checkbox" name="openEntryPoints" class="w-5 h-5">
-      <span data-i18n="inspection.openEntryPoints">Unsealed cracks, holes, or vents</span>
-    </label>
+function applyTranslations() {
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const keys = el.getAttribute("data-i18n").split(".");
+    let text = translations;
+    for (const k of keys) text = text?.[k];
+    if (text) el.textContent = text;
+  });
 
-    <!-- Safety & Structural -->
-    <label class="flex items-center gap-3">
-      <input type="checkbox" name="brokenStairs" class="w-5 h-5">
-      <span data-i18n="inspection.brokenStairs">Broken steps, railings, or flooring</span>
-    </label>
-    <label class="flex items-center gap-3">
-      <input type="checkbox" name="tripHazards" class="w-5 h-5">
-      <span data-i18n="inspection.tripHazards">Trip hazards (loose rugs, cords, clutter)</span>
-    </label>
+  document.querySelectorAll("select[data-i18n-options]").forEach(select => {
+    const optionsKey = select.getAttribute("data-i18n-options");
+    const keys = optionsKey.split(".");
+    let optionSet = translations;
+    for (const k of keys) optionSet = optionSet?.[k];
 
-    <!-- Ventilation & Air -->
-    <label class="flex items-center gap-3">
-      <input type="checkbox" name="noVentilation" class="w-5 h-5">
-      <span data-i18n="inspection.noVentilation">No ventilation in kitchen/bathroom</span>
-    </label>
-    <label class="flex items-center gap-3">
-      <input type="checkbox" name="hvacInadequate" class="w-5 h-5">
-      <span data-i18n="inspection.hvacInadequate">No heating or cooling system</span>
-    </label>
+    if (optionSet) {
+      const currentValue = select.value;
+      select.innerHTML = "";
+      for (const [value, label] of Object.entries(optionSet)) {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = label;
+        select.appendChild(option);
+      }
+      if (select.querySelector(`option[value="${currentValue}"]`)) {
+        select.value = currentValue;
+      }
+    }
+  });
 
-    <!-- Lead & Toxins -->
-    <label class="flex items-center gap-3">
-      <input type="checkbox" name="pre1978Paint" class="w-5 h-5">
-      <span data-i18n="inspection.pre1978Paint">Painted surfaces in homes built before 1978</span>
-    </label>
-    <label class="flex items-center gap-3">
-      <input type="checkbox" name="gasSmell" class="w-5 h-5">
-      <span data-i18n="inspection.gasSmell">Smell of gas or fuel inside home</span>
-    </label>
+  const checklistItems = [
+    "moldVisible",
+    "dampSmell",
+    "leakingPipes",
+    "pestDroppings",
+    "openEntryPoints",
+    "brokenStairs",
+    "tripHazards",
+    "noVentilation",
+    "hvacInadequate",
+    "pre1978Paint",
+    "gasSmell",
+    "noRunningWater",
+    "visibleTrash",
+    "asthmaTriggers",
+    "otherHazards"
+  ];
 
-    <!-- Sanitation -->
-    <label class="flex items-center gap-3">
-      <input type="checkbox" name="noRunningWater" class="w-5 h-5">
-      <span data-i18n="inspection.noRunningWater">No running water or working toilet</span>
-    </label>
-    <label class="flex items-center gap-3">
-      <input type="checkbox" name="visibleTrash" class="w-5 h-5">
-      <span data-i18n="inspection.visibleTrash">Visible trash, sewage, or biohazards</span>
-    </label>
+  checklistItems.forEach(id => {
+    const label = document.querySelector(`label[for='${id}'] span[data-i18n]`);
+    const key = `inspection.${id}`;
+    const keys = key.split(".");
+    let text = translations;
+    for (const k of keys) text = text?.[k];
+    if (label && text) label.textContent = text;
+  });
 
-    <!-- Other -->
-    <label class="flex items-center gap-3">
-      <input type="checkbox" name="asthmaTriggers" class="w-5 h-5">
-      <span data-i18n="inspection.asthmaTriggers">Asthma triggers (dust, smoke, pets)</span>
-    </label>
-    <label class="flex items-center gap-3">
-      <input type="checkbox" name="otherHazards" class="w-5 h-5">
-      <span data-i18n="inspection.otherHazards">Other observed health/safety risks</span>
-    </label>
-  </form>
-</section>
+  const consentLabels = {
+    name: "consent.name",
+    signature: "consent.signature"
+  };
 
+  for (const [id, keyPath] of Object.entries(consentLabels)) {
+    const label = document.querySelector(`label[for='${id}']`);
+    const keys = keyPath.split(".");
+    let text = translations;
+    for (const k of keys) text = text?.[k];
+    if (label && text) label.textContent = text;
+  }
+}
 
-    <section class="space-y-4">
-      <h2 class="text-2xl font-semibold" data-i18n="sdoh.title">🧍 Resident SDOH Questionnaire</h2>
-      <form id="sdohForm" class="space-y-4">
-        <div>
-          <label for="housingStable" class="block font-medium" data-i18n="sdoh.housingStable">Is your housing stable?</label>
-          <select id="housingStable" name="housingStable" class="mt-1 border p-2 rounded w-full" data-i18n-options="options.yesNo">
-            <option value="">Select</option>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
-          </select>
-        </div>
-        <div>
-          <label for="utilityShutoff" class="block font-medium" data-i18n="sdoh.utilityShutoff">Has your utility service been shut off in the last year?</label>
-          <select id="utilityShutoff" name="utilityShutoff" class="mt-1 border p-2 rounded w-full" data-i18n-options="options.yesNo">
-            <option value="">Select</option>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
-          </select>
-        </div>
-        <div>
-          <label for="foodInsecurity" class="block font-medium" data-i18n="sdoh.foodInsecurity">Do you have consistent access to healthy food?</label>
-          <select id="foodInsecurity" name="foodInsecurity" class="mt-1 border p-2 rounded w-full" data-i18n-options="options.yesNo">
-            <option value="">Select</option>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
-          </select>
-        </div>
-        <div>
-          <label for="languagePref" class="block font-medium" data-i18n="sdoh.languagePref">Preferred language for communication:</label>
-          <input type="text" id="languagePref" name="languagePref" class="mt-1 border p-2 rounded w-full">
-        </div>
-      </form>
-    </section>
+// 🌍 EJScreen Mock API
+async function getEJScreenData(lat, lon) {
+  const banner = document.createElement("div");
+  banner.textContent = "🧪 Using MOCK EJScreen data";
+  banner.className = "bg-yellow-100 border border-yellow-400 text-yellow-800 px-4 py-2 rounded my-4";
+  document.querySelector("#map").insertAdjacentElement("beforebegin", banner);
+  console.warn("🧪 Using MOCK EJScreen data");
+  return {
+    asthmaRisk: "High",
+    leadRisk: "Moderate",
+    pm25: "21.3 μg/m³",
+    proximityToTraffic: "Low",
+    dieselPM: "7.8 μg/m³"
+  };
+}
 
-    <section class="space-y-2">
-      <h2 class="text-2xl font-semibold">📝 <span data-i18n="consent.title">Consent & Signature</span></h2>
-      <label class="flex items-center gap-3">
-        <input type="checkbox" id="consentCheckbox" class="w-5 h-5">
-        <span data-i18n="consent.explained">I have explained this form and received consent.</span>
-      </label>
-      <label for="residentName" class="block font-medium mt-2" data-i18n="consent.name">Resident Name:</label>
-      <input type="text" id="residentName" class="mt-1 border p-2 rounded w-full">
-      <label for="residentSignature" class="block font-medium mt-2" data-i18n="consent.signature">Signature:</label>
-      <input type="text" id="residentSignature" class="mt-1 border p-2 rounded w-full">
-    </section>
+// 📍 Geolocation with Address and EJ Data
+async function getLocation() {
+  if (!navigator.geolocation) return alert("Geolocation not supported.");
+  navigator.geolocation.getCurrentPosition(async ({ coords }) => {
+    const { latitude, longitude } = coords;
+    const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
+    const data = await response.json();
+    document.getElementById("userAddress").textContent = data.display_name || `${latitude}, ${longitude}`;
 
-    <section class="space-y-2">
-      <h2 class="text-2xl font-semibold">📍 <span data-i18n="location.title">Inspection Map Location</span></h2>
-      <div id="map" class="rounded border" style="height: 300px;"></div>
-    </section>
+    const env = await getEJScreenData(latitude, longitude);
+    document.getElementById("asthmaRisk").textContent = env.asthmaRisk;
+    document.getElementById("leadRisk").textContent = env.leadRisk;
+    document.getElementById("pm25").textContent = env.pm25;
 
-    <section class="space-y-2">
-      <h2 class="text-2xl font-semibold" data-i18n="env.title">🌍 Environmental Context (EJScreen)</h2>
-      <button onclick="getLocation()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" data-i18n="env.useLocation">📍 Use My Location</button>
-      <p><strong data-i18n="env.address">Address:</strong> <span id="userAddress">--</span></p>
-      <p><strong data-i18n="env.asthmaRisk">Asthma Risk:</strong> <span id="asthmaRisk">--</span></p>
-      <p><strong data-i18n="env.leadRisk">Lead Exposure Risk:</strong> <span id="leadRisk">--</span></p>
-      <p><strong data-i18n="env.pm25">Air Quality Index (PM2.5):</strong> <span id="pm25">--</span></p>
-    </section>
+    window.ejScreenInfo = { coords, address: data.display_name, ...env };
+  }, () => alert("Unable to retrieve location."));
+}
 
-    <section class="space-y-2">
-      <button onclick="generateFHIR()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" data-i18n="fhir.generate">Generate FHIR Report</button>
-      <h3 class="text-xl font-semibold" data-i18n="fhir.outputTitle">FHIR JSON Output:</h3>
-      <pre id="output" class="bg-gray-100 p-3 rounded overflow-x-auto"></pre>
-      <div class="flex gap-4">
-        <button onclick="downloadJSON()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" data-i18n="fhir.downloadJson">Download JSON</button>
-        <button onclick="downloadPDF()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" data-i18n="fhir.downloadPdf">Download PDF</button>
-      </div>
-    </section>
-  </main>
-</body>
-</html>
+// 🧬 Generate FHIR Output
+function generateFHIR() {
+  const inspection = document.forms['inspectionForm'];
+  const sdoh = document.forms['sdohForm'];
+  const consentGiven = document.getElementById("consentCheckbox").checked;
+  const residentName = document.getElementById("residentName").value.trim();
+  const residentSignature = document.getElementById("residentSignature").value.trim();
+
+  if (!consentGiven) return alert("Resident consent is required.");
+
+  const fieldMap = {
+    moldVisible: "Visible mold",
+    dampSmell: "Musty odors",
+    leakingPipes: "Plumbing/roof leaks",
+    pestDroppings: "Pest droppings",
+    openEntryPoints: "Unsealed cracks",
+    brokenStairs: "Broken steps",
+    tripHazards: "Trip hazards",
+    noVentilation: "No ventilation",
+    hvacInadequate: "No HVAC",
+    pre1978Paint: "Lead paint risk",
+    gasSmell: "Smell of gas",
+    noRunningWater: "No water/toilet",
+    visibleTrash: "Trash/sewage",
+    asthmaTriggers: "Asthma triggers",
+    otherHazards: "Other risks"
+  };
+
+  const observations = Object.keys(fieldMap).filter(name => {
+    return inspection.elements[name]?.checked;
+  }).map(name => ({
+    code: "99999-0",
+    description: fieldMap[name],
+    value: true
+  }));
+
+  const socialNeeds = {
+    housingStable: sdoh.housingStable.value,
+    utilityShutoff: sdoh.utilityShutoff.value,
+    foodInsecurity: sdoh.foodInsecurity.value,
+    languagePref: sdoh.languagePref.value
+  };
+
+  const ej = window.ejScreenInfo || {};
+
+  const fhirBundle = {
+    resourceType: "Bundle",
+    type: "collection",
+    entry: observations.map(obs => ({
+      resource: {
+        resourceType: "Observation",
+        status: "final",
+        code: {
+          coding: [{ system: "http://loinc.org", code: obs.code, display: obs.description }]
+        },
+        valueBoolean: obs.value
+      }
+    })).concat({
+      resource: {
+        resourceType: "QuestionnaireResponse",
+        status: "completed",
+        item: Object.keys(socialNeeds).map(key => ({
+          linkId: key,
+          text: key,
+          answer: [{ valueString: socialNeeds[key] }]
+        }))
+      }
+    }).concat({
+      resource: {
+        resourceType: "Basic",
+        id: "consent-info",
+        code: {
+          coding: [{ system: "http://hl7.org/fhir/basic-resource-type", code: "consent-info", display: "Resident Consent Info" }]
+        },
+        extension: [
+          { url: "residentName", valueString: residentName || "N/A" },
+          { url: "residentSignature", valueString: residentSignature || "N/A" },
+          { url: "consentGiven", valueBoolean: true }
+        ]
+      }
+    }).concat({
+      resource: {
+        resourceType: "Observation",
+        status: "final",
+        code: { coding: [{ system: "https://example.org", code: "ejscreen-summary", display: "Environmental Context" }] },
+        component: [
+          { code: { text: "Asthma Risk" }, valueString: ej.asthmaRisk || "N/A" },
+          { code: { text: "Lead Risk" }, valueString: ej.leadRisk || "N/A" },
+          { code: { text: "PM2.5" }, valueString: ej.pm25 || "N/A" },
+          { code: { text: "Address" }, valueString: ej.address || "N/A" }
+        ]
+      }
+    })
+  };
+
+  document.getElementById("output").textContent = JSON.stringify(fhirBundle, null, 2);
+  lastFHIRBundle = fhirBundle;
+}
+
+// 💾 Export and PDF download handlers should be defined in a separate file and invoked on click events
+
+// 🌐 Init
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadLanguage("en");
+  document.getElementById("langSelect").addEventListener("change", e => {
+    loadLanguage(e.target.value);
+  });
+
+  try {
+    map = L.map('map').setView([25.032969, 121.565418], 13);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+  } catch (err) {
+    console.error("❌ Map error:", err);
+  }
+});
