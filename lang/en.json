@@ -1,44 +1,40 @@
 {
-  "sdoh": {
-    "title": "Resident SDOH Questionnaire",
-    "housingStable": "Is your housing currently stable?",
-    "housingStableOptions": {
-      "": "Select",
-      "yes": "Yes",
-      "no": "No"
-    },
-    "utilityShutoff": "In the past year, have your utilities been shut off?",
-    "utilityShutoffOptions": {
-      "": "Select",
-      "yes": "Yes",
-      "no": "No"
-    },
-    "foodInsecurity": "Do you ever worry about running out of food?",
-    "foodInsecurityOptions": {
-      "": "Select",
-      "yes": "Yes",
-      "no": "No"
-    },
-    "languagePref": "What is your preferred language?"
+  "app": {
+    "title": "Healthy Homes Practitioner App",
+    "intro": "This tool helps field workers assess housing-related health risks and social needs."
+  },
+  "language": {
+    "label": "Language:"
   },
   "inspection": {
-    "title": "Home Inspection Checklist",
+    "title": "🏠 Home Inspection Checklist",
     "mold": "Visible mold",
     "pests": "Pest infestation",
     "leaks": "Leaks or dampness",
-    "lead": "Lead paint risk"
+    "lead": "Lead paint risk (pre-1978)",
+    "noHVAC": "No heating or cooling",
+    "noVent": "No bathroom/kitchen ventilation",
+    "tripHazards": "Trip hazards (loose rugs, cords)",
+    "asthmaTriggers": "Asthma triggers (dust, pets, etc.)"
+  },
+  "sdoh": {
+    "title": "🧍 Resident SDOH Questionnaire",
+    "housingStable": "Is your housing stable?",
+    "utilityShutoff": "Has your utility service been shut off in the last year?",
+    "foodInsecurity": "Do you have consistent access to healthy food?",
+    "languagePref": "Preferred language for communication:"
   },
   "consent": {
     "title": "Consent & Signature",
-    "explained": "I have explained this assessment to the resident and received consent to record and share findings with authorized personnel.",
-    "name": "Resident Name (required):",
-    "signature": "Resident Signature (required):"
+    "explained": "I have explained this form and received consent.",
+    "name": "Resident Name:",
+    "signature": "Signature:"
   },
   "location": {
     "title": "Inspection Map Location"
   },
   "env": {
-    "title": "Environmental Context (EJScreen)",
+    "title": "🌍 Environmental Context (EJScreen)",
     "useLocation": "📍 Use My Location",
     "address": "Address:",
     "asthmaRisk": "Asthma Risk:",
