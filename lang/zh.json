@@ -45,3 +45,10 @@
     "downloadPdf": "下載 PDF"
   }
 }
+"options": {
+  "yesNo": {
+    "": "請選擇",
+    "yes": "是",
+    "no": "否"
+  }
+}
