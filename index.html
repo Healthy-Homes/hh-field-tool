@@ -24,31 +24,41 @@
 
     <section>
       <h2 data-i18n="inspection.title">🏠 Home Inspection Checklist</h2>
-      <form id="inspectionForm">
-        <label for="mold" data-i18n="inspection.mold">Visible mold</label>
-        <input type="checkbox" name="mold" id="mold"><br />
+     <form id="inspectionForm">
+  <div class="flex items-center space-x-2 mb-2">
+    <input type="checkbox" id="mold" name="mold" class="w-5 h-5 text-blue-600">
+    <label for="mold" class="text-base" data-i18n="inspection.mold">Visible mold</label>
+  </div>
+  <div class="flex items-center space-x-2 mb-2">
+    <input type="checkbox" id="pests" name="pests" class="w-5 h-5 text-blue-600">
+    <label for="pests" class="text-base" data-i18n="inspection.pests">Pest infestation</label>
+  </div>
+  <div class="flex items-center space-x-2 mb-2">
+    <input type="checkbox" id="leaks" name="leaks" class="w-5 h-5 text-blue-600">
+    <label for="leaks" class="text-base" data-i18n="inspection.leaks">Leaks or dampness</label>
+  </div>
+  <div class="flex items-center space-x-2 mb-2">
+    <input type="checkbox" id="lead" name="lead" class="w-5 h-5 text-blue-600">
+    <label for="lead" class="text-base" data-i18n="inspection.lead">Lead paint risk (pre-1978)</label>
+  </div>
+  <div class="flex items-center space-x-2 mb-2">
+    <input type="checkbox" id="noHVAC" name="noHVAC" class="w-5 h-5 text-blue-600">
+    <label for="noHVAC" class="text-base" data-i18n="inspection.noHVAC">No heating or cooling</label>
+  </div>
+  <div class="flex items-center space-x-2 mb-2">
+    <input type="checkbox" id="noVent" name="noVent" class="w-5 h-5 text-blue-600">
+    <label for="noVent" class="text-base" data-i18n="inspection.noVent">No bathroom/kitchen ventilation</label>
+  </div>
+  <div class="flex items-center space-x-2 mb-2">
+    <input type="checkbox" id="tripHazards" name="tripHazards" class="w-5 h-5 text-blue-600">
+    <label for="tripHazards" class="text-base" data-i18n="inspection.tripHazards">Trip hazards (loose rugs, cords)</label>
+  </div>
+  <div class="flex items-center space-x-2 mb-2">
+    <input type="checkbox" id="asthmaTriggers" name="asthmaTriggers" class="w-5 h-5 text-blue-600">
+    <label for="asthmaTriggers" class="text-base" data-i18n="inspection.asthmaTriggers">Asthma triggers (dust, pets, etc.)</label>
+  </div>
+</form>
 
-        <label for="pests" data-i18n="inspection.pests">Pest infestation</label>
-        <input type="checkbox" name="pests" id="pests"><br />
-
-        <label for="leaks" data-i18n="inspection.leaks">Leaks or dampness</label>
-        <input type="checkbox" name="leaks" id="leaks"><br />
-
-        <label for="lead" data-i18n="inspection.lead">Lead paint risk (pre-1978)</label>
-        <input type="checkbox" name="lead" id="lead"><br />
-
-        <label for="noHVAC" data-i18n="inspection.noHVAC">No heating or cooling</label>
-        <input type="checkbox" name="noHVAC" id="noHVAC"><br />
-
-        <label for="noVent" data-i18n="inspection.noVent">No bathroom/kitchen ventilation</label>
-        <input type="checkbox" name="noVent" id="noVent"><br />
-
-        <label for="tripHazards" data-i18n="inspection.tripHazards">Trip hazards (loose rugs, cords)</label>
-        <input type="checkbox" name="tripHazards" id="tripHazards"><br />
-
-        <label for="asthmaTriggers" data-i18n="inspection.asthmaTriggers">Asthma triggers (dust, pets, etc.)</label>
-        <input type="checkbox" name="asthmaTriggers" id="asthmaTriggers"><br />
-      </form>
     </section>
 
     <section>
