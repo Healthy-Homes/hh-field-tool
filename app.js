@@ -1,3 +1,4 @@
+console.log("✅ app.js loaded and running");
 let lastFHIRBundle = null;
 let translations = {};
 let currentLang = 'en';
@@ -247,18 +248,19 @@ async function downloadPDF() {
 // 🗺️ Init on page load
 document.addEventListener("DOMContentLoaded", () => {
   loadLanguage("en");
-
   document.getElementById("langSelect").addEventListener("change", (e) => {
     loadLanguage(e.target.value);
   });
 
-  // Safely defer map init
-  setTimeout(() => {
+  try {
     map = L.map('map').setView([25.032969, 121.565418], 13);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap'
     }).addTo(map);
-    console.log("Leaflet map initialized.");
-  }, 0);
+    console.log("✅ Leaflet map initialized.");
+  } catch (err) {
+    console.error("❌ Error initializing Leaflet:", err);
+  }
 });
+
