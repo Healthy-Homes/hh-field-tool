@@ -1,4 +1,4 @@
-// ✅ Full app.js (corrected, ready to paste)
+
 console.log("✅ app.js loaded and running");
 let lastFHIRBundle = null;
 let translations = {};
@@ -23,11 +23,11 @@ function applyTranslations() {
     if (text) el.textContent = text;
   });
 
-  // Dropdown translations — including "Select", "Yes", "No"
+  // Dropdown translations
   const selectFields = [
-    { id: "housingStable", optionsKey: "sdoh.options.stable" },
-    { id: "utilityShutoff", optionsKey: "sdoh.options.utility" },
-    { id: "foodInsecurity", optionsKey: "sdoh.options.food" }
+    { id: "housingStable", optionsKey: "sdoh.housingStableOptions" },
+    { id: "utilityShutoff", optionsKey: "sdoh.utilityShutoffOptions" },
+    { id: "foodInsecurity", optionsKey: "sdoh.foodInsecurityOptions" }
   ];
 
   selectFields.forEach(field => {
@@ -42,10 +42,11 @@ function applyTranslations() {
 
       const defaultOption = document.createElement("option");
       defaultOption.value = "";
-      defaultOption.textContent = translations.sdoh.options.select || "Select";
+      defaultOption.textContent = options[""] || "Select";
       select.appendChild(defaultOption);
 
       for (const [value, label] of Object.entries(options)) {
+        if (value === "") continue;
         const option = document.createElement("option");
         option.value = value;
         option.textContent = label;
@@ -57,6 +58,36 @@ function applyTranslations() {
       }
     }
   });
+
+  // Checklist translations
+  const inspectionLabels = {
+    mold: "inspection.mold",
+    pests: "inspection.pests",
+    leaks: "inspection.leaks",
+    lead: "inspection.lead"
+  };
+
+  for (const [id, keyPath] of Object.entries(inspectionLabels)) {
+    const label = document.querySelector(`label[for="${id}"]`);
+    const keys = keyPath.split(".");
+    let text = translations;
+    for (const k of keys) text = text?.[k];
+    if (label && text) label.textContent = text;
+  }
+
+  // Consent block
+  const consentLabels = {
+    name: "consent.name",
+    signature: "consent.signature"
+  };
+
+  for (const [id, keyPath] of Object.entries(consentLabels)) {
+    const label = document.querySelector(`label[for="${id}"]`);
+    const keys = keyPath.split(".");
+    let text = translations;
+    for (const k of keys) text = text?.[k];
+    if (label && text) label.textContent = text;
+  }
 }
 
 // 🌍 EJScreen Mock API
@@ -277,7 +308,7 @@ async function downloadPDF() {
   });
 }
 
-// 🗺️ Map + Language Init
+// Init
 document.addEventListener("DOMContentLoaded", () => {
   loadLanguage("en");
   document.getElementById("langSelect").addEventListener("change", e => {
