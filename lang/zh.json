@@ -22,30 +22,30 @@
     "utilityShutoff": "過去一年內您的水電服務有被中斷嗎？",
     "foodInsecurity": "您是否經常擔心食物不足？",
     "languagePref": "偏好的溝通語言：",
-    "incomeLevel": "您每月的家庭收入為多少？（可選）",
-    "options": {
-      "housingStable": {
-        "": "請選擇",
-        "yes": "是",
-        "no": "否"
-      },
-      "utilityShutoff": {
-        "": "請選擇",
-        "yes": "是",
-        "no": "否"
-      },
-      "foodInsecurity": {
-        "": "請選擇",
-        "always": "總是",
-        "sometimes": "有時",
-        "never": "從不"
-      },
-      "languagePref": {
-        "": "請選擇",
-        "english": "英文",
-        "chinese": "中文",
-        "other": "其他"
-      }
+    "incomeLevel": "您每月的家庭收入為多少？（可選）"
+  },
+  "sdohOptions": {
+    "housingStable": {
+      "": "請選擇",
+      "yes": "是",
+      "no": "否"
+    },
+    "utilityShutoff": {
+      "": "請選擇",
+      "yes": "是",
+      "no": "否"
+    },
+    "foodInsecurity": {
+      "": "請選擇",
+      "always": "總是",
+      "sometimes": "有時",
+      "never": "從不"
+    },
+    "languagePref": {
+      "": "請選擇",
+      "english": "英文",
+      "chinese": "中文",
+      "other": "其他"
     }
   }
 }
