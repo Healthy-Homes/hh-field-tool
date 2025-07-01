@@ -32,18 +32,31 @@
     <form id="inspectionForm" class="space-y-4">
       <h2 class="text-lg font-semibold text-green-700" data-i18n="inspection.title">Home Inspection Checklist</h2>
       <div class="grid grid-cols-1 gap-3">
-        <!-- Checklist items here -->
-        <!-- [Unchanged checklist HTML omitted for brevity — it's identical to your version] -->
-        <label class="flex items-center space-x-2" for="otherHazards">
-          <input type="checkbox" id="otherHazards" />
-          <span data-i18n="inspection.otherHazards">Other risks</span>
-        </label>
+        <label class="flex items-center space-x-2"><input type="checkbox" id="mold" /><span data-i18n="inspection.mold">Visible mold</span></label>
+        <label class="flex items-center space-x-2"><input type="checkbox" id="leaks" /><span data-i18n="inspection.leaks">Water damage or leaks</span></label>
+        <label class="flex items-center space-x-2"><input type="checkbox" id="ventilation" /><span data-i18n="inspection.ventilation">Poor ventilation</span></label>
+        <label class="flex items-center space-x-2"><input type="checkbox" id="pests" /><span data-i18n="inspection.pests">Signs of pests</span></label>
+        <label class="flex items-center space-x-2"><input type="checkbox" id="electrical" /><span data-i18n="inspection.electrical">Unsafe electrical systems</span></label>
+        <label class="flex items-center space-x-2"><input type="checkbox" id="tripHazards" /><span data-i18n="inspection.tripHazards">Trip hazards</span></label>
+        <label class="flex items-center space-x-2"><input type="checkbox" id="otherHazards" /><span data-i18n="inspection.otherHazards">Other risks</span></label>
       </div>
     </form>
 
     <form id="sdohForm" class="space-y-4">
       <h2 class="text-lg font-semibold text-green-700" data-i18n="sdoh.title">Resident SDOH Questionnaire</h2>
-      <!-- [Unchanged SDOH form HTML omitted for brevity] -->
+      <label class="block text-sm font-medium text-gray-700" for="incomeLevel" data-i18n="sdoh.income">Income Level:</label>
+      <select id="incomeLevel" class="block w-full rounded border-gray-300 shadow-sm">
+        <option value="">Select</option>
+        <option value="low">Low</option>
+        <option value="moderate">Moderate</option>
+        <option value="high">High</option>
+      </select>
+      <label class="block text-sm font-medium text-gray-700" for="housingStability" data-i18n="sdoh.housing">Housing Stability:</label>
+      <select id="housingStability" class="block w-full rounded border-gray-300 shadow-sm">
+        <option value="">Select</option>
+        <option value="stable">Stable</option>
+        <option value="unstable">Unstable</option>
+      </select>
     </form>
 
     <section>
@@ -60,7 +73,7 @@
 
     <section>
       <h2 class="text-lg font-semibold text-green-700" data-i18n="location.title">Inspection Map Location</h2>
-      <button onclick="getLocation()" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700" data-i18n="env.useLocation">📍 Use My Location</button>
+      <button onclick="getLocation()" type="button" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700" data-i18n="env.useLocation">📍 Use My Location</button>
       <p id="userAddress" class="mt-2 text-sm text-gray-700"></p>
       <div id="map" class="mt-4 h-60 rounded border border-gray-300"></div>
     </section>
@@ -72,24 +85,23 @@
       <p class="text-sm"><strong data-i18n="env.pm25">PM2.5:</strong> <span id="pm25">-</span></p>
     </section>
 
-<section class="mb-4">
-  <label for="photoUpload" class="block text-sm font-medium text-gray-700">Upload Photos (optional)</label>
-  <input type="file" id="photoUpload" name="photos" accept="image/*" multiple
-    class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
-    file:rounded-full file:border-0 file:text-sm file:font-semibold
-    file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
-  <div id="photoPreview" class="mt-4 grid grid-cols-2 gap-2"></div>
-  <div id="uploadStatus" class="text-sm text-gray-600 mt-2"></div>
-</section>
-
+    <section class="mb-4">
+      <label for="photoUpload" class="block text-sm font-medium text-gray-700">Upload Photos (optional)</label>
+      <input type="file" id="photoUpload" name="photos" accept="image/*" multiple
+        class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
+        file:rounded-full file:border-0 file:text-sm file:font-semibold
+        file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+      <div id="photoPreview" class="mt-4 grid grid-cols-2 gap-2"></div>
+      <div id="uploadStatus" class="text-sm text-gray-600 mt-2"></div>
+    </section>
 
     <section>
       <h2 class="text-lg font-semibold text-green-700" data-i18n="fhir.outputTitle">FHIR JSON Output</h2>
       <pre id="output" class="mt-2 p-2 bg-gray-100 border rounded overflow-x-auto text-xs text-gray-800"></pre>
-      <div class="mt-2 flex gap-3">
-        <button onclick="generateFHIR()" class="px-4 py-2 bg-green-600 text-white rounded shadow hover:bg-green-700" data-i18n="fhir.generate">Generate FHIR Report</button>
-        <button onclick="downloadJSON()" class="px-4 py-2 bg-gray-800 text-white rounded shadow hover:bg-gray-900" data-i18n="fhir.downloadJson">Download JSON</button>
-        <button onclick="downloadPDF()" class="px-4 py-2 bg-gray-800 text-white rounded shadow hover:bg-gray-900" data-i18n="fhir.downloadPdf">Download PDF</button>
+      <div class="mt-2 flex gap-3 flex-wrap">
+        <button onclick="generateFHIR()" type="button" class="px-4 py-2 bg-green-600 text-white rounded shadow hover:bg-green-700" data-i18n="fhir.generate">Generate FHIR Report</button>
+        <button onclick="downloadJSON()" type="button" class="px-4 py-2 bg-gray-800 text-white rounded shadow hover:bg-gray-900" data-i18n="fhir.downloadJson">Download JSON</button>
+        <button onclick="downloadPDF()" type="button" class="px-4 py-2 bg-gray-800 text-white rounded shadow hover:bg-gray-900" data-i18n="fhir.downloadPdf">Download PDF</button>
       </div>
     </section>
 
