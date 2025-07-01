@@ -85,19 +85,25 @@
     <section>
       <h2>📍 <span data-i18n="map.header"></span></h2>
       <div id="map" style="height: 300px; margin-bottom: 1rem;"></div>
+
+      <!-- ✅ Mock warning inserted here -->
+      <p id="mockWarning" style="display:none; color:orange; font-weight:bold;">
+        ⚠️ EJScreen data is currently mocked. Replace with real API before production use.
+      </p>
     </section>
-<section>
-  <h2 data-i18n="ejscreen.title">🌍 Environmental Context (EJScreen)</h2>
 
-  <button onclick="getLocation()">📍 Use My Location</button>
-  <p><strong>Address:</strong> <span id="userAddress">N/A</span></p>
+    <section>
+      <h2 data-i18n="ejscreen.title">🌍 Environmental Context (EJScreen)</h2>
 
-  <div id="ejscreenData">
-    <p><strong>Asthma Risk:</strong> <span id="asthmaRisk">--</span></p>
-    <p><strong>Lead Exposure Risk:</strong> <span id="leadRisk">--</span></p>
-    <p><strong>Air Quality Index (PM2.5):</strong> <span id="pm25">--</span></p>
-  </div>
-</section>
+      <button onclick="getLocation()">📍 Use My Location</button>
+      <p><strong>Address:</strong> <span id="userAddress">N/A</span></p>
+
+      <div id="ejscreenData">
+        <p><strong>Asthma Risk:</strong> <span id="asthmaRisk">--</span></p>
+        <p><strong>Lead Exposure Risk:</strong> <span id="leadRisk">--</span></p>
+        <p><strong>Air Quality Index (PM2.5):</strong> <span id="pm25">--</span></p>
+      </div>
+    </section>
 
     <button onclick="generateFHIR()" data-i18n="buttons.generate"></button>
 
