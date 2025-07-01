@@ -1,107 +1,171 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Healthy Homes Practitioner App</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-</head>
-<body class="bg-gray-50 text-gray-800">
-  <div class="max-w-3xl mx-auto px-4 py-6 space-y-8">
-    <header class="space-y-2">
-      <h1 class="text-2xl font-bold text-green-700" data-i18n="app.title">Healthy Homes Practitioner App</h1>
-      <p class="text-sm text-gray-600" data-i18n="app.intro">
-        This tool helps field workers assess housing-related health risks and social needs.
-      </p>
-    </header>
+// app.js – Updated for full SDOH alignment, translation toggle integrity, and photo preview functionality
 
-    <section>
-      <label class="block text-sm font-medium text-gray-700">
-        <span data-i18n="language.label">Language:</span>
-        <select id="langSelect" class="mt-1 block w-full rounded border-gray-300 shadow-sm">
-          <option value="en">English</option>
-          <option value="zh">繁體中文</option>
-        </select>
-      </label>
-    </section>
+const i18nStrings = {
+  en: {
+    app: { title: "Healthy Homes Practitioner App", intro: "This tool helps field workers assess housing-related health risks and social needs." },
+    language: { label: "Language:" },
+    inspection: {
+      title: "Home Inspection Checklist",
+      moldVisible: "Visible mold",
+      leakingPipes: "Water damage or leaks",
+      noVentilation: "Poor ventilation",
+      pestDroppings: "Signs of pests",
+      electrical: "Unsafe electrical systems",
+      tripHazards: "Trip hazards",
+      otherHazards: "Other risks"
+    },
+    sdoh: {
+      title: "Resident SDOH Questionnaire",
+      housingStability: "Is your housing stable?",
+      disabilityStatus: "Do you or anyone in your household have a disability?",
+      utilityShutoff: "Have your utilities been shut off in the past year?",
+      foodInsecurity: "How often do you worry about running out of food?",
+      languagePref: "Preferred language for communication?",
+      incomeLevel: "What is your monthly household income? (optional)"
+    },
+    consent: {
+      title: "Consent & Signature",
+      explained: "I have explained and received consent.",
+      name: "Resident Name:",
+      signature: "Signature:"
+    },
+    location: { title: "Inspection Map Location" },
+    env: {
+      title: "Environmental Context",
+      asthmaRisk: "Asthma Risk:",
+      leadRisk: "Lead Risk:",
+      pm25: "PM2.5:",
+      useLocation: "📍 Use My Location"
+    },
+    photo: { label: "Upload Photos (optional)" },
+    fhir: {
+      outputTitle: "FHIR JSON Output",
+      generate: "Generate FHIR Report",
+      downloadJson: "Download JSON",
+      downloadPdf: "Download PDF"
+    }
+  },
+  zh: {
+    app: { title: "健康住宅實踐者應用程式", intro: "此工具幫助現場工作人員評估與住宅相關的健康風險和社會需求。" },
+    language: { label: "語言：" },
+    inspection: {
+      title: "房屋檢查清單",
+      moldVisible: "可見黴菌",
+      leakingPipes: "水損或漏水",
+      noVentilation: "通風不良",
+      pestDroppings: "害蟲跡象",
+      electrical: "電力系統不安全",
+      tripHazards: "絆倒危險",
+      otherHazards: "其他風險"
+    },
+    sdoh: {
+      title: "居民社會健康決定因素問卷",
+      housingStability: "您的住房是否穩定？",
+      disabilityStatus: "您或您的家庭成員是否有殘疾？",
+      utilityShutoff: "過去一年內您的水電是否被停用？",
+      foodInsecurity: "您有多常擔心食物不足？",
+      languagePref: "溝通偏好的語言？",
+      incomeLevel: "您每月的家庭收入是多少？（可選填）"
+    },
+    consent: {
+      title: "同意與簽名",
+      explained: "我已說明並獲得同意。",
+      name: "居民姓名：",
+      signature: "簽名："
+    },
+    location: { title: "檢查地圖位置" },
+    env: {
+      title: "環境背景",
+      asthmaRisk: "氣喘風險：",
+      leadRisk: "鉛暴露風險：",
+      pm25: "PM2.5：",
+      useLocation: "📍 使用我的位置"
+    },
+    photo: { label: "上傳照片（可選）" },
+    fhir: {
+      outputTitle: "FHIR JSON 輸出",
+      generate: "產生FHIR報告",
+      downloadJson: "下載 JSON",
+      downloadPdf: "下載 PDF"
+    }
+  }
+};
 
-    <form id="inspectionForm" class="space-y-4">
-      <h2 class="text-lg font-semibold text-green-700" data-i18n="inspection.title">Home Inspection Checklist</h2>
-      <div class="grid grid-cols-1 gap-3">
-        <label class="flex items-center space-x-2" for="moldVisible"><input type="checkbox" id="moldVisible" /><span data-i18n="inspection.moldVisible">Visible mold</span></label>
-        <label class="flex items-center space-x-2" for="leakingPipes"><input type="checkbox" id="leakingPipes" /><span data-i18n="inspection.leakingPipes">Water damage or leaks</span></label>
-        <label class="flex items-center space-x-2" for="noVentilation"><input type="checkbox" id="noVentilation" /><span data-i18n="inspection.noVentilation">Poor ventilation</span></label>
-        <label class="flex items-center space-x-2" for="pestDroppings"><input type="checkbox" id="pestDroppings" /><span data-i18n="inspection.pestDroppings">Signs of pests</span></label>
-        <label class="flex items-center space-x-2" for="electrical"><input type="checkbox" id="electrical" /><span data-i18n="inspection.electrical">Unsafe electrical systems</span></label>
-        <label class="flex items-center space-x-2" for="tripHazards"><input type="checkbox" id="tripHazards" /><span data-i18n="inspection.tripHazards">Trip hazards</span></label>
-        <label class="flex items-center space-x-2" for="otherHazards"><input type="checkbox" id="otherHazards" /><span data-i18n="inspection.otherHazards">Other risks</span></label>
-      </div>
-    </form>
+function translate(lang) {
+  const dict = i18nStrings[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const keys = el.getAttribute('data-i18n').split('.');
+    let text = dict;
+    keys.forEach(k => text = text?.[k]);
+    if (text) el.textContent = text;
+  });
+  document.querySelectorAll('[data-i18n-options]').forEach(el => {
+    const key = el.getAttribute('data-i18n-options').split('.').pop();
+    el.innerHTML = `
+      <option value="">Select</option>
+      <option value="yes">${lang === 'zh' ? '是' : 'Yes'}</option>
+      <option value="no">${lang === 'zh' ? '否' : 'No'}</option>
+    `;
+  });
+}
 
-    <form id="sdohForm" class="space-y-4">
-      <h2 class="text-lg font-semibold text-green-700" data-i18n="sdoh.title">Resident SDOH Questionnaire</h2>
-      <label class="block text-sm font-medium text-gray-700" for="housingStable" data-i18n="sdoh.housingStable">Is your housing stable?</label>
-      <select id="housingStable" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="sdohOptions.housingStable"></select>
+document.getElementById("langSelect").addEventListener("change", e => translate(e.target.value));
+window.addEventListener("DOMContentLoaded", () => translate("en"));
 
-      <label class="block text-sm font-medium text-gray-700" for="utilityShutoff" data-i18n="sdoh.utilityShutoff">Have your utilities been shut off in the past year?</label>
-      <select id="utilityShutoff" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="sdohOptions.utilityShutoff"></select>
+function generateFHIR() {
+  const sdoh = {
+    housingStability: document.getElementById("housingStability").value,
+    disabilityStatus: document.getElementById("disabilityStatus").value,
+    utilityShutoff: document.getElementById("utilityShutoff").value,
+    foodInsecurity: document.getElementById("foodInsecurity").value,
+    preferredLanguage: document.getElementById("preferredLanguage").value,
+    incomeLevel: document.getElementById("incomeLevel").value
+  };
+  const fhir = { resourceType: "Observation", extension: Object.entries(sdoh).map(([k, v]) => ({ url: k, valueString: v })) };
+  document.getElementById("output").textContent = JSON.stringify(fhir, null, 2);
+}
 
-      <label class="block text-sm font-medium text-gray-700" for="foodInsecurity" data-i18n="sdoh.foodInsecurity">How often do you worry about running out of food?</label>
-      <select id="foodInsecurity" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="sdohOptions.foodInsecurity"></select>
+function downloadJSON() {
+  const blob = new Blob([document.getElementById("output").textContent], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "fhir_report.json";
+  a.click();
+}
 
-      <label class="block text-sm font-medium text-gray-700" for="languagePref" data-i18n="sdoh.languagePref">Preferred language for communication?</label>
-      <select id="languagePref" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="sdohOptions.languagePref"></select>
-    </form>
+function downloadPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.text(document.getElementById("output").textContent, 10, 10);
+  doc.save("fhir_report.pdf");
+}
 
-    <section>
-      <h2 class="text-lg font-semibold text-green-700" data-i18n="consent.title">Consent & Signature</h2>
-      <label class="block mt-2 text-sm font-medium text-gray-700">
-        <input type="checkbox" id="consentCheckbox" class="mr-2" />
-        <span data-i18n="consent.explained">I have explained and received consent.</span>
-      </label>
-      <label class="block mt-2 text-sm font-medium text-gray-700" for="residentName" data-i18n="consent.name">Resident Name:</label>
-      <input type="text" id="residentName" class="mt-1 block w-full rounded border-gray-300 shadow-sm" />
-      <label class="block mt-2 text-sm font-medium text-gray-700" for="residentSignature" data-i18n="consent.signature">Signature:</label>
-      <input type="text" id="residentSignature" class="mt-1 block w-full rounded border-gray-300 shadow-sm" />
-    </section>
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(pos => {
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+      const map = L.map('map').setView([lat, lng], 15);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+      L.marker([lat, lng]).addTo(map);
+      document.getElementById("userAddress").textContent = `Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}`;
+    });
+  }
+}
 
-    <section>
-      <h2 class="text-lg font-semibold text-green-700" data-i18n="location.title">Inspection Map Location</h2>
-      <button onclick="getLocation()" type="button" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700" data-i18n="env.useLocation">📍 Use My Location</button>
-      <p id="userAddress" class="mt-2 text-sm text-gray-700"></p>
-      <div id="map" class="mt-4 h-60 rounded border border-gray-300"></div>
-    </section>
-
-    <section>
-      <h2 class="text-lg font-semibold text-green-700" data-i18n="env.title">Environmental Context</h2>
-      <p class="text-sm"><strong data-i18n="env.asthmaRisk">Asthma Risk:</strong> <span id="asthmaRisk">-</span></p>
-      <p class="text-sm"><strong data-i18n="env.leadRisk">Lead Risk:</strong> <span id="leadRisk">-</span></p>
-      <p class="text-sm"><strong data-i18n="env.pm25">PM2.5:</strong> <span id="pm25">-</span></p>
-    </section>
-
-    <section class="mb-4">
-      <label for="photoUpload" class="block text-sm font-medium text-gray-700" data-i18n="photo.label">Upload Photos (optional)</label>
-      <input type="file" id="photoUpload" name="photos" accept="image/*" multiple
-        class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
-        file:rounded-full file:border-0 file:text-sm file:font-semibold
-        file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
-      <div id="photoPreview" class="mt-4 grid grid-cols-2 gap-2"></div>
-      <div id="uploadStatus" class="text-sm text-gray-600 mt-2"></div>
-    </section>
-
-    <section>
-      <h2 class="text-lg font-semibold text-green-700" data-i18n="fhir.outputTitle">FHIR JSON Output</h2>
-      <pre id="output" class="mt-2 p-2 bg-gray-100 border rounded overflow-x-auto text-xs text-gray-800"></pre>
-      <div class="mt-2 flex gap-3 flex-wrap">
-        <button onclick="generateFHIR()" type="button" class="px-4 py-2 bg-green-600 text-white rounded shadow hover:bg-green-700" data-i18n="fhir.generate">Generate FHIR Report</button>
-        <button onclick="downloadJSON()" type="button" class="px-4 py-2 bg-gray-800 text-white rounded shadow hover:bg-gray-900" data-i18n="fhir.downloadJson">Download JSON</button>
-        <button onclick="downloadPDF()" type="button" class="px-4 py-2 bg-gray-800 text-white rounded shadow hover:bg-gray-900" data-i18n="fhir.downloadPdf">Download PDF</button>
-      </div>
-    </section>
-  </div>
-  <script src="app.js"></script>
-</body>
-</html>
+document.getElementById("photoUpload").addEventListener("change", function () {
+  const preview = document.getElementById("photoPreview");
+  const status = document.getElementById("uploadStatus");
+  preview.innerHTML = "";
+  [...this.files].forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = document.createElement("img");
+      img.src = e.target.result;
+      img.className = "w-full rounded border border-gray-300";
+      preview.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  });
+  status.textContent = `${this.files.length} photo(s) uploaded.`;
+});
