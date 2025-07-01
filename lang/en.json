@@ -3,6 +3,9 @@
     "title": "Healthy Homes Practitioner App",
     "intro": "This tool helps field workers assess housing-related health risks and social needs."
   },
+  "language": {
+    "label": "Language:"
+  },
   "inspection": {
     "title": "Home Inspection Checklist",
     "moldVisible": "Visible mold",
@@ -16,7 +19,6 @@
   "sdoh": {
     "title": "Resident SDOH Questionnaire",
     "housingStable": "Is your housing stable?",
-    "disabilityStatus": "Do you or anyone in your household have a disability?",
     "utilityShutoff": "Have your utilities been shut off in the past year?",
     "foodInsecurity": "How often do you worry about running out of food?",
     "languagePref": "Preferred language for communication?",
@@ -24,11 +26,6 @@
   },
   "sdohOptions": {
     "housingStable": {
-      "": "Select",
-      "yes": "Yes",
-      "no": "No"
-    },
-    "disabilityStatus": {
       "": "Select",
       "yes": "Yes",
       "no": "No"
@@ -46,12 +43,9 @@
     },
     "languagePref": {
       "": "Select",
-      "en": "English",
-      "zh": "Traditional Chinese",
-      "es": "Spanish",
-      "vi": "Vietnamese",
-      "tl": "Tagalog",
-      "other": "Other (enter below)"
+      "english": "English",
+      "chinese": "Chinese",
+      "other": "Other"
     }
   },
   "consent": {
@@ -64,17 +58,18 @@
   },
   "env": {
     "title": "Environmental Context",
-    "asthmaRisk": "Asthma Risk",
-    "leadRisk": "Lead Risk",
-    "pm25": "PM2.5",
-    "useLocation": "📍 Use My Location"
+    "useLocation": "📍 Use My Location",
+    "address": "Address:",
+    "asthmaRisk": "Asthma Risk:",
+    "leadRisk": "Lead Risk:",
+    "pm25": "PM2.5:"
   },
   "photo": {
     "label": "Upload Photos (optional)"
   },
   "fhir": {
-    "outputTitle": "FHIR JSON Output",
     "generate": "Generate FHIR Report",
+    "outputTitle": "FHIR JSON Output",
     "downloadJson": "Download JSON",
     "downloadPdf": "Download PDF"
   }
