@@ -254,7 +254,8 @@ document.addEventListener("DOMContentLoaded", () => {
     loadLanguage(e.target.value);
   });
 
-  const photoInput = document.getElementById("photoInput");
+const photoInput = document.getElementById("photoUpload");
+
   if (photoInput) {
     photoInput.addEventListener("change", handlePhotoUpload);
   }
