@@ -30,7 +30,7 @@ function applyTranslations() {
   });
 }
 
-// ✅ FIXED: Populate dropdowns from translations[currentLang].sdoh.options
+// Populate dropdowns from translations[currentLang].sdoh.options
 function populateSelectOptions() {
   document.querySelectorAll('[data-i18n-options]').forEach(select => {
     const key = select.getAttribute('data-i18n-options');
@@ -62,11 +62,11 @@ document.getElementById('langSelect').addEventListener('change', async e => {
 // DOM Ready
 window.addEventListener('DOMContentLoaded', async () => {
   await loadTranslations(currentLang);
-  getLocation?.();  // Prevents crashing if getLocation is missing
+  getLocation?.(); // Prevents crash if getLocation() is undefined
   document.getElementById('dummyBanner').style.display = 'block';
 });
 
-// ----- Everything below unchanged ----- //
+// ---- Unchanged functionality below ----
 
 // Photo uploads
 const uploadedImages = [];
