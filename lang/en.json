@@ -2,24 +2,31 @@
   "sdoh": {
     "title": "Resident SDOH Questionnaire",
     "housingStable": "Is your housing currently stable?",
+    "housingStableOptions": {
+      "": "Select",
+      "yes": "Yes",
+      "no": "No"
+    },
     "utilityShutoff": "In the past year, have your utilities been shut off?",
+    "utilityShutoffOptions": {
+      "": "Select",
+      "yes": "Yes",
+      "no": "No"
+    },
     "foodInsecurity": "Do you ever worry about running out of food?",
-    "languagePref": "What is your preferred language?",
-    "options": {
-      "select": "Select",
-      "stable": {
-        "yes": "Yes",
-        "no": "No"
-      },
-      "utility": {
-        "yes": "Yes",
-        "no": "No"
-      },
-      "food": {
-        "yes": "Yes",
-        "no": "No"
-      }
-    }
+    "foodInsecurityOptions": {
+      "": "Select",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "languagePref": "What is your preferred language?"
+  },
+  "inspection": {
+    "title": "Home Inspection Checklist",
+    "mold": "Visible mold",
+    "pests": "Pest infestation",
+    "leaks": "Leaks or dampness",
+    "lead": "Lead paint risk"
   },
   "consent": {
     "title": "Consent & Signature",
@@ -43,5 +50,12 @@
     "outputTitle": "FHIR JSON Output:",
     "downloadJson": "Download JSON",
     "downloadPdf": "Download PDF"
+  },
+  "options": {
+    "yesNo": {
+      "": "Select",
+      "yes": "Yes",
+      "no": "No"
+    }
   }
 }
