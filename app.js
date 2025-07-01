@@ -1,4 +1,3 @@
-
 console.log("✅ app.js loaded and running");
 let lastFHIRBundle = null;
 let translations = {};
@@ -23,57 +22,44 @@ function applyTranslations() {
     if (text) el.textContent = text;
   });
 
-  // Dropdown translations
-  const selectFields = [
-    { id: "housingStable", optionsKey: "sdoh.housingStableOptions" },
-    { id: "utilityShutoff", optionsKey: "sdoh.utilityShutoffOptions" },
-    { id: "foodInsecurity", optionsKey: "sdoh.foodInsecurityOptions" }
-  ];
+  // Translate <select> options using data-i18n-options attribute
+  document.querySelectorAll("select[data-i18n-options]").forEach(select => {
+    const optionsKey = select.getAttribute("data-i18n-options");
+    const keys = optionsKey.split(".");
+    let optionSet = translations;
+    for (const k of keys) optionSet = optionSet?.[k];
 
-  selectFields.forEach(field => {
-    const select = document.getElementById(field.id);
-    const keys = field.optionsKey.split(".");
-    let options = translations;
-    for (const k of keys) options = options?.[k];
+    if (optionSet) {
+      const currentValue = select.value;
+      select.innerHTML = ""; // clear
 
-    if (select && options) {
-      const selectedValue = select.value;
-      select.innerHTML = "";
-
-      const defaultOption = document.createElement("option");
-      defaultOption.value = "";
-      defaultOption.textContent = options[""] || "Select";
-      select.appendChild(defaultOption);
-
-      for (const [value, label] of Object.entries(options)) {
-        if (value === "") continue;
+      for (const [value, label] of Object.entries(optionSet)) {
         const option = document.createElement("option");
         option.value = value;
         option.textContent = label;
         select.appendChild(option);
       }
 
-      if (select.querySelector(`option[value="${selectedValue}"]`)) {
-        select.value = selectedValue;
+      if (select.querySelector(`option[value="${currentValue}"]`)) {
+        select.value = currentValue;
       }
     }
   });
 
   // Checklist translations
-  const inspectionLabels = {
-    mold: "inspection.mold",
-    pests: "inspection.pests",
-    leaks: "inspection.leaks",
-    lead: "inspection.lead"
-  };
+  const checklistItems = [
+    "mold", "pests", "leaks", "lead",
+    "noHVAC", "noVent", "tripHazards", "asthmaTriggers"
+  ];
 
-  for (const [id, keyPath] of Object.entries(inspectionLabels)) {
+  checklistItems.forEach(id => {
     const label = document.querySelector(`label[for="${id}"]`);
-    const keys = keyPath.split(".");
+    const key = `inspection.${id}`;
+    const keys = key.split(".");
     let text = translations;
     for (const k of keys) text = text?.[k];
     if (label && text) label.textContent = text;
-  }
+  });
 
   // Consent block
   const consentLabels = {
@@ -161,6 +147,10 @@ function generateFHIR() {
   if (inspection.pests.checked) observations.push({ code: "93043-8", description: "Pest infestation", value: true });
   if (inspection.leaks.checked) observations.push({ code: "99999-9", description: "Leaks or dampness", value: true });
   if (inspection.lead.checked) observations.push({ code: "93044-6", description: "Lead paint risk", value: true });
+  if (inspection.noHVAC.checked) observations.push({ code: "99999-5", description: "No heating or cooling", value: true });
+  if (inspection.noVent.checked) observations.push({ code: "99999-6", description: "No ventilation", value: true });
+  if (inspection.tripHazards.checked) observations.push({ code: "99999-7", description: "Trip hazards", value: true });
+  if (inspection.asthmaTriggers.checked) observations.push({ code: "99999-8", description: "Asthma triggers", value: true });
 
   const socialNeeds = {
     housingStable: sdoh.housingStable.value,
