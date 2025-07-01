@@ -269,3 +269,23 @@ document.addEventListener("DOMContentLoaded", () => {
     console.error("❌ Map error:", err);
   }
 });
+function downloadJSON() {
+  if (!lastFHIRBundle) return alert("Generate the FHIR report first.");
+  const blob = new Blob([JSON.stringify(lastFHIRBundle, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "fhir-report.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function downloadPDF() {
+  if (!lastFHIRBundle) return alert("Generate the FHIR report first.");
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  const text = JSON.stringify(lastFHIRBundle, null, 2);
+  const lines = doc.splitTextToSize(text, 180);
+  doc.text(lines, 10, 10);
+  doc.save("fhir-report.pdf");
+}
