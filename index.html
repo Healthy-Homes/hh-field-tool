@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en"> 
+<html lang="en">
 <head>
- <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Healthy Homes Assessment Tool</title>
@@ -11,124 +11,125 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script defer src="app.js"></script>
 </head>
-<body>
-  <main>
-    <h1 data-i18n="app.title">Healthy Homes Practitioner App</h1>
-    <p data-i18n="app.intro">This tool helps field workers assess housing-related health risks and social needs.</p>
+<body class="bg-gray-50 text-gray-900">
+  <main class="max-w-4xl mx-auto px-4 py-8 space-y-10">
+    <header class="space-y-2">
+      <h1 class="text-3xl font-bold" data-i18n="app.title">Healthy Homes Practitioner App</h1>
+      <p class="text-lg" data-i18n="app.intro">This tool helps field workers assess housing-related health risks and social needs.</p>
+      <label for="langSelect" class="block mt-4 font-semibold">🌐 <span data-i18n="language.label">Language:</span></label>
+      <select id="langSelect" class="mt-1 border p-2 rounded">
+        <option value="en">English</option>
+        <option value="zh">中文</option>
+      </select>
+    </header>
 
-    <label for="langSelect" style="margin-top: 30px; display: block;">🌐 <span data-i18n="language.label">Language:</span></label>
-    <select id="langSelect">
-      <option value="en">English</option>
-      <option value="zh">中文</option>
-    </select>
-
-    <section>
-      <h2 data-i18n="inspection.title">🏠 Home Inspection Checklist</h2>
-     <form id="inspectionForm">
-  <div class="flex items-center space-x-2 mb-2">
-    <input type="checkbox" id="mold" name="mold" class="w-5 h-5 text-blue-600">
-    <label for="mold" class="text-base" data-i18n="inspection.mold">Visible mold</label>
-  </div>
-  <div class="flex items-center space-x-2 mb-2">
-    <input type="checkbox" id="pests" name="pests" class="w-5 h-5 text-blue-600">
-    <label for="pests" class="text-base" data-i18n="inspection.pests">Pest infestation</label>
-  </div>
-  <div class="flex items-center space-x-2 mb-2">
-    <input type="checkbox" id="leaks" name="leaks" class="w-5 h-5 text-blue-600">
-    <label for="leaks" class="text-base" data-i18n="inspection.leaks">Leaks or dampness</label>
-  </div>
-  <div class="flex items-center space-x-2 mb-2">
-    <input type="checkbox" id="lead" name="lead" class="w-5 h-5 text-blue-600">
-    <label for="lead" class="text-base" data-i18n="inspection.lead">Lead paint risk (pre-1978)</label>
-  </div>
-  <div class="flex items-center space-x-2 mb-2">
-    <input type="checkbox" id="noHVAC" name="noHVAC" class="w-5 h-5 text-blue-600">
-    <label for="noHVAC" class="text-base" data-i18n="inspection.noHVAC">No heating or cooling</label>
-  </div>
-  <div class="flex items-center space-x-2 mb-2">
-    <input type="checkbox" id="noVent" name="noVent" class="w-5 h-5 text-blue-600">
-    <label for="noVent" class="text-base" data-i18n="inspection.noVent">No bathroom/kitchen ventilation</label>
-  </div>
-  <div class="flex items-center space-x-2 mb-2">
-    <input type="checkbox" id="tripHazards" name="tripHazards" class="w-5 h-5 text-blue-600">
-    <label for="tripHazards" class="text-base" data-i18n="inspection.tripHazards">Trip hazards (loose rugs, cords)</label>
-  </div>
-  <div class="flex items-center space-x-2 mb-2">
-    <input type="checkbox" id="asthmaTriggers" name="asthmaTriggers" class="w-5 h-5 text-blue-600">
-    <label for="asthmaTriggers" class="text-base" data-i18n="inspection.asthmaTriggers">Asthma triggers (dust, pets, etc.)</label>
-  </div>
-</form>
-
+    <section class="space-y-4">
+      <h2 class="text-2xl font-semibold" data-i18n="inspection.title">🏠 Home Inspection Checklist</h2>
+      <form id="inspectionForm" class="grid grid-cols-1 gap-3">
+        <label class="flex items-center gap-3">
+          <input type="checkbox" id="mold" name="mold" class="w-5 h-5">
+          <span data-i18n="inspection.mold">Visible mold</span>
+        </label>
+        <label class="flex items-center gap-3">
+          <input type="checkbox" id="pests" name="pests" class="w-5 h-5">
+          <span data-i18n="inspection.pests">Pest infestation</span>
+        </label>
+        <label class="flex items-center gap-3">
+          <input type="checkbox" id="leaks" name="leaks" class="w-5 h-5">
+          <span data-i18n="inspection.leaks">Leaks or dampness</span>
+        </label>
+        <label class="flex items-center gap-3">
+          <input type="checkbox" id="lead" name="lead" class="w-5 h-5">
+          <span data-i18n="inspection.lead">Lead paint risk (pre-1978)</span>
+        </label>
+        <label class="flex items-center gap-3">
+          <input type="checkbox" id="noHVAC" name="noHVAC" class="w-5 h-5">
+          <span data-i18n="inspection.noHVAC">No heating or cooling</span>
+        </label>
+        <label class="flex items-center gap-3">
+          <input type="checkbox" id="noVent" name="noVent" class="w-5 h-5">
+          <span data-i18n="inspection.noVent">No bathroom/kitchen ventilation</span>
+        </label>
+        <label class="flex items-center gap-3">
+          <input type="checkbox" id="tripHazards" name="tripHazards" class="w-5 h-5">
+          <span data-i18n="inspection.tripHazards">Trip hazards (loose rugs, cords)</span>
+        </label>
+        <label class="flex items-center gap-3">
+          <input type="checkbox" id="asthmaTriggers" name="asthmaTriggers" class="w-5 h-5">
+          <span data-i18n="inspection.asthmaTriggers">Asthma triggers (dust, pets, etc.)</span>
+        </label>
+      </form>
     </section>
 
-    <section>
-      <h2 data-i18n="sdoh.title">🧍 Resident SDOH Questionnaire</h2>
-      <form id="sdohForm">
-        <div class="form-row">
-          <label for="housingStable" data-i18n="sdoh.housingStable">Is your housing stable?</label>
-          <select id="housingStable" name="housingStable" data-i18n-options="options.yesNo">
+    <section class="space-y-4">
+      <h2 class="text-2xl font-semibold" data-i18n="sdoh.title">🧍 Resident SDOH Questionnaire</h2>
+      <form id="sdohForm" class="space-y-4">
+        <div>
+          <label for="housingStable" class="block font-medium" data-i18n="sdoh.housingStable">Is your housing stable?</label>
+          <select id="housingStable" name="housingStable" class="mt-1 border p-2 rounded w-full" data-i18n-options="options.yesNo">
             <option value="">Select</option>
             <option value="yes">Yes</option>
             <option value="no">No</option>
           </select>
         </div>
-
-        <div class="form-row">
-          <label for="utilityShutoff" data-i18n="sdoh.utilityShutoff">Has your utility service been shut off in the last year?</label>
-          <select id="utilityShutoff" name="utilityShutoff" data-i18n-options="options.yesNo">
+        <div>
+          <label for="utilityShutoff" class="block font-medium" data-i18n="sdoh.utilityShutoff">Has your utility service been shut off in the last year?</label>
+          <select id="utilityShutoff" name="utilityShutoff" class="mt-1 border p-2 rounded w-full" data-i18n-options="options.yesNo">
             <option value="">Select</option>
             <option value="yes">Yes</option>
             <option value="no">No</option>
           </select>
         </div>
-
-        <div class="form-row">
-          <label for="foodInsecurity" data-i18n="sdoh.foodInsecurity">Do you have consistent access to healthy food?</label>
-          <select id="foodInsecurity" name="foodInsecurity" data-i18n-options="options.yesNo">
+        <div>
+          <label for="foodInsecurity" class="block font-medium" data-i18n="sdoh.foodInsecurity">Do you have consistent access to healthy food?</label>
+          <select id="foodInsecurity" name="foodInsecurity" class="mt-1 border p-2 rounded w-full" data-i18n-options="options.yesNo">
             <option value="">Select</option>
             <option value="yes">Yes</option>
             <option value="no">No</option>
           </select>
         </div>
-
-        <div class="form-row">
-          <label for="languagePref" data-i18n="sdoh.languagePref">Preferred language for communication:</label>
-          <input type="text" id="languagePref" name="languagePref">
+        <div>
+          <label for="languagePref" class="block font-medium" data-i18n="sdoh.languagePref">Preferred language for communication:</label>
+          <input type="text" id="languagePref" name="languagePref" class="mt-1 border p-2 rounded w-full">
         </div>
       </form>
     </section>
 
-    <section>
-      <h2>📝 <span data-i18n="consent.title">Consent & Signature</span></h2>
-      <input type="checkbox" id="consentCheckbox">
-      <label for="consentCheckbox" data-i18n="consent.explained">I have explained this form and received consent.</label>
-
-      <label for="residentName" data-i18n="consent.name">Resident Name:</label>
-      <input type="text" id="residentName">
-
-      <label for="residentSignature" data-i18n="consent.signature">Signature:</label>
-      <input type="text" id="residentSignature">
+    <section class="space-y-2">
+      <h2 class="text-2xl font-semibold">📝 <span data-i18n="consent.title">Consent & Signature</span></h2>
+      <label class="flex items-center gap-3">
+        <input type="checkbox" id="consentCheckbox" class="w-5 h-5">
+        <span data-i18n="consent.explained">I have explained this form and received consent.</span>
+      </label>
+      <label for="residentName" class="block font-medium mt-2" data-i18n="consent.name">Resident Name:</label>
+      <input type="text" id="residentName" class="mt-1 border p-2 rounded w-full">
+      <label for="residentSignature" class="block font-medium mt-2" data-i18n="consent.signature">Signature:</label>
+      <input type="text" id="residentSignature" class="mt-1 border p-2 rounded w-full">
     </section>
 
-    <section>
-      <h2>📍 <span data-i18n="location.title">Inspection Map Location</span></h2>
-      <div id="map" style="height: 300px; margin-bottom: 1rem;"></div>
+    <section class="space-y-2">
+      <h2 class="text-2xl font-semibold">📍 <span data-i18n="location.title">Inspection Map Location</span></h2>
+      <div id="map" class="rounded border" style="height: 300px;"></div>
     </section>
 
-    <section>
-      <h2 data-i18n="env.title">🌍 Environmental Context (EJScreen)</h2>
-      <button onclick="getLocation()" data-i18n="env.useLocation">📍 Use My Location</button>
+    <section class="space-y-2">
+      <h2 class="text-2xl font-semibold" data-i18n="env.title">🌍 Environmental Context (EJScreen)</h2>
+      <button onclick="getLocation()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" data-i18n="env.useLocation">📍 Use My Location</button>
       <p><strong data-i18n="env.address">Address:</strong> <span id="userAddress">--</span></p>
       <p><strong data-i18n="env.asthmaRisk">Asthma Risk:</strong> <span id="asthmaRisk">--</span></p>
       <p><strong data-i18n="env.leadRisk">Lead Exposure Risk:</strong> <span id="leadRisk">--</span></p>
       <p><strong data-i18n="env.pm25">Air Quality Index (PM2.5):</strong> <span id="pm25">--</span></p>
     </section>
 
-    <button onclick="generateFHIR()" data-i18n="fhir.generate">Generate FHIR Report</button>
-    <h3 data-i18n="fhir.outputTitle">FHIR JSON Output:</h3>
-    <pre id="output"></pre>
-    <button onclick="downloadJSON()" data-i18n="fhir.downloadJson">Download JSON</button>
-    <button onclick="downloadPDF()" data-i18n="fhir.downloadPdf">Download PDF</button>
+    <section class="space-y-2">
+      <button onclick="generateFHIR()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" data-i18n="fhir.generate">Generate FHIR Report</button>
+      <h3 class="text-xl font-semibold" data-i18n="fhir.outputTitle">FHIR JSON Output:</h3>
+      <pre id="output" class="bg-gray-100 p-3 rounded overflow-x-auto"></pre>
+      <div class="flex gap-4">
+        <button onclick="downloadJSON()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" data-i18n="fhir.downloadJson">Download JSON</button>
+        <button onclick="downloadPDF()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" data-i18n="fhir.downloadPdf">Download PDF</button>
+      </div>
+    </section>
   </main>
 </body>
 </html>
