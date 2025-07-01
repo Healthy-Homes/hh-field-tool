@@ -18,13 +18,20 @@
   },
   "sdoh": {
     "title": "Resident SDOH Questionnaire",
-    "housingStable": "Is your housing stable?",
+    "housingStability": "Is your housing stable?",
+    "disabilityStatus": "Do you or anyone in your household have a disability?",
     "utilityShutoff": "Have your utilities been shut off in the past year?",
     "foodInsecurity": "How often do you worry about running out of food?",
-    "languagePref": "Preferred language for communication?"
+    "languagePref": "Preferred language for communication?",
+    "incomeLevel": "What is your monthly household income? (optional)"
   },
   "sdohOptions": {
-    "housingStable": {
+    "housingStability": {
+      "": "Select",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "disabilityStatus": {
       "": "Select",
       "yes": "Yes",
       "no": "No"
@@ -57,21 +64,4 @@
   "location": {
     "title": "Inspection Map Location"
   },
-  "env": {
-    "title": "Environmental Context",
-    "useLocation": "📍 Use My Location",
-    "address": "Address:",
-    "asthmaRisk": "Asthma Risk:",
-    "leadRisk": "Lead Risk:",
-    "pm25": "PM2.5:"
-  },
-  "photo": {
-    "label": "Upload Photos (optional)"
-  },
-  "fhir": {
-    "generate": "Generate FHIR Report",
-    "outputTitle": "FHIR JSON Output",
-    "downloadJson": "Download JSON",
-    "downloadPdf": "Download PDF"
-  }
-}
+  "en
