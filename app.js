@@ -290,7 +290,23 @@ async function downloadPDF() {
 }
 
 // Init
-
+// 📷 Handle Photo Upload Preview
+document.addEventListener("change", function (e) {
+  if (e.target.id === "photoUpload") {
+    const preview = document.getElementById("photoPreview");
+    preview.innerHTML = "";
+    Array.from(e.target.files).forEach(file => {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        const img = document.createElement("img");
+        img.src = event.target.result;
+        img.className = "w-full h-auto rounded border";
+        preview.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+});
 document.addEventListener("DOMContentLoaded", () => {
   loadLanguage("en");
   document.getElementById("langSelect").addEventListener("change", e => {
