@@ -23,43 +23,86 @@
       </select>
     </header>
 
-    <section class="space-y-4">
-      <h2 class="text-2xl font-semibold" data-i18n="inspection.title">🏠 Home Inspection Checklist</h2>
-      <form id="inspectionForm" class="grid grid-cols-1 gap-3">
-        <label class="flex items-center gap-3">
-          <input type="checkbox" id="mold" name="mold" class="w-5 h-5">
-          <span data-i18n="inspection.mold">Visible mold</span>
-        </label>
-        <label class="flex items-center gap-3">
-          <input type="checkbox" id="pests" name="pests" class="w-5 h-5">
-          <span data-i18n="inspection.pests">Pest infestation</span>
-        </label>
-        <label class="flex items-center gap-3">
-          <input type="checkbox" id="leaks" name="leaks" class="w-5 h-5">
-          <span data-i18n="inspection.leaks">Leaks or dampness</span>
-        </label>
-        <label class="flex items-center gap-3">
-          <input type="checkbox" id="lead" name="lead" class="w-5 h-5">
-          <span data-i18n="inspection.lead">Lead paint risk (pre-1978)</span>
-        </label>
-        <label class="flex items-center gap-3">
-          <input type="checkbox" id="noHVAC" name="noHVAC" class="w-5 h-5">
-          <span data-i18n="inspection.noHVAC">No heating or cooling</span>
-        </label>
-        <label class="flex items-center gap-3">
-          <input type="checkbox" id="noVent" name="noVent" class="w-5 h-5">
-          <span data-i18n="inspection.noVent">No bathroom/kitchen ventilation</span>
-        </label>
-        <label class="flex items-center gap-3">
-          <input type="checkbox" id="tripHazards" name="tripHazards" class="w-5 h-5">
-          <span data-i18n="inspection.tripHazards">Trip hazards (loose rugs, cords)</span>
-        </label>
-        <label class="flex items-center gap-3">
-          <input type="checkbox" id="asthmaTriggers" name="asthmaTriggers" class="w-5 h-5">
-          <span data-i18n="inspection.asthmaTriggers">Asthma triggers (dust, pets, etc.)</span>
-        </label>
-      </form>
-    </section>
+   <section class="space-y-4">
+  <h2 class="text-2xl font-semibold" data-i18n="inspection.title">🏠 Home Inspection Checklist</h2>
+  <form id="inspectionForm" class="grid grid-cols-1 gap-3">
+
+    <!-- Moisture & Mold -->
+    <label class="flex items-center gap-3">
+      <input type="checkbox" name="moldVisible" class="w-5 h-5">
+      <span data-i18n="inspection.moldVisible">Visible mold on walls, ceilings, or windows</span>
+    </label>
+    <label class="flex items-center gap-3">
+      <input type="checkbox" name="dampSmell" class="w-5 h-5">
+      <span data-i18n="inspection.dampSmell">Persistent damp or musty odors</span>
+    </label>
+    <label class="flex items-center gap-3">
+      <input type="checkbox" name="leakingPipes" class="w-5 h-5">
+      <span data-i18n="inspection.leakingPipes">Leaks from plumbing or roof</span>
+    </label>
+
+    <!-- Pests -->
+    <label class="flex items-center gap-3">
+      <input type="checkbox" name="pestDroppings" class="w-5 h-5">
+      <span data-i18n="inspection.pestDroppings">Pest droppings (cockroaches, rodents)</span>
+    </label>
+    <label class="flex items-center gap-3">
+      <input type="checkbox" name="openEntryPoints" class="w-5 h-5">
+      <span data-i18n="inspection.openEntryPoints">Unsealed cracks, holes, or vents</span>
+    </label>
+
+    <!-- Safety & Structural -->
+    <label class="flex items-center gap-3">
+      <input type="checkbox" name="brokenStairs" class="w-5 h-5">
+      <span data-i18n="inspection.brokenStairs">Broken steps, railings, or flooring</span>
+    </label>
+    <label class="flex items-center gap-3">
+      <input type="checkbox" name="tripHazards" class="w-5 h-5">
+      <span data-i18n="inspection.tripHazards">Trip hazards (loose rugs, cords, clutter)</span>
+    </label>
+
+    <!-- Ventilation & Air -->
+    <label class="flex items-center gap-3">
+      <input type="checkbox" name="noVentilation" class="w-5 h-5">
+      <span data-i18n="inspection.noVentilation">No ventilation in kitchen/bathroom</span>
+    </label>
+    <label class="flex items-center gap-3">
+      <input type="checkbox" name="hvacInadequate" class="w-5 h-5">
+      <span data-i18n="inspection.hvacInadequate">No heating or cooling system</span>
+    </label>
+
+    <!-- Lead & Toxins -->
+    <label class="flex items-center gap-3">
+      <input type="checkbox" name="pre1978Paint" class="w-5 h-5">
+      <span data-i18n="inspection.pre1978Paint">Painted surfaces in homes built before 1978</span>
+    </label>
+    <label class="flex items-center gap-3">
+      <input type="checkbox" name="gasSmell" class="w-5 h-5">
+      <span data-i18n="inspection.gasSmell">Smell of gas or fuel inside home</span>
+    </label>
+
+    <!-- Sanitation -->
+    <label class="flex items-center gap-3">
+      <input type="checkbox" name="noRunningWater" class="w-5 h-5">
+      <span data-i18n="inspection.noRunningWater">No running water or working toilet</span>
+    </label>
+    <label class="flex items-center gap-3">
+      <input type="checkbox" name="visibleTrash" class="w-5 h-5">
+      <span data-i18n="inspection.visibleTrash">Visible trash, sewage, or biohazards</span>
+    </label>
+
+    <!-- Other -->
+    <label class="flex items-center gap-3">
+      <input type="checkbox" name="asthmaTriggers" class="w-5 h-5">
+      <span data-i18n="inspection.asthmaTriggers">Asthma triggers (dust, smoke, pets)</span>
+    </label>
+    <label class="flex items-center gap-3">
+      <input type="checkbox" name="otherHazards" class="w-5 h-5">
+      <span data-i18n="inspection.otherHazards">Other observed health/safety risks</span>
+    </label>
+  </form>
+</section>
+
 
     <section class="space-y-4">
       <h2 class="text-2xl font-semibold" data-i18n="sdoh.title">🧍 Resident SDOH Questionnaire</h2>
