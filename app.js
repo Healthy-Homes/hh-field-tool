@@ -1,4 +1,4 @@
-// ✅ app.js – Fully updated and synced with index.html and i18n logic
+// ✅ app.js – Fully synced, with restored SDOH fields and complete i18n toggle
 console.log("✅ app.js loaded and running");
 
 let lastFHIRBundle = null;
@@ -26,6 +26,26 @@ function applyTranslations() {
     let text = translations;
     for (const k of keys) text = text?.[k];
     if (text) el.textContent = text;
+  });
+
+  const selectFields = ["incomeLevel", "housingStable", "utilityShutoff", "foodInsecurity", "languagePref"];
+  selectFields.forEach(id => {
+    const select = document.getElementById(id);
+    if (!select) return;
+    const i18nKey = select.getAttribute("data-i18n-options");
+    let optionSet = translations;
+    for (const part of i18nKey.split(".")) optionSet = optionSet?.[part];
+    if (optionSet) {
+      const current = select.value;
+      select.innerHTML = "";
+      for (const [value, label] of Object.entries(optionSet)) {
+        const opt = document.createElement("option");
+        opt.value = value;
+        opt.textContent = label;
+        select.appendChild(opt);
+      }
+      select.value = current;
+    }
   });
 }
 
@@ -118,8 +138,10 @@ function generateFHIR() {
   }));
 
   const socialNeeds = {
-    incomeLevel: sdoh.incomeLevel.value,
-    housingStability: sdoh.housingStability.value
+    housingStable: sdoh.housingStable?.value || "",
+    utilityShutoff: sdoh.utilityShutoff?.value || "",
+    foodInsecurity: sdoh.foodInsecurity?.value || "",
+    languagePref: sdoh.languagePref?.value || ""
   };
 
   const ej = window.ejScreenInfo || {};
