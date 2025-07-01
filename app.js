@@ -23,17 +23,6 @@ function applyTranslations() {
 
 // 🌍 EJScreen (Mock for Now — Easily Upgradable)
 async function getEJScreenData(lat, lon) {
-  // TODO: Replace with real EPA EJScreen API call once back in the U.S.
-  // Example:
-  // const response = await fetch(`https://ejscreen.epa.gov/arcgis/rest/services/EJSCREEN/MapServer/identify?geometry=${lon},${lat}&...`);
-  // const data = await response.json();
-  // return {
-  //   asthmaRisk: data.attributes.ASTM_RATE,
-  //   leadRisk: data.attributes.LEAD_BASED_PAINT,
-  //   pm25: data.attributes.PM25,
-  //   ...
-  // };
-
   console.warn("🧪 Using MOCK EJScreen data — replace this for real deployment.");
 
   return {
@@ -65,7 +54,6 @@ async function getLocation() {
     document.getElementById("leadRisk").textContent = env.leadRisk;
     document.getElementById("pm25").textContent = env.pm25;
 
-    // ✅ Show warning banner if using mock data
     const mockWarning = document.getElementById("mockWarning");
     if (mockWarning) mockWarning.style.display = "block";
 
@@ -259,13 +247,18 @@ async function downloadPDF() {
 // 🗺️ Init on page load
 document.addEventListener("DOMContentLoaded", () => {
   loadLanguage("en");
+
   document.getElementById("langSelect").addEventListener("change", (e) => {
     loadLanguage(e.target.value);
   });
 
-  map = L.map('map').setView([25.032969, 121.565418], 13);
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '© OpenStreetMap'
-  }).addTo(map);
+  // Safely defer map init
+  setTimeout(() => {
+    map = L.map('map').setView([25.032969, 121.565418], 13);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+    console.log("Leaflet map initialized.");
+  }, 0);
 });
