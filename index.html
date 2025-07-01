@@ -37,11 +37,40 @@
 
     <section>
       <h2 data-i18n="sdoh.title">🧍 Resident SDOH Questionnaire</h2>
-      <form id="sdohForm">
-        <div class="form-row">
-          <label for="housingStable" data-i18n="sdoh.housingStable"></label>
-          <select id="housingStable" name="housingStable"></select>
-        </div>
+     <form id="sdohForm">
+  <div class="form-row">
+    <label for="housingStable" data-i18n="sdoh.housingStable">Is your housing stable?</label>
+    <select id="housingStable" name="housingStable">
+      <option value="">Select</option>
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select>
+  </div>
+
+  <div class="form-row">
+    <label for="utilityShutoff" data-i18n="sdoh.utilityShutoff">Has your utility service been shut off in the last year?</label>
+    <select id="utilityShutoff" name="utilityShutoff">
+      <option value="">Select</option>
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select>
+  </div>
+
+  <div class="form-row">
+    <label for="foodInsecurity" data-i18n="sdoh.foodInsecurity">Do you have consistent access to healthy food?</label>
+    <select id="foodInsecurity" name="foodInsecurity">
+      <option value="">Select</option>
+      <option value="yes">Yes</option>
+      <option value="no">No</option>
+    </select>
+  </div>
+
+  <div class="form-row">
+    <label for="languagePref" data-i18n="sdoh.languagePref">Preferred language for communication:</label>
+    <input type="text" id="languagePref" name="languagePref">
+  </div>
+</form>
+
 
         <div class="form-row">
           <label for="utilityShutoff" data-i18n="sdoh.utilityShutoff"></label>
