@@ -1,10 +1,11 @@
-// ✅ Updated app.js for Healthy Homes App
+// ✅ Updated app.js with Photo Upload Support in FHIR Bundle
 
 console.log("✅ app.js loaded and running");
 let lastFHIRBundle = null;
 let translations = {};
 let currentLang = 'en';
 let map;
+let base64Photo = null; // Stores encoded image
 
 // Load and apply language translations
 async function loadLanguage(lang) {
@@ -89,7 +90,7 @@ function applyTranslations() {
 async function getEJScreenData(lat, lon) {
   const banner = document.createElement("div");
   banner.textContent = "🧪 Using MOCK EJScreen data";
-  banner.className = "bg-yellow-100 border border-yellow-400 text-yellow-800 px-4 py-2 rounded my-2";
+  banner.className = "bg-yellow-100 border border-yellow-400 text-yellow-800 px-4 py-2 rounded my-4";
   document.querySelector("#map").insertAdjacentElement("beforebegin", banner);
   console.warn("🧪 Using MOCK EJScreen data");
   return {
@@ -119,6 +120,21 @@ async function getLocation() {
   }, () => alert("Unable to retrieve location."));
 }
 
+// 🖼️ Handle photo upload
+function handlePhotoUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    base64Photo = e.target.result.split(',')[1];
+    const preview = document.getElementById("photoPreview");
+    preview.src = e.target.result;
+    preview.classList.remove("hidden");
+  };
+  reader.readAsDataURL(file);
+}
+
+// 🧬 Generate FHIR Output
 function generateFHIR() {
   const inspection = document.forms['inspectionForm'];
   const sdoh = document.forms['sdohForm'];
@@ -213,105 +229,35 @@ function generateFHIR() {
     })
   };
 
+  if (base64Photo) {
+    fhirBundle.entry.push({
+      resource: {
+        resourceType: "Media",
+        type: "photo",
+        content: {
+          contentType: "image/png",
+          data: base64Photo
+        }  
+      }
+    });
+  }
+
   document.getElementById("output").textContent = JSON.stringify(fhirBundle, null, 2);
   lastFHIRBundle = fhirBundle;
 }
-// 💾 Export Functions
-function downloadJSON() {
-  if (!lastFHIRBundle) return alert("Run the assessment first.");
-  const blob = new Blob([JSON.stringify(lastFHIRBundle, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "healthy-home-assessment.json";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-
-async function downloadPDF() {
-  if (!lastFHIRBundle) return alert("Run the assessment first.");
-
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  doc.setFontSize(14);
-  doc.text("Healthy Homes Assessment Summary", 10, 10);
-  doc.setFontSize(10);
-  let y = 20;
-
-  lastFHIRBundle.entry.forEach(entry => {
-    const res = entry.resource;
-    if (res.resourceType === "Observation" && res.code?.coding?.[0]?.code !== "ejscreen-summary") {
-      doc.text(`• ${res.code.coding[0].display}: ${res.valueBoolean ? "Yes" : "No"}`, 10, y);
-      y += 7;
-    }
-  });
-
-  const sdoh = lastFHIRBundle.entry.find(e => e.resource.resourceType === "QuestionnaireResponse");
-  if (sdoh) {
-    doc.text("Resident SDOH Responses:", 10, y + 5);
-    y += 12;
-    sdoh.resource.item.forEach(item => {
-      doc.text(`• ${item.text}: ${item.answer[0].valueString}`, 10, y);
-      y += 7;
-    });
-  }
-
-  const consent = lastFHIRBundle.entry.find(e => e.resource.id === "consent-info");
-  if (consent) {
-    const ext = consent.resource.extension;
-    const get = (key) => ext.find(e => e.url === key)?.valueString || "N/A";
-    y += 10;
-    doc.text("Resident Consent:", 10, y);
-    y += 6;
-    doc.text(`Name: ${get("residentName")}`, 10, y);
-    y += 6;
-    doc.text(`Signature: ${get("residentSignature")}`, 10, y);
-    y += 6;
-    doc.text(`Consent Given: Yes`, 10, y);
-  }
-
-  const ej = window.ejScreenInfo;
-  if (ej) {
-    y += 10;
-    doc.text("Environmental Context (EJScreen):", 10, y);
-    y += 6;
-    doc.text(`Address: ${ej.address}`, 10, y);
-    y += 6;
-    doc.text(`Asthma Risk: ${ej.asthmaRisk}`, 10, y);
-    y += 6;
-    doc.text(`Lead Risk: ${ej.leadRisk}`, 10, y);
-    y += 6;
-    doc.text(`PM2.5: ${ej.pm25}`, 10, y);
-  }
-
-  doc.save("healthy-home-assessment.pdf");
-}
 
 // Init
-// 📷 Handle Photo Upload Preview
-document.addEventListener("change", function (e) {
-  if (e.target.id === "photoUpload") {
-    const preview = document.getElementById("photoPreview");
-    preview.innerHTML = "";
-    Array.from(e.target.files).forEach(file => {
-      const reader = new FileReader();
-      reader.onload = function (event) {
-        const img = document.createElement("img");
-        img.src = event.target.result;
-        img.className = "w-full h-auto rounded border";
-        preview.appendChild(img);
-      };
-      reader.readAsDataURL(file);
-    });
-  }
-});
+
 document.addEventListener("DOMContentLoaded", () => {
   loadLanguage("en");
   document.getElementById("langSelect").addEventListener("change", e => {
     loadLanguage(e.target.value);
   });
+
+  const photoInput = document.getElementById("photoInput");
+  if (photoInput) {
+    photoInput.addEventListener("change", handlePhotoUpload);
+  }
 
   try {
     map = L.map('map').setView([25.032969, 121.565418], 13);
