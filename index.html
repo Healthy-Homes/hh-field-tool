@@ -13,9 +13,7 @@
   <div class="max-w-3xl mx-auto px-4 py-6 space-y-8">
     <header class="space-y-2">
       <h1 class="text-2xl font-bold text-green-700" data-i18n="app.title">Healthy Homes Practitioner App</h1>
-      <p class="text-sm text-gray-600" data-i18n="app.intro">
-        This tool helps field workers assess housing-related health risks and social needs.
-      </p>
+      <p class="text-sm text-gray-600" data-i18n="app.intro">This tool helps field workers assess housing-related health risks and social needs.</p>
     </header>
 
     <section>
@@ -44,20 +42,17 @@
     <form id="sdohForm" class="space-y-4">
       <h2 class="text-lg font-semibold text-green-700" data-i18n="sdoh.title">Resident SDOH Questionnaire</h2>
 
-      <label class="block text-sm font-medium text-gray-700" for="housingStability" data-i18n="sdoh.housingStability">Is your housing stable?</label>
-      <select id="housingStability" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="sdohOptions.yesNo"></select>
-
-      <label class="block text-sm font-medium text-gray-700" for="disabilityStatus" data-i18n="sdoh.disabilityStatus">Do you or anyone in your household have a disability?</label>
-      <select id="disabilityStatus" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="sdohOptions.yesNo"></select>
+      <label class="block text-sm font-medium text-gray-700" for="housingStable" data-i18n="sdoh.housingStable">Is your housing stable?</label>
+      <select id="housingStable" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="sdohOptions.housingStable"></select>
 
       <label class="block text-sm font-medium text-gray-700" for="utilityShutoff" data-i18n="sdoh.utilityShutoff">Have your utilities been shut off in the past year?</label>
-      <select id="utilityShutoff" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="sdohOptions.yesNo"></select>
+      <select id="utilityShutoff" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="sdohOptions.utilityShutoff"></select>
 
       <label class="block text-sm font-medium text-gray-700" for="foodInsecurity" data-i18n="sdoh.foodInsecurity">How often do you worry about running out of food?</label>
-      <select id="foodInsecurity" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="sdohOptions.yesNo"></select>
+      <select id="foodInsecurity" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="sdohOptions.foodInsecurity"></select>
 
-      <label class="block text-sm font-medium text-gray-700" for="preferredLanguage" data-i18n="sdoh.languagePref">Preferred language for communication?</label>
-      <input type="text" id="preferredLanguage" class="block w-full rounded border-gray-300 shadow-sm" />
+      <label class="block text-sm font-medium text-gray-700" for="languagePref" data-i18n="sdoh.languagePref">Preferred language for communication?</label>
+      <select id="languagePref" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="sdohOptions.languagePref"></select>
 
       <label class="block text-sm font-medium text-gray-700" for="incomeLevel" data-i18n="sdoh.incomeLevel">What is your monthly household income? <span class="text-gray-500">(optional)</span></label>
       <input type="number" id="incomeLevel" class="block w-full rounded border-gray-300 shadow-sm" />
@@ -67,16 +62,17 @@
       <h2 class="text-lg font-semibold text-green-700" data-i18n="consent.title">Consent & Signature</h2>
       <label class="block mt-2 text-sm font-medium text-gray-700">
         <input type="checkbox" id="consentCheckbox" class="mr-2" />
-        <span data-i18n="consent.explained">I have explained and received consent.</span>
+        <span data-i18n="consent.explained">I consent to a home inspection to assess health and safety conditions, understand this is voluntary, and agree that photos may be taken for documentation purposes.</span>
       </label>
-      <label class="block mt-2 text-sm font-medium text-gray-700" for="residentName" data-i18n="consent.name">Resident Name:</label>
+      <label class="block mt-2 text-sm font-medium text-gray-700" for="residentName" data-i18n="consent.name">Resident Name (serves as consent confirmation):</label>
       <input type="text" id="residentName" class="mt-1 block w-full rounded border-gray-300 shadow-sm" />
-      <label class="block mt-2 text-sm font-medium text-gray-700" for="residentSignature" data-i18n="consent.signature">Signature:</label>
-      <input type="text" id="residentSignature" class="mt-1 block w-full rounded border-gray-300 shadow-sm" />
     </section>
 
     <section>
       <h2 class="text-lg font-semibold text-green-700" data-i18n="location.title">Inspection Map Location</h2>
+      <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-2 mb-2 text-sm" id="dummyBanner">
+        ⚠️ Environmental context data is currently mock-only and not live. This will be updated in a future version.
+      </div>
       <button onclick="getLocation()" type="button" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700" data-i18n="env.useLocation">📍 Use My Location</button>
       <p id="userAddress" class="mt-2 text-sm text-gray-700"></p>
       <div id="map" class="mt-4 h-60 rounded border border-gray-300"></div>
