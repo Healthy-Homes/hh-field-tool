@@ -2,24 +2,24 @@
   "sdoh": {
     "title": "🧍‍♂️ 住戶社會決定因素問卷",
     "housingStable": "您目前的住房穩定嗎？",
-    "housingStableOptions": {
-      "": "請選擇",
-      "yes": "是",
-      "no": "否"
-    },
     "utilityShutoff": "過去一年中，您的電、水或瓦斯有被中斷嗎？",
-    "utilityShutoffOptions": {
-      "": "請選擇",
-      "yes": "是",
-      "no": "否"
-    },
     "foodInsecurity": "您是否曾擔心食物不足？",
-    "foodInsecurityOptions": {
-      "": "請選擇",
-      "yes": "是",
-      "no": "否"
-    },
-    "languagePref": "您偏好的服務語言是什麼？"
+    "languagePref": "您偏好的服務語言是什麼？",
+    "options": {
+      "select": "請選擇",
+      "stable": {
+        "yes": "是",
+        "no": "否"
+      },
+      "utility": {
+        "yes": "是",
+        "no": "否"
+      },
+      "food": {
+        "yes": "是",
+        "no": "否"
+      }
+    }
   },
   "consent": {
     "title": "📝 同意與簽名",
@@ -43,12 +43,5 @@
     "outputTitle": "FHIR JSON 輸出：",
     "downloadJson": "下載 JSON",
     "downloadPdf": "下載 PDF"
-  }
-}
-"options": {
-  "yesNo": {
-    "": "請選擇",
-    "yes": "是",
-    "no": "否"
   }
 }
