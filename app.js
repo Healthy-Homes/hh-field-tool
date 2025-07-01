@@ -65,7 +65,7 @@ async function getLocation() {
     document.getElementById("leadRisk").textContent = env.leadRisk;
     document.getElementById("pm25").textContent = env.pm25;
 
-    // Optional warning banner for mock
+    // ✅ Show warning banner if using mock data
     const mockWarning = document.getElementById("mockWarning");
     if (mockWarning) mockWarning.style.display = "block";
 
