@@ -47,30 +47,5 @@
       "chinese": "中文",
       "other": "其他"
     }
-  },
-  "consent": {
-    "title": "同意與簽名",
-    "explained": "我同意進行住房健康與安全評估，了解此為自願，並同意拍照作為紀錄用途。",
-    "name": "居民姓名（作為同意確認）："
-  },
-  "location": {
-    "title": "檢查地圖位置"
-  },
-  "env": {
-    "title": "環境背景",
-    "useLocation": "📍 使用我的位置",
-    "address": "地址：",
-    "asthmaRisk": "氣喘風險：",
-    "leadRisk": "鉛暴露風險：",
-    "pm25": "PM2.5："
-  },
-  "photo": {
-    "label": "上傳照片（可選）"
-  },
-  "fhir": {
-    "generate": "產生 FHIR 報告",
-    "outputTitle": "FHIR JSON 輸出：",
-    "downloadJson": "下載 JSON",
-    "downloadPdf": "下載 PDF"
   }
 }
