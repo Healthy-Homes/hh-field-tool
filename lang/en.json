@@ -1,6 +1,34 @@
 {
+  "app": {
+    "title": "Healthy Homes Practitioner App",
+    "intro": "This tool helps field workers assess housing-related health risks and social needs."
+  },
+  "inspection": {
+    "title": "Home Inspection Checklist",
+    "moldVisible": "Visible mold",
+    "leakingPipes": "Water damage or leaks",
+    "noVentilation": "Poor ventilation",
+    "pestDroppings": "Signs of pests",
+    "electrical": "Unsafe electrical systems",
+    "tripHazards": "Trip hazards",
+    "otherHazards": "Other risks"
+  },
+  "sdoh": {
+    "title": "Resident SDOH Questionnaire",
+    "housingStable": "Is your housing stable?",
+    "disabilityStatus": "Do you or anyone in your household have a disability?",
+    "utilityShutoff": "Have your utilities been shut off in the past year?",
+    "foodInsecurity": "How often do you worry about running out of food?",
+    "languagePref": "Preferred language for communication?",
+    "incomeLevel": "What is your monthly household income? (optional)"
+  },
   "sdohOptions": {
     "housingStable": {
+      "": "Select",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "disabilityStatus": {
       "": "Select",
       "yes": "Yes",
       "no": "No"
@@ -14,14 +42,40 @@
       "": "Select",
       "always": "Always",
       "sometimes": "Sometimes",
-      "rarely": "Rarely",
       "never": "Never"
     },
     "languagePref": {
       "": "Select",
       "en": "English",
       "zh": "Traditional Chinese",
-      "other": "Other (please specify below)"
+      "es": "Spanish",
+      "vi": "Vietnamese",
+      "tl": "Tagalog",
+      "other": "Other (enter below)"
     }
+  },
+  "consent": {
+    "title": "Consent & Signature",
+    "explained": "I consent to a home inspection to assess health and safety conditions, understand this is voluntary, and agree that photos may be taken for documentation purposes.",
+    "name": "Resident Name (serves as consent confirmation):"
+  },
+  "location": {
+    "title": "Inspection Map Location"
+  },
+  "env": {
+    "title": "Environmental Context",
+    "asthmaRisk": "Asthma Risk",
+    "leadRisk": "Lead Risk",
+    "pm25": "PM2.5",
+    "useLocation": "📍 Use My Location"
+  },
+  "photo": {
+    "label": "Upload Photos (optional)"
+  },
+  "fhir": {
+    "outputTitle": "FHIR JSON Output",
+    "generate": "Generate FHIR Report",
+    "downloadJson": "Download JSON",
+    "downloadPdf": "Download PDF"
   }
 }
