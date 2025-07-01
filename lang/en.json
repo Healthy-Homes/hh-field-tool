@@ -1,5 +1,5 @@
 {
-  "app": { 
+  "app": {
     "title": "Healthy Homes Practitioner App",
     "intro": "This tool helps field workers assess housing-related health risks and social needs."
   },
@@ -8,24 +8,21 @@
   },
   "inspection": {
     "title": "Home Inspection Checklist",
-    "mold": "Visible mold on walls, ceilings, or furniture",
-    "pests": "Presence of cockroaches, rodents, or other pests",
-    "leaks": "Leaks or water damage in ceilings, walls, or floors",
-    "lead": "Peeling or chipping paint in homes built before 1978",
-    "noHVAC": "No functioning heating or cooling system",
-    "noVent": "Lack of exhaust fans in kitchen or bathroom",
-    "tripHazards": "Trip hazards such as loose rugs, cords, or cluttered walkways",
-    "asthmaTriggers": "Asthma triggers like dust buildup, pets, or strong odors",
-    "electrical": "Exposed wiring or lack of grounded outlets",
-    "structural": "Cracks in walls, ceilings, or foundation",
-    "plumbing": "Inadequate plumbing or drainage issues",
-    "safetyDevices": "Missing or non-functional smoke or carbon monoxide detectors",
-    "accessibility": "Barriers for people with mobility challenges (stairs, no ramps)",
-    "sanitation": "Overflowing garbage, sewage backup, or strong odors",
-    "ventilation": "Windows that do not open or poor air circulation",
-    "pesticideUse": "Strong smell of pesticides or improper storage",
-    "overcrowding": "Too many occupants for available rooms or beds",
-    "noise": "Excessive noise from nearby traffic, factories, or neighbors"
+    "moldVisible": "Visible mold on walls, ceilings, or windows",
+    "dampSmell": "Persistent damp or musty odors",
+    "leakingPipes": "Leaks from plumbing or roof",
+    "pestDroppings": "Pest droppings (cockroaches, rodents)",
+    "openEntryPoints": "Unsealed cracks, holes, or vents",
+    "brokenStairs": "Broken steps, railings, or flooring",
+    "tripHazards": "Trip hazards (loose rugs, cords, clutter)",
+    "noVentilation": "No ventilation in kitchen/bathroom",
+    "hvacInadequate": "No heating or cooling system",
+    "pre1978Paint": "Painted surfaces in homes built before 1978",
+    "gasSmell": "Smell of gas or fuel inside home",
+    "noRunningWater": "No running water or working toilet",
+    "visibleTrash": "Visible trash, sewage, or biohazards",
+    "asthmaTriggers": "Asthma triggers (dust, smoke, pets)",
+    "otherHazards": "Other observed health/safety risks"
   },
   "sdoh": {
     "title": "Resident SDOH Questionnaire",
