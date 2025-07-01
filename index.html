@@ -37,53 +37,36 @@
 
     <section>
       <h2 data-i18n="sdoh.title">🧍 Resident SDOH Questionnaire</h2>
-     <form id="sdohForm">
-  <div class="form-row">
-    <label for="housingStable" data-i18n="sdoh.housingStable">Is your housing stable?</label>
-    <select id="housingStable" name="housingStable">
-      <option value="">Select</option>
-      <option value="yes">Yes</option>
-      <option value="no">No</option>
-    </select>
-  </div>
-
-  <div class="form-row">
-    <label for="utilityShutoff" data-i18n="sdoh.utilityShutoff">Has your utility service been shut off in the last year?</label>
-    <select id="utilityShutoff" name="utilityShutoff">
-      <option value="">Select</option>
-      <option value="yes">Yes</option>
-      <option value="no">No</option>
-    </select>
-  </div>
-
-  <div class="form-row">
-    <label for="foodInsecurity" data-i18n="sdoh.foodInsecurity">Do you have consistent access to healthy food?</label>
-    <select id="foodInsecurity" name="foodInsecurity">
-      <option value="">Select</option>
-      <option value="yes">Yes</option>
-      <option value="no">No</option>
-    </select>
-  </div>
-
-  <div class="form-row">
-    <label for="languagePref" data-i18n="sdoh.languagePref">Preferred language for communication:</label>
-    <input type="text" id="languagePref" name="languagePref">
-  </div>
-</form>
-
-
+      <form id="sdohForm">
         <div class="form-row">
-          <label for="utilityShutoff" data-i18n="sdoh.utilityShutoff"></label>
-          <select id="utilityShutoff" name="utilityShutoff"></select>
+          <label for="housingStable" data-i18n="sdoh.housingStable">Is your housing stable?</label>
+          <select id="housingStable" name="housingStable">
+            <option value="">Select</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
         </div>
 
         <div class="form-row">
-          <label for="foodInsecurity" data-i18n="sdoh.foodInsecurity"></label>
-          <select id="foodInsecurity" name="foodInsecurity"></select>
+          <label for="utilityShutoff" data-i18n="sdoh.utilityShutoff">Has your utility service been shut off in the last year?</label>
+          <select id="utilityShutoff" name="utilityShutoff">
+            <option value="">Select</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
         </div>
 
         <div class="form-row">
-          <label for="languagePref" data-i18n="sdoh.languagePref"></label>
+          <label for="foodInsecurity" data-i18n="sdoh.foodInsecurity">Do you have consistent access to healthy food?</label>
+          <select id="foodInsecurity" name="foodInsecurity">
+            <option value="">Select</option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label for="languagePref" data-i18n="sdoh.languagePref">Preferred language for communication:</label>
           <input type="text" id="languagePref" name="languagePref">
         </div>
       </form>
@@ -92,12 +75,12 @@
     <section>
       <h2>📝 <span data-i18n="consent.title">Consent & Signature</span></h2>
       <input type="checkbox" id="consentCheckbox">
-      <label for="consentCheckbox" data-i18n="consent.explained"></label>
+      <label for="consentCheckbox" data-i18n="consent.explained">I have explained this form and received consent.</label>
 
-      <label for="residentName" data-i18n="consent.name"></label>
+      <label for="residentName" data-i18n="consent.name">Resident Name:</label>
       <input type="text" id="residentName">
 
-      <label for="residentSignature" data-i18n="consent.signature"></label>
+      <label for="residentSignature" data-i18n="consent.signature">Signature:</label>
       <input type="text" id="residentSignature">
     </section>
 
