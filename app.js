@@ -30,7 +30,7 @@ function applyTranslations() {
   });
 }
 
-// ✅ FIXED: Populate dropdowns from sdohOptions (not nested in sdoh.options)
+// ✅ Populate dropdowns from sdohOptions
 function populateSelectOptions() {
   document.querySelectorAll('[data-i18n-options]').forEach(select => {
     const key = select.getAttribute('data-i18n-options');
@@ -53,22 +53,47 @@ function populateSelectOptions() {
   });
 }
 
-// Handle language change
+// 🌍 Get current geolocation and show map
+function getLocation() {
+  if (!navigator.geolocation) {
+    alert('Geolocation is not supported by your browser');
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    async position => {
+      const { latitude, longitude } = position.coords;
+      const latlng = [latitude, longitude];
+
+      const map = L.map('map').setView(latlng, 15);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+      L.marker(latlng).addTo(map);
+
+      document.getElementById('userAddress').textContent = `Latitude: ${latitude.toFixed(4)}, Longitude: ${longitude.toFixed(4)}`;
+    },
+    error => {
+      console.error('Geolocation error:', error);
+      alert('Unable to retrieve your location.');
+    }
+  );
+}
+
+// 🔁 Handle language change
 document.getElementById('langSelect').addEventListener('change', async e => {
   currentLang = e.target.value;
   await loadTranslations(currentLang);
 });
 
-// DOM Ready
+// ✅ DOM Ready
 window.addEventListener('DOMContentLoaded', async () => {
   await loadTranslations(currentLang);
-  getLocation?.(); // Prevents crash if getLocation() is undefined
+  getLocation?.(); // Load location on page load
   document.getElementById('dummyBanner').style.display = 'block';
 });
 
-// ---- Unchanged functionality below ----
-
-// Photo uploads
+// 📸 Handle photo uploads
 const uploadedImages = [];
 
 document.getElementById('photoUpload').addEventListener('change', function (e) {
@@ -93,7 +118,7 @@ document.getElementById('photoUpload').addEventListener('change', function (e) {
   uploadStatus.textContent = `${e.target.files.length} image(s) uploaded.`;
 });
 
-// Generate FHIR Observation
+// 🧾 Generate FHIR JSON
 function generateFHIR() {
   const formData = {
     housingStable: document.getElementById('housingStable').value,
@@ -125,7 +150,7 @@ function generateFHIR() {
   document.getElementById('output').textContent = JSON.stringify(obs, null, 2);
 }
 
-// JSON export
+// 💾 Download JSON
 function downloadJSON() {
   const blob = new Blob([document.getElementById('output').textContent], { type: 'application/json' });
   const a = document.createElement('a');
@@ -134,7 +159,7 @@ function downloadJSON() {
   a.click();
 }
 
-// PDF export
+// 📄 Download PDF
 function downloadPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
