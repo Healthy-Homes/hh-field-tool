@@ -8,39 +8,49 @@
   },
   "inspection": {
     "title": "Home Inspection Checklist",
-    "moldVisible": "Visible mold on walls, ceilings, or windows",
-    "dampSmell": "Persistent damp or musty odors",
-    "leakingPipes": "Leaks from plumbing or roof",
-    "pestDroppings": "Pest droppings (cockroaches, rodents)",
-    "openEntryPoints": "Unsealed cracks, holes, or vents",
-    "brokenStairs": "Broken steps, railings, or flooring",
-    "tripHazards": "Trip hazards (loose rugs, cords, clutter)",
-    "noVentilation": "No ventilation in kitchen/bathroom",
-    "hvacInadequate": "No heating or cooling system",
-    "pre1978Paint": "Painted surfaces in homes built before 1978",
-    "gasSmell": "Smell of gas or fuel inside home",
-    "noRunningWater": "No running water or working toilet",
-    "visibleTrash": "Visible trash, sewage, or biohazards",
-    "asthmaTriggers": "Asthma triggers (dust, smoke, pets)",
-    "otherHazards": "Other observed health/safety risks"
+    "moldVisible": "Visible mold",
+    "leakingPipes": "Water damage or leaks",
+    "noVentilation": "Poor ventilation",
+    "pestDroppings": "Signs of pests",
+    "electrical": "Unsafe electrical systems",
+    "tripHazards": "Trip hazards",
+    "otherHazards": "Other risks"
   },
   "sdoh": {
     "title": "Resident SDOH Questionnaire",
     "housingStable": "Is your housing stable?",
-    "utilityShutoff": "Has your utility service been shut off in the last year?",
-    "foodInsecurity": "Do you have consistent access to healthy food?",
-    "languagePref": "Preferred language for communication:"
+    "utilityShutoff": "Have your utilities been shut off in the past year?",
+    "foodInsecurity": "How often do you worry about running out of food?",
+    "languagePref": "Preferred language for communication?"
   },
-  "options": {
-    "yesNo": {
+  "sdohOptions": {
+    "housingStable": {
       "": "Select",
       "yes": "Yes",
       "no": "No"
+    },
+    "utilityShutoff": {
+      "": "Select",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "foodInsecurity": {
+      "": "Select",
+      "often": "Often",
+      "sometimes": "Sometimes",
+      "rarely": "Rarely",
+      "never": "Never"
+    },
+    "languagePref": {
+      "": "Select",
+      "english": "English",
+      "chinese": "Chinese",
+      "other": "Other"
     }
   },
   "consent": {
     "title": "Consent & Signature",
-    "explained": "I have explained this form and received consent.",
+    "explained": "I have explained and received consent.",
     "name": "Resident Name:",
     "signature": "Signature:"
   },
@@ -48,16 +58,19 @@
     "title": "Inspection Map Location"
   },
   "env": {
-    "title": "Environmental Context (EJScreen)",
+    "title": "Environmental Context",
     "useLocation": "📍 Use My Location",
     "address": "Address:",
     "asthmaRisk": "Asthma Risk:",
-    "leadRisk": "Lead Exposure Risk:",
-    "pm25": "Air Quality Index (PM2.5):"
+    "leadRisk": "Lead Risk:",
+    "pm25": "PM2.5:"
+  },
+  "photo": {
+    "label": "Upload Photos (optional)"
   },
   "fhir": {
     "generate": "Generate FHIR Report",
-    "outputTitle": "FHIR JSON Output:",
+    "outputTitle": "FHIR JSON Output",
     "downloadJson": "Download JSON",
     "downloadPdf": "Download PDF"
   }
