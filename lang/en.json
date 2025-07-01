@@ -2,24 +2,24 @@
   "sdoh": {
     "title": "Resident SDOH Questionnaire",
     "housingStable": "Is your housing currently stable?",
-    "housingStableOptions": {
-      "": "Select",
-      "yes": "Yes",
-      "no": "No"
-    },
     "utilityShutoff": "In the past year, have your utilities been shut off?",
-    "utilityShutoffOptions": {
-      "": "Select",
-      "yes": "Yes",
-      "no": "No"
-    },
     "foodInsecurity": "Do you ever worry about running out of food?",
-    "foodInsecurityOptions": {
-      "": "Select",
-      "yes": "Yes",
-      "no": "No"
-    },
-    "languagePref": "What is your preferred language?"
+    "languagePref": "What is your preferred language?",
+    "options": {
+      "select": "Select",
+      "stable": {
+        "yes": "Yes",
+        "no": "No"
+      },
+      "utility": {
+        "yes": "Yes",
+        "no": "No"
+      },
+      "food": {
+        "yes": "Yes",
+        "no": "No"
+      }
+    }
   },
   "consent": {
     "title": "Consent & Signature",
@@ -40,10 +40,8 @@
   },
   "fhir": {
     "generate": "Generate FHIR Report",
-"options": {
-  "yesNo": {
-    "": "Select",
-    "yes": "Yes",
-    "no": "No"
+    "outputTitle": "FHIR JSON Output:",
+    "downloadJson": "Download JSON",
+    "downloadPdf": "Download PDF"
   }
 }
