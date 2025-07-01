@@ -43,19 +43,24 @@
 
     <form id="sdohForm" class="space-y-4">
       <h2 class="text-lg font-semibold text-green-700" data-i18n="sdoh.title">Resident SDOH Questionnaire</h2>
-      <label class="block text-sm font-medium text-gray-700" for="incomeLevel" data-i18n="sdoh.income">Income Level:</label>
-      <select id="incomeLevel" class="block w-full rounded border-gray-300 shadow-sm">
-        <option value="">Select</option>
-        <option value="low">Low</option>
-        <option value="moderate">Moderate</option>
-        <option value="high">High</option>
-      </select>
-      <label class="block text-sm font-medium text-gray-700" for="housingStability" data-i18n="sdoh.housing">Housing Stability:</label>
-      <select id="housingStability" class="block w-full rounded border-gray-300 shadow-sm">
-        <option value="">Select</option>
-        <option value="stable">Stable</option>
-        <option value="unstable">Unstable</option>
-      </select>
+
+      <label class="block text-sm font-medium text-gray-700" for="housingStability" data-i18n="sdoh.housingStability">Is your housing stable?</label>
+      <select id="housingStability" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="sdohOptions.yesNo"></select>
+
+      <label class="block text-sm font-medium text-gray-700" for="disabilityStatus" data-i18n="sdoh.disabilityStatus">Do you or anyone in your household have a disability?</label>
+      <select id="disabilityStatus" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="sdohOptions.yesNo"></select>
+
+      <label class="block text-sm font-medium text-gray-700" for="utilityShutoff" data-i18n="sdoh.utilityShutoff">Have your utilities been shut off in the past year?</label>
+      <select id="utilityShutoff" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="sdohOptions.yesNo"></select>
+
+      <label class="block text-sm font-medium text-gray-700" for="foodInsecurity" data-i18n="sdoh.foodInsecurity">How often do you worry about running out of food?</label>
+      <select id="foodInsecurity" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="sdohOptions.yesNo"></select>
+
+      <label class="block text-sm font-medium text-gray-700" for="preferredLanguage" data-i18n="sdoh.languagePref">Preferred language for communication?</label>
+      <input type="text" id="preferredLanguage" class="block w-full rounded border-gray-300 shadow-sm" />
+
+      <label class="block text-sm font-medium text-gray-700" for="incomeLevel" data-i18n="sdoh.incomeLevel">What is your monthly household income? <span class="text-gray-500">(optional)</span></label>
+      <input type="number" id="incomeLevel" class="block w-full rounded border-gray-300 shadow-sm" />
     </form>
 
     <section>
