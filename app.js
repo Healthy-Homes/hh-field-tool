@@ -1,8 +1,10 @@
+// ✅ Updated app.js for Healthy Homes App
+
 console.log("✅ app.js loaded and running");
 let lastFHIRBundle = null;
 let translations = {};
 let currentLang = 'en';
-let map; 
+let map;
 
 // Load and apply language translations
 async function loadLanguage(lang) {
@@ -14,7 +16,6 @@ async function loadLanguage(lang) {
 }
 
 function applyTranslations() {
-  // Static text translations
   document.querySelectorAll("[data-i18n]").forEach(el => {
     const keys = el.getAttribute("data-i18n").split(".");
     let text = translations;
@@ -22,7 +23,6 @@ function applyTranslations() {
     if (text) el.textContent = text;
   });
 
-  // Translate <select> options using data-i18n-options attribute
   document.querySelectorAll("select[data-i18n-options]").forEach(select => {
     const optionsKey = select.getAttribute("data-i18n-options");
     const keys = optionsKey.split(".");
@@ -31,29 +31,39 @@ function applyTranslations() {
 
     if (optionSet) {
       const currentValue = select.value;
-      select.innerHTML = ""; // clear
-
+      select.innerHTML = "";
       for (const [value, label] of Object.entries(optionSet)) {
         const option = document.createElement("option");
         option.value = value;
         option.textContent = label;
         select.appendChild(option);
       }
-
       if (select.querySelector(`option[value="${currentValue}"]`)) {
         select.value = currentValue;
       }
     }
   });
 
-  // Checklist translations
   const checklistItems = [
-    "mold", "pests", "leaks", "lead",
-    "noHVAC", "noVent", "tripHazards", "asthmaTriggers"
+    "moldVisible",
+    "dampSmell",
+    "leakingPipes",
+    "pestDroppings",
+    "openEntryPoints",
+    "brokenStairs",
+    "tripHazards",
+    "noVentilation",
+    "hvacInadequate",
+    "pre1978Paint",
+    "gasSmell",
+    "noRunningWater",
+    "visibleTrash",
+    "asthmaTriggers",
+    "otherHazards"
   ];
 
   checklistItems.forEach(id => {
-    const label = document.querySelector(`label[for="${id}"]`);
+    const label = document.querySelector(`label[for='${id}'] span[data-i18n]`);
     const key = `inspection.${id}`;
     const keys = key.split(".");
     let text = translations;
@@ -61,14 +71,13 @@ function applyTranslations() {
     if (label && text) label.textContent = text;
   });
 
-  // Consent block
   const consentLabels = {
     name: "consent.name",
     signature: "consent.signature"
   };
 
   for (const [id, keyPath] of Object.entries(consentLabels)) {
-    const label = document.querySelector(`label[for="${id}"]`);
+    const label = document.querySelector(`label[for='${id}']`);
     const keys = keyPath.split(".");
     let text = translations;
     for (const k of keys) text = text?.[k];
@@ -78,6 +87,10 @@ function applyTranslations() {
 
 // 🌍 EJScreen Mock API
 async function getEJScreenData(lat, lon) {
+  const banner = document.createElement("div");
+  banner.textContent = "🧪 Using MOCK EJScreen data";
+  banner.className = "bg-yellow-100 border border-yellow-400 text-yellow-800 px-4 py-2 rounded my-2";
+  document.querySelector("#map").insertAdjacentElement("beforebegin", banner);
   console.warn("🧪 Using MOCK EJScreen data");
   return {
     asthmaRisk: "High",
@@ -106,32 +119,6 @@ async function getLocation() {
   }, () => alert("Unable to retrieve location."));
 }
 
-// 🗺️ Static Map Snapshot (Mapbox)
-function captureMapImage(callback) {
-  const { latitude, longitude } = window.ejScreenInfo?.coords || {
-    latitude: 25.032969,
-    longitude: 121.565418
-  };
-  const mapboxToken = 'pk.eyJ1IjoibXd1bHNoIiwiYSI6ImNtY2p1M2RzbDA3ZWgybXB6OHdua3l0OGUifQ.mOwY0FB4d5wvQ6vmijQF4g';
-  const zoom = 13;
-  const width = 600;
-  const height = 400;
-  const url = `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${longitude},${latitude},${zoom}/${width}x${height}?access_token=${mapboxToken}`;
-
-  fetch(url)
-    .then(res => res.blob())
-    .then(blob => {
-      const reader = new FileReader();
-      reader.onload = () => callback(reader.result);
-      reader.readAsDataURL(blob);
-    })
-    .catch(err => {
-      console.error("❌ Map snapshot failed:", err);
-      callback(null);
-    });
-}
-
-// 🧬 Generate FHIR Output
 function generateFHIR() {
   const inspection = document.forms['inspectionForm'];
   const sdoh = document.forms['sdohForm'];
@@ -141,16 +128,31 @@ function generateFHIR() {
 
   if (!consentGiven) return alert("Resident consent is required.");
 
-  const observations = [];
+  const fieldMap = {
+    moldVisible: "Visible mold",
+    dampSmell: "Musty odors",
+    leakingPipes: "Plumbing/roof leaks",
+    pestDroppings: "Pest droppings",
+    openEntryPoints: "Unsealed cracks",
+    brokenStairs: "Broken steps",
+    tripHazards: "Trip hazards",
+    noVentilation: "No ventilation",
+    hvacInadequate: "No HVAC",
+    pre1978Paint: "Lead paint risk",
+    gasSmell: "Smell of gas",
+    noRunningWater: "No water/toilet",
+    visibleTrash: "Trash/sewage",
+    asthmaTriggers: "Asthma triggers",
+    otherHazards: "Other risks"
+  };
 
-  if (inspection.mold.checked) observations.push({ code: "93041-2", description: "Visible mold", value: true });
-  if (inspection.pests.checked) observations.push({ code: "93043-8", description: "Pest infestation", value: true });
-  if (inspection.leaks.checked) observations.push({ code: "99999-9", description: "Leaks or dampness", value: true });
-  if (inspection.lead.checked) observations.push({ code: "93044-6", description: "Lead paint risk", value: true });
-  if (inspection.noHVAC.checked) observations.push({ code: "99999-5", description: "No heating or cooling", value: true });
-  if (inspection.noVent.checked) observations.push({ code: "99999-6", description: "No ventilation", value: true });
-  if (inspection.tripHazards.checked) observations.push({ code: "99999-7", description: "Trip hazards", value: true });
-  if (inspection.asthmaTriggers.checked) observations.push({ code: "99999-8", description: "Asthma triggers", value: true });
+  const observations = Object.keys(fieldMap).filter(name => {
+    return inspection.elements[name]?.checked;
+  }).map(name => ({
+    code: "99999-0",
+    description: fieldMap[name],
+    value: true
+  }));
 
   const socialNeeds = {
     housingStable: sdoh.housingStable.value,
@@ -173,8 +175,7 @@ function generateFHIR() {
         },
         valueBoolean: obs.value
       }
-    }))
-    .concat({
+    })).concat({
       resource: {
         resourceType: "QuestionnaireResponse",
         status: "completed",
@@ -184,8 +185,7 @@ function generateFHIR() {
           answer: [{ valueString: socialNeeds[key] }]
         }))
       }
-    })
-    .concat({
+    }).concat({
       resource: {
         resourceType: "Basic",
         id: "consent-info",
@@ -198,8 +198,7 @@ function generateFHIR() {
           { url: "consentGiven", valueBoolean: true }
         ]
       }
-    })
-    .concat({
+    }).concat({
       resource: {
         resourceType: "Observation",
         status: "final",
@@ -218,87 +217,8 @@ function generateFHIR() {
   lastFHIRBundle = fhirBundle;
 }
 
-// 💾 Export Functions
-function downloadJSON() {
-  if (!lastFHIRBundle) return alert("Run the assessment first.");
-  const blob = new Blob([JSON.stringify(lastFHIRBundle, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "healthy-home-assessment.json";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-
-async function downloadPDF() {
-  if (!lastFHIRBundle) return alert("Run the assessment first.");
-  captureMapImage((imgData) => {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    doc.setFontSize(14);
-    doc.text("Healthy Homes Assessment Summary", 10, 10);
-    doc.setFontSize(10);
-    let y = 20;
-
-    lastFHIRBundle.entry.forEach(entry => {
-      const res = entry.resource;
-      if (res.resourceType === "Observation" && res.code?.coding?.[0]?.code !== "ejscreen-summary") {
-        doc.text(`• ${res.code.coding[0].display}: ${res.valueBoolean ? "Yes" : "No"}`, 10, y);
-        y += 7;
-      }
-    });
-
-    const sdoh = lastFHIRBundle.entry.find(e => e.resource.resourceType === "QuestionnaireResponse");
-    if (sdoh) {
-      doc.text("Resident SDOH Responses:", 10, y + 5);
-      y += 12;
-      sdoh.resource.item.forEach(item => {
-        doc.text(`• ${item.text}: ${item.answer[0].valueString}`, 10, y);
-        y += 7;
-      });
-    }
-
-    const consent = lastFHIRBundle.entry.find(e => e.resource.id === "consent-info");
-    if (consent) {
-      const ext = consent.resource.extension;
-      const get = (key) => ext.find(e => e.url === key)?.valueString || "N/A";
-      y += 10;
-      doc.text("Resident Consent:", 10, y);
-      y += 6;
-      doc.text(`Name: ${get("residentName")}`, 10, y);
-      y += 6;
-      doc.text(`Signature: ${get("residentSignature")}`, 10, y);
-      y += 6;
-      doc.text(`Consent Given: Yes`, 10, y);
-    }
-
-    const ej = window.ejScreenInfo;
-    if (ej) {
-      y += 10;
-      doc.text("Environmental Context (EJScreen):", 10, y);
-      y += 6;
-      doc.text(`Address: ${ej.address}`, 10, y);
-      y += 6;
-      doc.text(`Asthma Risk: ${ej.asthmaRisk}`, 10, y);
-      y += 6;
-      doc.text(`Lead Risk: ${ej.leadRisk}`, 10, y);
-      y += 6;
-      doc.text(`PM2.5: ${ej.pm25}`, 10, y);
-    }
-
-    if (imgData) {
-      y += 10;
-      doc.text("Map Snapshot:", 10, y);
-      doc.addImage(imgData, "PNG", 10, y + 5, 180, 80);
-    }
-
-    doc.save("healthy-home-assessment.pdf");
-  });
-}
-
 // Init
+
 document.addEventListener("DOMContentLoaded", () => {
   loadLanguage("en");
   document.getElementById("langSelect").addEventListener("change", e => {
