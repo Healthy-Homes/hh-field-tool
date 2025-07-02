@@ -55,26 +55,30 @@ function populateSelectOptions() {
   });
 }
 
+// Capture SDOH responses using data-sdoh
+function getSDOHResponses() {
+  const sdohInputs = document.querySelectorAll('[data-sdoh]');
+  const formData = {};
+  sdohInputs.forEach(input => {
+    formData[input.name] = input.value || '';
+  });
+  return formData;
+}
+
+// Capture checked checklist items
+function getChecklistFindings() {
+  const checkboxes = document.querySelectorAll('[data-checklist]');
+  const checkedItems = [];
+  checkboxes.forEach(cb => {
+    if (cb.checked) checkedItems.push(cb.value);
+  });
+  return checkedItems;
+}
+
 // Generate FHIR JSON and show on screen
 function generateFHIR() {
-  const formData = {};
-  document.querySelectorAll('#sdohForm select, #sdohForm input[type="text"]').forEach(el => {
-    if (el.name && el.value) {
-      formData[el.name] = el.value;
-    }
-  });
-
-  const checklist = [
-    'moldVisible', 'leakingPipes', 'noVentilation',
-    'pestDroppings', 'electrical', 'tripHazards',
-    'radonRisk', 'indoorAir', 'pets', 'grabBars',
-    'leadPaint', 'noSmokeAlarm', 'noCOAlarm', 'otherHazards'
-  ];
-
-  const checklistItems = checklist.filter(id => {
-    const checkbox = document.getElementById(id);
-    return checkbox?.checked;
-  });
+  const formData = getSDOHResponses();
+  const checklistItems = getChecklistFindings();
 
   const obs = {
     resourceType: "Observation",
@@ -183,32 +187,4 @@ function getLocation() {
       } else {
         mapInstance = L.map('map').setView([lat, lng], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '© OpenStreetMap contributors'
-        }).addTo(mapInstance);
-      }
-
-      try {
-        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`);
-        const data = await res.json();
-        document.getElementById("userAddress").textContent = `📍 ${data.display_name}`;
-      } catch (err) {
-        console.error("Reverse geocoding failed:", err);
-      }
-
-      document.getElementById("asthmaRisk").textContent = "Moderate (mock)";
-      document.getElementById("leadRisk").textContent = "Low (mock)";
-      document.getElementById("pm25").textContent = "12 µg/m³ (mock)";
-    },
-    error => {
-      alert("Unable to retrieve your location.");
-      console.error(error);
-    }
-  );
-}
-
-// On DOM load
-window.addEventListener('DOMContentLoaded', async () => {
-  await loadTranslations(currentLang);
-  getLocation();
-  document.getElementById('dummyBanner').style.display = 'block';
-});
+          attribution: '© OpenStreetMap contribu
