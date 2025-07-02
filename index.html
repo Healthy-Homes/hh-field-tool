@@ -30,13 +30,13 @@
     <form id="inspectionForm" class="space-y-4">
       <h2 class="text-lg font-semibold text-green-700" data-i18n="inspection.title">Home Inspection Checklist</h2>
       <div class="grid grid-cols-1 gap-3">
-        <label class="flex items-center space-x-2" for="moldVisible"><input type="checkbox" id="moldVisible" /><span data-i18n="inspection.moldVisible">Visible mold</span></label>
-        <label class="flex items-center space-x-2" for="leakingPipes"><input type="checkbox" id="leakingPipes" /><span data-i18n="inspection.leakingPipes">Water damage or leaks</span></label>
-        <label class="flex items-center space-x-2" for="noVentilation"><input type="checkbox" id="noVentilation" /><span data-i18n="inspection.noVentilation">Poor ventilation</span></label>
-        <label class="flex items-center space-x-2" for="pestDroppings"><input type="checkbox" id="pestDroppings" /><span data-i18n="inspection.pestDroppings">Signs of pests</span></label>
-        <label class="flex items-center space-x-2" for="electrical"><input type="checkbox" id="electrical" /><span data-i18n="inspection.electrical">Unsafe electrical systems</span></label>
-        <label class="flex items-center space-x-2" for="tripHazards"><input type="checkbox" id="tripHazards" /><span data-i18n="inspection.tripHazards">Trip hazards</span></label>
-        <label class="flex items-center space-x-2" for="otherHazards"><input type="checkbox" id="otherHazards" /><span data-i18n="inspection.otherHazards">Other risks</span></label>
+        <label class="flex items-center space-x-2" for="moldVisible"><input type="checkbox" id="moldVisible" name="moldVisible" /><span data-i18n="inspection.moldVisible">Visible mold</span></label>
+        <label class="flex items-center space-x-2" for="leakingPipes"><input type="checkbox" id="leakingPipes" name="leakingPipes" /><span data-i18n="inspection.leakingPipes">Water damage or leaks</span></label>
+        <label class="flex items-center space-x-2" for="noVentilation"><input type="checkbox" id="noVentilation" name="noVentilation" /><span data-i18n="inspection.noVentilation">Poor ventilation</span></label>
+        <label class="flex items-center space-x-2" for="pestDroppings"><input type="checkbox" id="pestDroppings" name="pestDroppings" /><span data-i18n="inspection.pestDroppings">Signs of pests</span></label>
+        <label class="flex items-center space-x-2" for="electrical"><input type="checkbox" id="electrical" name="electrical" /><span data-i18n="inspection.electrical">Unsafe electrical systems</span></label>
+        <label class="flex items-center space-x-2" for="tripHazards"><input type="checkbox" id="tripHazards" name="tripHazards" /><span data-i18n="inspection.tripHazards">Trip hazards</span></label>
+        <label class="flex items-center space-x-2" for="otherHazards"><input type="checkbox" id="otherHazards" name="otherHazards" /><span data-i18n="inspection.otherHazards">Other risks</span></label>
       </div>
     </form>
 
@@ -44,29 +44,29 @@
       <h2 class="text-lg font-semibold text-green-700" data-i18n="sdoh.title">Resident SDOH Questionnaire</h2>
 
       <label class="block text-sm font-medium text-gray-700" for="housingStable" data-i18n="sdoh.housingStable">Is your housing stable?</label>
-      <select id="housingStable" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="housingStable"></select>
+      <select id="housingStable" name="housingStable" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="housingStable"></select>
 
       <label class="block text-sm font-medium text-gray-700" for="utilityShutoff" data-i18n="sdoh.utilityShutoff">Have your utilities been shut off in the past year?</label>
-      <select id="utilityShutoff" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="utilityShutoff"></select>
+      <select id="utilityShutoff" name="utilityShutoff" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="utilityShutoff"></select>
 
       <label class="block text-sm font-medium text-gray-700" for="foodInsecurity" data-i18n="sdoh.foodInsecurity">How often do you worry about running out of food?</label>
-      <select id="foodInsecurity" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="foodInsecurity"></select>
+      <select id="foodInsecurity" name="foodInsecurity" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="foodInsecurity"></select>
 
       <label class="block text-sm font-medium text-gray-700" for="languagePref" data-i18n="sdoh.languagePref">Preferred language for communication?</label>
-      <select id="languagePref" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="languagePref"></select>
+      <select id="languagePref" name="languagePref" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="languagePref"></select>
 
       <label class="block text-sm font-medium text-gray-700" for="incomeLevel" data-i18n="sdoh.incomeLevel">What is your monthly household income? <span class="text-gray-500">(optional)</span></label>
-      <input type="number" id="incomeLevel" class="block w-full rounded border-gray-300 shadow-sm" />
+      <input type="number" id="incomeLevel" name="incomeLevel" class="block w-full rounded border-gray-300 shadow-sm" />
     </form>
 
     <section>
       <h2 class="text-lg font-semibold text-green-700" data-i18n="consent.title">Consent & Signature</h2>
       <label class="block mt-2 text-sm font-medium text-gray-700">
-        <input type="checkbox" id="consentCheckbox" class="mr-2" />
+        <input type="checkbox" id="consentCheckbox" name="consentCheckbox" class="mr-2" />
         <span data-i18n="consent.explained">I consent to a home inspection to assess health and safety conditions, understand this is voluntary, and agree that photos may be taken for documentation purposes.</span>
       </label>
       <label class="block mt-2 text-sm font-medium text-gray-700" for="residentName" data-i18n="consent.name">Resident Name (serves as consent confirmation):</label>
-      <input type="text" id="residentName" class="mt-1 block w-full rounded border-gray-300 shadow-sm" />
+      <input type="text" id="residentName" name="residentName" class="mt-1 block w-full rounded border-gray-300 shadow-sm" />
     </section>
 
     <section>
@@ -100,16 +100,16 @@
       <h2 class="text-lg font-semibold text-green-700" data-i18n="fhir.outputTitle">FHIR JSON Output</h2>
       <pre id="output" class="mt-2 p-2 bg-gray-100 border rounded overflow-x-auto text-xs text-gray-800"></pre>
       <div class="mt-2 flex gap-3 flex-wrap">
-        <button onclick="generateFHIR()" type="button" class="px-4 py-2 bg-green-600 text-white rounded shadow hover:bg-green-700" data-i18n="fhir.generate">Generate FHIR Report</button>
+        <button onclick="generateFHIR()" type="button" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Generate FHIR JSON</button>
         <button onclick="downloadJSON()" type="button" class="px-4 py-2 bg-gray-800 text-white rounded shadow hover:bg-gray-900" data-i18n="fhir.downloadJson">Download JSON</button>
         <button onclick="downloadPDF()" type="button" class="px-4 py-2 bg-gray-800 text-white rounded shadow hover:bg-gray-900" data-i18n="fhir.downloadPdf">Download PDF</button>
       </div>
     </section>
   </div>
-<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-  <script src="app.js"></script>
-<script src="checklist-loader.js"></script>
-<script src="sdoh-loader.js"></script>
 
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="app.js"></script>
+  <script src="checklist-loader.js"></script>
+  <script src="sdoh-loader.js"></script>
 </body>
 </html>
