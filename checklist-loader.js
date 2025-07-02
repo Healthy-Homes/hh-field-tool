@@ -1,41 +1,46 @@
-// checklist-loader.js using PapaParse
-async function loadChecklistCSV() {
-  const response = await fetch('data/Final_Risk_List_CSV.csv');
-  const text = await response.text();
+// checklist-loader.js
 
-  const result = Papa.parse(text, {
-    header: true,
-    skipEmptyLines: true
-  });
+(async function loadChecklist() {
+  const checklistContainer = document.getElementById("inspectionForm");
+  if (!checklistContainer) return;
 
-  const checklistContainer = document.querySelector('#inspectionForm .grid');
-  checklistContainer.innerHTML = '';
+  try {
+    const response = await fetch("data/checklist.csv");
+    if (!response.ok) throw new Error("Checklist CSV not found.");
+    const csvText = await response.text();
 
-  const currentLang = document.getElementById('langSelect')?.value || 'en';
+    const results = Papa.parse(csvText, { header: true });
+    const items = results.data.filter(row => row.key && row.english);
 
-  result.data.forEach(item => {
-    const label = document.createElement('label');
-    label.className = 'flex items-center space-x-2';
+    const title = document.createElement("h2");
+    title.className = "text-lg font-semibold text-green-700";
+    title.dataset.i18n = "inspection.title";
+    title.textContent = translations[currentLang]?.inspection?.title || "Home Inspection Checklist";
+    checklistContainer.appendChild(title);
 
-    const input = document.createElement('input');
-    input.type = 'checkbox';
-    input.id = item.key;
-    if (item.code_system) input.dataset.codeSystem = item.code_system;
-    if (item.custom_code) input.dataset.customCode = item.custom_code;
+    const grid = document.createElement("div");
+    grid.className = "grid grid-cols-1 gap-3";
+    checklistContainer.appendChild(grid);
 
-    const span = document.createElement('span');
-    span.textContent = currentLang === 'zh' ? item.chinese : item.english;
+    items.forEach(item => {
+      const label = document.createElement("label");
+      label.className = "flex items-center space-x-2";
+      label.setAttribute("for", item.key);
 
-    label.appendChild(input);
-    label.appendChild(span);
-    checklistContainer.appendChild(label);
-  });
-}
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.id = item.key;
+      checkbox.name = item.key;
 
-document.getElementById('langSelect').addEventListener('change', () => {
-  loadChecklistCSV();
-});
+      const span = document.createElement("span");
+      span.dataset.i18n = `inspection.${item.key}`;
+      span.textContent = translations[currentLang]?.inspection?.[item.key] || item.english;
 
-window.addEventListener('DOMContentLoaded', () => {
-  loadChecklistCSV();
-});
+      label.appendChild(checkbox);
+      label.appendChild(span);
+      grid.appendChild(label);
+    });
+  } catch (err) {
+    console.error("Error loading checklist items:", err);
+  }
+})();
