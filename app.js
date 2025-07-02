@@ -93,7 +93,39 @@ function generateFHIR() {
 
   document.getElementById('output').textContent = JSON.stringify(obs, null, 2);
 }
+function generateFHIR() {
+  const formData = {};
+  document.querySelectorAll('#sdohForm select, #sdohForm input[type="text"]').forEach(el => {
+    if (el.name && el.value) {
+      formData[el.name] = el.value;
+    }
+  });
 
+  const checklist = [
+    'moldVisible', 'leakingPipes', 'noVentilation',
+    'pestDroppings', 'electrical', 'tripHazards',
+    'radonRisk', 'indoorAir', 'pets', 'grabBars',
+    'leadPaint', 'noSmokeAlarm', 'noCOAlarm'
+  ];
+
+  const checklistItems = checklist.filter(id => {
+    const checkbox = document.getElementById(id);
+    return checkbox?.checked;
+  });
+
+  const obs = {
+    resourceType: "Observation",
+    extension: Object.entries(formData).map(([k, v]) => ({ url: k, valueString: v })),
+    checklistFindings: checklistItems,
+    photos: uploadedImages.map(img => ({
+      name: img.name,
+      contentType: "image/jpeg",
+      data: img.data
+    }))
+  };
+
+  document.getElementById('output').textContent = JSON.stringify(obs, null, 2);
+}
 // Download JSON file
 function downloadJSON() {
   const blob = new Blob([document.getElementById('output').textContent], { type: 'application/json' });
