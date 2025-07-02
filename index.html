@@ -4,74 +4,67 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Healthy Homes Practitioner App</title>
-
-  <!-- Styles -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
-
-  <!-- External Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
 <body class="bg-gray-50 text-gray-900">
 
   <main class="max-w-3xl mx-auto p-4">
-    <!-- Title -->
-    <h1 id="appTitle" class="text-2xl font-bold mb-4">Healthy Homes Practitioner App</h1>
+    <h1 class="text-2xl font-bold mb-4" data-i18n="app.title">Healthy Homes Practitioner App</h1>
 
     <!-- Language Selector -->
     <div class="mb-4">
-      <label for="langSelect" class="block text-sm font-medium" id="languageLabel">Select Language</label>
+      <label for="langSelect" class="block text-sm font-medium" data-i18n="language.label">Language:</label>
       <select id="langSelect" class="block w-full mt-1 border rounded p-2">
         <option value="en">English</option>
         <option value="zh">中文</option>
       </select>
     </div>
 
-    <!-- Consent Block -->
+    <!-- Consent -->
     <div class="mb-4">
       <label class="inline-flex items-center">
         <input type="checkbox" id="consentCheckbox" class="form-checkbox mr-2" />
-        <span id="consentText">
-          I consent to a home inspection to assess health and safety conditions, understand this is voluntary, and agree that photos may be taken for documentation purposes.
-        </span>
+        <span data-i18n="consent.consentText">I consent to a home inspection to assess health and safety conditions, understand this is voluntary, and agree that photos may be taken for documentation purposes.</span>
       </label>
       <input type="text" id="residentName" placeholder="Full Name" class="block mt-2 w-full p-2 border rounded" />
     </div>
 
-    <!-- Location Capture -->
+    <!-- Location -->
     <div class="mb-4">
-      <button id="getLocationBtn" class="bg-blue-600 text-white px-4 py-2 rounded">Use My Location</button>
+      <button id="getLocationBtn" class="bg-blue-600 text-white px-4 py-2 rounded" data-i18n="env.useLocation">📍 Use My Location</button>
       <p id="addressDisplay" class="text-sm mt-2"></p>
       <div id="map" class="h-48 mt-2 rounded border"></div>
     </div>
 
     <!-- Inspection Checklist -->
-    <h2 class="text-xl font-semibold mt-6 mb-2" id="inspectionChecklistLabel">Inspection Checklist</h2>
+    <h2 class="text-xl font-semibold mt-6 mb-2" data-i18n="inspection.title">Home Inspection Checklist</h2>
     <form id="inspectionForm" class="space-y-2"></form>
 
-    <!-- SDOH Questions -->
-    <h2 class="text-xl font-semibold mt-6 mb-2" id="sdohQuestionsLabel">Social Determinants of Health</h2>
+    <!-- SDOH Questionnaire -->
+    <h2 class="text-xl font-semibold mt-6 mb-2" data-i18n="sdoh.title">Resident SDOH Questionnaire</h2>
     <form id="sdohForm" class="space-y-4"></form>
 
     <!-- Photo Upload -->
     <div class="mb-4">
-      <label for="photoUpload" class="block text-sm font-medium" id="photoUploadLabel">Upload Photos (optional)</label>
+      <label for="photoUpload" class="block text-sm font-medium" data-i18n="photo.label">Upload Photos (optional)</label>
       <input type="file" id="photoUpload" accept="image/*" multiple class="mt-1 block w-full text-sm text-gray-500" />
       <div id="photoPreview" class="grid grid-cols-3 gap-2 mt-2"></div>
     </div>
 
     <!-- Export Buttons -->
     <div class="mt-6 space-x-2">
-      <button id="generateBtn" class="bg-green-600 text-white px-4 py-2 rounded">Generate FHIR JSON</button>
-      <button id="downloadJSON" class="bg-gray-700 text-white px-4 py-2 rounded hidden">Download JSON</button>
-      <button id="downloadPDF" class="bg-gray-700 text-white px-4 py-2 rounded hidden">Download PDF</button>
+      <button id="generateBtn" class="bg-green-600 text-white px-4 py-2 rounded" data-i18n="fhir.generate">Generate FHIR JSON</button>
+      <button id="downloadJSON" class="bg-gray-700 text-white px-4 py-2 rounded hidden" data-i18n="fhir.downloadJson">Download JSON</button>
+      <button id="downloadPDF" class="bg-gray-700 text-white px-4 py-2 rounded hidden" data-i18n="fhir.downloadPdf">Download PDF</button>
     </div>
 
     <!-- Output -->
     <pre id="output" class="mt-6 p-4 bg-gray-100 rounded overflow-x-auto text-sm"></pre>
   </main>
 
-  <!-- Core Logic -->
+  <!-- Scripts -->
   <script src="app.js"></script>
   <script src="checklist-loader.js"></script>
   <script src="sdoh-loader.js"></script>
