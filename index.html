@@ -36,10 +36,6 @@
         <label class="flex items-center space-x-2" for="pestDroppings"><input type="checkbox" id="pestDroppings" name="pestDroppings" /><span data-i18n="inspection.pestDroppings">Signs of pests</span></label>
         <label class="flex items-center space-x-2" for="electrical"><input type="checkbox" id="electrical" name="electrical" /><span data-i18n="inspection.electrical">Unsafe electrical systems</span></label>
         <label class="flex items-center space-x-2" for="tripHazards"><input type="checkbox" id="tripHazards" name="tripHazards" /><span data-i18n="inspection.tripHazards">Trip hazards</span></label>
-        <label class="flex items-center space-x-2" for="radonRisk"><input type="checkbox" id="radonRisk" name="radonRisk" /><span data-i18n="inspection.radonRisk">Radon risk</span></label>
-        <label class="flex items-center space-x-2" for="leadPaint"><input type="checkbox" id="leadPaint" name="leadPaint" /><span data-i18n="inspection.leadPaint">Possible lead paint</span></label>
-        <label class="flex items-center space-x-2" for="noSmokeAlarm"><input type="checkbox" id="noSmokeAlarm" name="noSmokeAlarm" /><span data-i18n="inspection.noSmokeAlarm">No smoke alarm</span></label>
-        <label class="flex items-center space-x-2" for="noCOAlarm"><input type="checkbox" id="noCOAlarm" name="noCOAlarm" /><span data-i18n="inspection.noCOAlarm">No CO alarm</span></label>
         <label class="flex items-center space-x-2" for="otherHazards"><input type="checkbox" id="otherHazards" name="otherHazards" /><span data-i18n="inspection.otherHazards">Other risks</span></label>
       </div>
     </form>
@@ -105,8 +101,8 @@
       <pre id="output" class="mt-2 p-2 bg-gray-100 border rounded overflow-x-auto text-xs text-gray-800"></pre>
       <div class="mt-2 flex gap-3 flex-wrap">
         <button onclick="generateFHIR()" type="button" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Generate FHIR JSON</button>
-        <button onclick="downloadJSON()" type="button" class="px-4 py-2 bg-gray-800 text-white rounded shadow hover:bg-gray-900" data-i18n="fhir.downloadJson">Download JSON</button>
-        <button onclick="downloadPDF()" type="button" class="px-4 py-2 bg-gray-800 text-white rounded shadow hover:bg-gray-900" data-i18n="fhir.downloadPdf">Download PDF</button>
+        <button onclick="downloadJSON()" id="downloadJsonBtn" type="button" class="px-4 py-2 bg-gray-800 text-white rounded shadow hover:bg-gray-900 disabled:opacity-50" data-i18n="fhir.downloadJson" disabled>Download JSON</button>
+        <button onclick="downloadPDF()" id="downloadPdfBtn" type="button" class="px-4 py-2 bg-gray-800 text-white rounded shadow hover:bg-gray-900 disabled:opacity-50" data-i18n="fhir.downloadPdf" disabled>Download PDF</button>
       </div>
     </section>
   </div>
