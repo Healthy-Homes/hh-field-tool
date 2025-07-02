@@ -1,46 +1,69 @@
+<script>
 // checklist-loader.js
+async function loadChecklist() {
+  const response = await fetch('data/checklist.csv');
+  const text = await response.text();
+  const rows = Papa.parse(text, { header: true }).data;
 
-(async function loadChecklist() {
-  const checklistContainer = document.getElementById("inspectionForm");
-  if (!checklistContainer) return;
+  const checklistContainer = document.getElementById('inspectionForm');
+  rows.forEach(row => {
+    const label = document.createElement('label');
+    label.className = 'flex items-center space-x-2';
+    label.htmlFor = row.id;
 
-  try {
-    const response = await fetch("data/checklist.csv");
-    if (!response.ok) throw new Error("Checklist CSV not found.");
-    const csvText = await response.text();
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.id = row.id;
+    checkbox.name = row.id;
 
-    const results = Papa.parse(csvText, { header: true });
-    const items = results.data.filter(row => row.key && row.english);
+    const span = document.createElement('span');
+    span.setAttribute('data-i18n', `inspection.${row.id}`);
+    span.textContent = translations[currentLang]?.inspection?.[row.id] || row.label;
 
-    const title = document.createElement("h2");
-    title.className = "text-lg font-semibold text-green-700";
-    title.dataset.i18n = "inspection.title";
-    title.textContent = translations[currentLang]?.inspection?.title || "Home Inspection Checklist";
-    checklistContainer.appendChild(title);
+    label.appendChild(checkbox);
+    label.appendChild(span);
+    checklistContainer.appendChild(label);
+  });
+}
 
-    const grid = document.createElement("div");
-    grid.className = "grid grid-cols-1 gap-3";
-    checklistContainer.appendChild(grid);
+window.addEventListener('DOMContentLoaded', loadChecklist);
+</script>
 
-    items.forEach(item => {
-      const label = document.createElement("label");
-      label.className = "flex items-center space-x-2";
-      label.setAttribute("for", item.key);
+<script>
+// sdoh-loader.js
+async function loadSDOH() {
+  const response = await fetch('data/sdoh.csv');
+  const text = await response.text();
+  const rows = Papa.parse(text, { header: true }).data;
 
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.id = item.key;
-      checkbox.name = item.key;
+  const sdohForm = document.getElementById('sdohForm');
+  rows.forEach(row => {
+    const label = document.createElement('label');
+    label.className = 'block text-sm font-medium text-gray-700';
+    label.htmlFor = row.id;
+    label.setAttribute('data-i18n', `sdoh.${row.id}`);
+    label.textContent = translations[currentLang]?.sdoh?.[row.id] || row.label;
 
-      const span = document.createElement("span");
-      span.dataset.i18n = `inspection.${item.key}`;
-      span.textContent = translations[currentLang]?.inspection?.[item.key] || item.english;
+    const select = document.createElement('select');
+    select.id = row.id;
+    select.name = row.id;
+    select.className = 'block w-full rounded border-gray-300 shadow-sm';
+    select.setAttribute('data-i18n-options', row.id);
 
-      label.appendChild(checkbox);
-      label.appendChild(span);
-      grid.appendChild(label);
-    });
-  } catch (err) {
-    console.error("Error loading checklist items:", err);
-  }
-})();
+    const options = translations[currentLang]?.sdohOptions?.[row.id];
+    if (options) {
+      Object.entries(options).forEach(([val, text]) => {
+        const opt = document.createElement('option');
+        opt.value = val;
+        opt.textContent = text;
+        select.appendChild(opt);
+      });
+    }
+
+    sdohForm.appendChild(label);
+    sdohForm.appendChild(select);
+  });
+}
+
+window.addEventListener('DOMContentLoaded', loadSDOH);
+</script>
