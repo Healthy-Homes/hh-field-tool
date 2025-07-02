@@ -29,34 +29,12 @@
 
     <form id="inspectionForm" class="space-y-4">
       <h2 class="text-lg font-semibold text-green-700" data-i18n="inspection.title">Home Inspection Checklist</h2>
-      <div class="grid grid-cols-1 gap-3">
-        <label class="flex items-center space-x-2" for="moldVisible"><input type="checkbox" id="moldVisible" name="moldVisible" /><span data-i18n="inspection.moldVisible">Visible mold</span></label>
-        <label class="flex items-center space-x-2" for="leakingPipes"><input type="checkbox" id="leakingPipes" name="leakingPipes" /><span data-i18n="inspection.leakingPipes">Water damage or leaks</span></label>
-        <label class="flex items-center space-x-2" for="noVentilation"><input type="checkbox" id="noVentilation" name="noVentilation" /><span data-i18n="inspection.noVentilation">Poor ventilation</span></label>
-        <label class="flex items-center space-x-2" for="pestDroppings"><input type="checkbox" id="pestDroppings" name="pestDroppings" /><span data-i18n="inspection.pestDroppings">Signs of pests</span></label>
-        <label class="flex items-center space-x-2" for="electrical"><input type="checkbox" id="electrical" name="electrical" /><span data-i18n="inspection.electrical">Unsafe electrical systems</span></label>
-        <label class="flex items-center space-x-2" for="tripHazards"><input type="checkbox" id="tripHazards" name="tripHazards" /><span data-i18n="inspection.tripHazards">Trip hazards</span></label>
-        <label class="flex items-center space-x-2" for="otherHazards"><input type="checkbox" id="otherHazards" name="otherHazards" /><span data-i18n="inspection.otherHazards">Other risks</span></label>
-      </div>
+      <div id="checklistContainer" class="grid grid-cols-1 gap-3"></div>
     </form>
 
     <form id="sdohForm" class="space-y-4">
       <h2 class="text-lg font-semibold text-green-700" data-i18n="sdoh.title">Resident SDOH Questionnaire</h2>
-
-      <label class="block text-sm font-medium text-gray-700" for="housingStable" data-i18n="sdoh.housingStable">Is your housing stable?</label>
-      <select id="housingStable" name="housingStable" data-sdoh class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="housingStable"></select>
-
-      <label class="block text-sm font-medium text-gray-700" for="utilityShutoff" data-i18n="sdoh.utilityShutoff">Have your utilities been shut off in the past year?</label>
-      <select id="utilityShutoff" name="utilityShutoff" data-sdoh class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="utilityShutoff"></select>
-
-      <label class="block text-sm font-medium text-gray-700" for="foodInsecurity" data-i18n="sdoh.foodInsecurity">How often do you worry about running out of food?</label>
-      <select id="foodInsecurity" name="foodInsecurity" data-sdoh class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="foodInsecurity"></select>
-
-      <label class="block text-sm font-medium text-gray-700" for="languagePref" data-i18n="sdoh.languagePref">Preferred language for communication?</label>
-      <select id="languagePref" name="languagePref" data-sdoh class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="languagePref"></select>
-
-      <label class="block text-sm font-medium text-gray-700" for="incomeLevel" data-i18n="sdoh.incomeLevel">What is your monthly household income? <span class="text-gray-500">(optional)</span></label>
-      <input type="number" id="incomeLevel" name="incomeLevel" data-sdoh class="block w-full rounded border-gray-300 shadow-sm" />
+      <div id="sdohContainer" class="space-y-4"></div>
     </form>
 
     <section>
