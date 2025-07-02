@@ -1,72 +1,110 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Healthy Homes Practitioner App</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://unpkg.com/i18next@21.10.0/dist/umd/i18next.min.js"></script>
 </head>
-<body class="bg-gray-50 text-gray-900">
+<body class="bg-gray-50 text-gray-800">
+  <div class="max-w-3xl mx-auto px-4 py-6 space-y-8">
+    <header class="space-y-2">
+      <h1 class="text-2xl font-bold text-green-700" data-i18n="app.title">Healthy Homes Practitioner App</h1>
+      <p class="text-sm text-gray-600" data-i18n="app.intro">This tool helps field workers assess housing-related health risks and social needs.</p>
+    </header>
 
-  <main class="max-w-3xl mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4" data-i18n="app.title">Healthy Homes Practitioner App</h1>
-
-    <!-- Language Selector -->
-    <div class="mb-4">
-      <label for="langSelect" class="block text-sm font-medium" data-i18n="language.label">Language:</label>
-      <select id="langSelect" class="block w-full mt-1 border rounded p-2">
-        <option value="en">English</option>
-        <option value="zh">中文</option>
-      </select>
-    </div>
-
-    <!-- Consent -->
-    <div class="mb-4">
-      <label class="inline-flex items-center">
-        <input type="checkbox" id="consentCheckbox" class="form-checkbox mr-2" />
-        <span data-i18n="consent.consentText">I consent to a home inspection to assess health and safety conditions, understand this is voluntary, and agree that photos may be taken for documentation purposes.</span>
+    <section>
+      <label class="block text-sm font-medium text-gray-700">
+        <span data-i18n="language.label">Language:</span>
+        <select id="langSelect" class="mt-1 block w-full rounded border-gray-300 shadow-sm">
+          <option value="en">English</option>
+          <option value="zh">繁體中文</option>
+        </select>
       </label>
-      <input type="text" id="residentName" placeholder="Full Name" class="block mt-2 w-full p-2 border rounded" />
-    </div>
+    </section>
 
-    <!-- Location -->
-    <div class="mb-4">
-      <button id="getLocationBtn" class="bg-blue-600 text-white px-4 py-2 rounded" data-i18n="env.useLocation">📍 Use My Location</button>
-      <p id="addressDisplay" class="text-sm mt-2"></p>
-      <div id="map" class="h-48 mt-2 rounded border"></div>
-    </div>
+    <form id="inspectionForm" class="space-y-4">
+      <h2 class="text-lg font-semibold text-green-700" data-i18n="inspection.title">Home Inspection Checklist</h2>
+      <div class="grid grid-cols-1 gap-3">
+        <label class="flex items-center space-x-2" for="moldVisible"><input type="checkbox" id="moldVisible"><span data-i18n="inspection.moldVisible">Visible mold</span></label>
+        <label class="flex items-center space-x-2" for="leakingPipes"><input type="checkbox" id="leakingPipes"><span data-i18n="inspection.leakingPipes">Water damage or leaks</span></label>
+        <label class="flex items-center space-x-2" for="noVentilation"><input type="checkbox" id="noVentilation"><span data-i18n="inspection.noVentilation">Poor ventilation</span></label>
+        <label class="flex items-center space-x-2" for="pestDroppings"><input type="checkbox" id="pestDroppings"><span data-i18n="inspection.pestDroppings">Signs of pests</span></label>
+        <label class="flex items-center space-x-2" for="electrical"><input type="checkbox" id="electrical"><span data-i18n="inspection.electrical">Unsafe electrical systems</span></label>
+        <label class="flex items-center space-x-2" for="tripHazards"><input type="checkbox" id="tripHazards"><span data-i18n="inspection.tripHazards">Trip hazards</span></label>
+        <label class="flex items-center space-x-2" for="otherHazards"><input type="checkbox" id="otherHazards"><span data-i18n="inspection.otherHazards">Other risks</span></label>
+      </div>
+    </form>
 
-    <!-- Inspection Checklist -->
-    <h2 class="text-xl font-semibold mt-6 mb-2" data-i18n="inspection.title">Home Inspection Checklist</h2>
-    <form id="inspectionForm" class="space-y-2"></form>
+    <form id="sdohForm" class="space-y-4">
+      <h2 class="text-lg font-semibold text-green-700" data-i18n="sdoh.title">Resident SDOH Questionnaire</h2>
 
-    <!-- SDOH Questionnaire -->
-    <h2 class="text-xl font-semibold mt-6 mb-2" data-i18n="sdoh.title">Resident SDOH Questionnaire</h2>
-    <form id="sdohForm" class="space-y-4"></form>
+      <label class="block text-sm font-medium text-gray-700" for="housingStable" data-i18n="sdoh.housingStable">Is your housing stable?</label>
+      <select id="housingStable" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="housingStable"></select>
 
-    <!-- Photo Upload -->
-    <div class="mb-4">
-      <label for="photoUpload" class="block text-sm font-medium" data-i18n="photo.label">Upload Photos (optional)</label>
-      <input type="file" id="photoUpload" accept="image/*" multiple class="mt-1 block w-full text-sm text-gray-500" />
-      <div id="photoPreview" class="grid grid-cols-3 gap-2 mt-2"></div>
-    </div>
+      <label class="block text-sm font-medium text-gray-700" for="utilityShutoff" data-i18n="sdoh.utilityShutoff">Have your utilities been shut off in the past year?</label>
+      <select id="utilityShutoff" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="utilityShutoff"></select>
 
-    <!-- Export Buttons -->
-    <div class="mt-6 space-x-2">
-      <button id="generateBtn" class="bg-green-600 text-white px-4 py-2 rounded" data-i18n="fhir.generate">Generate FHIR JSON</button>
-      <button id="downloadJSON" class="bg-gray-700 text-white px-4 py-2 rounded hidden" data-i18n="fhir.downloadJson">Download JSON</button>
-      <button id="downloadPDF" class="bg-gray-700 text-white px-4 py-2 rounded hidden" data-i18n="fhir.downloadPdf">Download PDF</button>
-    </div>
+      <label class="block text-sm font-medium text-gray-700" for="foodInsecurity" data-i18n="sdoh.foodInsecurity">How often do you worry about running out of food?</label>
+      <select id="foodInsecurity" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="foodInsecurity"></select>
 
-    <!-- Output -->
-    <pre id="output" class="mt-6 p-4 bg-gray-100 rounded overflow-x-auto text-sm"></pre>
-  </main>
+      <label class="block text-sm font-medium text-gray-700" for="languagePref" data-i18n="sdoh.languagePref">Preferred language for communication?</label>
+      <select id="languagePref" class="block w-full rounded border-gray-300 shadow-sm" data-i18n-options="languagePref"></select>
 
-  <!-- Scripts -->
+      <label class="block text-sm font-medium text-gray-700" for="incomeLevel" data-i18n="sdoh.incomeLevel">What is your monthly household income? <span class="text-gray-500">(optional)</span></label>
+      <input type="number" id="incomeLevel" class="block w-full rounded border-gray-300 shadow-sm">
+    </form>
+
+    <section>
+      <h2 class="text-lg font-semibold text-green-700" data-i18n="consent.title">Consent &amp; Signature</h2>
+      <label class="block mt-2 text-sm font-medium text-gray-700">
+        <input type="checkbox" id="consentCheckbox" class="mr-2">
+        <span data-i18n="consent.explained">I consent to a home inspection to assess health and safety conditions, understand this is voluntary, and agree that photos may be taken for documentation purposes.</span>
+      </label>
+      <label class="block mt-2 text-sm font-medium text-gray-700" for="residentName" data-i18n="consent.name">Resident Name (serves as consent confirmation):</label>
+      <input type="text" id="residentName" class="mt-1 block w-full rounded border-gray-300 shadow-sm">
+    </section>
+
+    <section>
+      <h2 class="text-lg font-semibold text-green-700" data-i18n="location.title">Inspection Map Location</h2>
+      <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-2 mb-2 text-sm" id="dummyBanner" style="display: block;">
+        ⚠️ Environmental context data is currently mock-only and not live. This will be updated in a future version.
+      </div>
+      <button onclick="getLocation()" type="button" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700" data-i18n="env.useLocation">📍 Use My Location</button>
+      <p id="userAddress" class="mt-2 text-sm text-gray-700">📍 26號, Lane 143, Tōnghuà Street, Linjiang Village, Da'an District, Liuzhangli, Taipei, 106, Taiwan</p>
+      <div id="map" class="mt-4 h-60 rounded border border-gray-300 leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" tabindex="0" style="position: relative;"><div class="leaflet-pane leaflet-map-pane" style="transform: translate3d(-174px, 0px, 0px);"><div class="leaflet-pane leaflet-tile-pane"><div class="leaflet-layer " style="z-index: 1; opacity: 1;"><div class="leaflet-tile-container leaflet-zoom-animated" style="z-index: 18; transform: translate3d(0px, 0px, 0px) scale(1);"><img alt="" src="https://c.tile.openstreetmap.org/13/6861/3506.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(87px, -247px, 0px); opacity: 1;"><img alt="" src="https://a.tile.openstreetmap.org/13/6862/3506.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(343px, -247px, 0px); opacity: 1;"><img alt="" src="https://a.tile.openstreetmap.org/13/6861/3507.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(87px, 9px, 0px); opacity: 1;"><img alt="" src="https://b.tile.openstreetmap.org/13/6862/3507.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(343px, 9px, 0px); opacity: 1;"><img alt="" src="https://b.tile.openstreetmap.org/13/6860/3506.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-169px, -247px, 0px); opacity: 1;"><img alt="" src="https://b.tile.openstreetmap.org/13/6863/3506.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(599px, -247px, 0px); opacity: 1;"><img alt="" src="https://c.tile.openstreetmap.org/13/6860/3507.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-169px, 9px, 0px); opacity: 1;"><img alt="" src="https://c.tile.openstreetmap.org/13/6863/3507.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(599px, 9px, 0px); opacity: 1;"></div></div></div><div class="leaflet-pane leaflet-overlay-pane"></div><div class="leaflet-pane leaflet-shadow-pane"></div><div class="leaflet-pane leaflet-marker-pane"></div><div class="leaflet-pane leaflet-tooltip-pane"></div><div class="leaflet-pane leaflet-popup-pane"></div><div class="leaflet-proxy leaflet-zoom-animated" style="transform: translate3d(1.75668e+06px, 897902px, 0px) scale(4096);"></div></div><div class="leaflet-control-container"><div class="leaflet-top leaflet-left"><div class="leaflet-control-zoom leaflet-bar leaflet-control"><a class="leaflet-control-zoom-in" href="#" title="Zoom in" role="button" aria-label="Zoom in" aria-disabled="false"><span aria-hidden="true">+</span></a><a class="leaflet-control-zoom-out" href="#" title="Zoom out" role="button" aria-label="Zoom out" aria-disabled="false"><span aria-hidden="true">−</span></a></div></div><div class="leaflet-top leaflet-right"></div><div class="leaflet-bottom leaflet-left"></div><div class="leaflet-bottom leaflet-right"><div class="leaflet-control-attribution leaflet-control"><a href="https://leafletjs.com" title="A JavaScript library for interactive maps"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" class="leaflet-attribution-flag"><path fill="#4C7BE1" d="M0 0h12v4H0z"></path><path fill="#FFD500" d="M0 4h12v3H0z"></path><path fill="#E0BC00" d="M0 7h12v1H0z"></path></svg> Leaflet</a> <span aria-hidden="true">|</span> © OpenStreetMap contributors</div></div></div></div>
+    </section>
+
+    <section>
+      <h2 class="text-lg font-semibold text-green-700" data-i18n="env.title">Environmental Context</h2>
+      <p class="text-sm"><strong data-i18n="env.asthmaRisk">Asthma Risk:</strong> <span id="asthmaRisk">Moderate (mock)</span></p>
+      <p class="text-sm"><strong data-i18n="env.leadRisk">Lead Risk:</strong> <span id="leadRisk">Low (mock)</span></p>
+      <p class="text-sm"><strong data-i18n="env.pm25">PM2.5:</strong> <span id="pm25">12 µg/m³ (mock)</span></p>
+    </section>
+
+    <section class="mb-4">
+      <label for="photoUpload" class="block text-sm font-medium text-gray-700" data-i18n="photo.label">Upload Photos (optional)</label>
+      <input type="file" id="photoUpload" name="photos" accept="image/*" multiple="" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4
+        file:rounded-full file:border-0 file:text-sm file:font-semibold
+        file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+      <div id="photoPreview" class="mt-4 grid grid-cols-2 gap-2"></div>
+      <div id="uploadStatus" class="text-sm text-gray-600 mt-2"></div>
+    </section>
+
+    <section>
+      <h2 class="text-lg font-semibold text-green-700" data-i18n="fhir.outputTitle">FHIR JSON Output</h2>
+      <pre id="output" class="mt-2 p-2 bg-gray-100 border rounded overflow-x-auto text-xs text-gray-800"></pre>
+      <div class="mt-2 flex gap-3 flex-wrap">
+        <button onclick="generateFHIR()" type="button" class="px-4 py-2 bg-green-600 text-white rounded shadow hover:bg-green-700" data-i18n="fhir.generate">Generate FHIR Report</button>
+        <button onclick="downloadJSON()" type="button" class="px-4 py-2 bg-gray-800 text-white rounded shadow hover:bg-gray-900" data-i18n="fhir.downloadJson">Download JSON</button>
+        <button onclick="downloadPDF()" type="button" class="px-4 py-2 bg-gray-800 text-white rounded shadow hover:bg-gray-900" data-i18n="fhir.downloadPdf">Download PDF</button>
+      </div>
+    </section>
+  </div>
+
   <script src="app.js"></script>
-  <script src="checklist-loader.js"></script>
-  <script src="sdoh-loader.js"></script>
-</body>
-</html>
+
+
+</body></html>
