@@ -1,4 +1,3 @@
-
 {
   "app": {
     "title": "Healthy Homes Practitioner App",
@@ -54,7 +53,7 @@
   },
   "consent": {
     "title": "Consent & Signature",
-    "explained": "I consent to a home inspection to assess health and safety conditions, understand this is voluntary, and agree that photos may be taken for documentation purposes.",
+    "consentText": "I consent to a home inspection to assess health and safety conditions, understand this is voluntary, and agree that photos may be taken for documentation purposes.",
     "name": "Resident Name (serves as consent confirmation):"
   },
   "env": {
@@ -73,4 +72,3 @@
     "downloadPdf": "Download PDF"
   }
 }
-
