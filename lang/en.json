@@ -1,3 +1,4 @@
+
 {
   "app": {
     "title": "Healthy Homes Practitioner App",
@@ -8,20 +9,16 @@
   },
   "inspection": {
     "title": "Home Inspection Checklist",
-    "moldVisible": "Visible mold",
+    "moldVisible": "Visible mold or moisture",
     "leakingPipes": "Water damage or leaks",
     "noVentilation": "Poor ventilation",
-    "pestDroppings": "Signs of pests",
-    "electrical": "Unsafe electrical systems",
-    "tripHazards": "Trip hazards",
-    "otherHazards": "Other risks",
-    "radonRisk": "Possible radon exposure",
-    "airPollutionSources": "Indoor air pollution sources (smoking, chemicals)",
-    "petAllergens": "Excessive pet allergens with sensitive residents",
-    "noGrabBars": "Lack of grab bars, non-slip surfaces",
+    "pestDroppings": "Signs of pests or droppings",
+    "electrical": "Unsafe or exposed electrical wiring",
+    "tripHazards": "Trip hazards (e.g. loose rugs, cords)",
     "leadPaint": "Possible lead paint (pre-1978 surfaces)",
     "noSmokeAlarm": "Missing or non-functional smoke detectors",
-    "noCOAlarm": "No carbon monoxide detector"
+    "noCOAlarm": "No carbon monoxide detector",
+    "otherHazards": "Other risks"
   },
   "sdoh": {
     "title": "Resident SDOH Questionnaire",
@@ -76,3 +73,4 @@
     "downloadPdf": "Download PDF"
   }
 }
+
