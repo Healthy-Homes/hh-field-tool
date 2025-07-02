@@ -38,8 +38,6 @@ function populateSelectOptions() {
     const key = select.getAttribute('data-i18n-options');
     const options = translations[currentLang]?.sdohOptions?.[key];
 
-    console.log(`[dropdown] Populating sdohOptions.${key} with:`, options);
-
     if (!options) {
       console.warn(`[dropdown] Missing options for key: sdohOptions.${key}`);
       return;
@@ -55,30 +53,26 @@ function populateSelectOptions() {
   });
 }
 
-// Capture SDOH responses using data-sdoh
-function getSDOHResponses() {
-  const sdohInputs = document.querySelectorAll('[data-sdoh]');
-  const formData = {};
-  sdohInputs.forEach(input => {
-    formData[input.name] = input.value || '';
-  });
-  return formData;
-}
-
-// Capture checked checklist items
-function getChecklistFindings() {
-  const checkboxes = document.querySelectorAll('[data-checklist]');
-  const checkedItems = [];
-  checkboxes.forEach(cb => {
-    if (cb.checked) checkedItems.push(cb.value);
-  });
-  return checkedItems;
-}
-
-// Generate FHIR JSON and show on screen
+// Generate FHIR JSON
 function generateFHIR() {
-  const formData = getSDOHResponses();
-  const checklistItems = getChecklistFindings();
+  const formData = {};
+  document.querySelectorAll('#sdohForm select, #sdohForm input[type="text"], #sdohForm input[type="number"]').forEach(el => {
+    if (el.name && el.value) {
+      formData[el.name] = el.value;
+    }
+  });
+
+  const checklist = [
+    'moldVisible', 'leakingPipes', 'noVentilation',
+    'pestDroppings', 'electrical', 'tripHazards',
+    'radonRisk', 'indoorAir', 'pets', 'grabBars',
+    'leadPaint', 'noSmokeAlarm', 'noCOAlarm', 'otherHazards'
+  ];
+
+  const checklistItems = checklist.filter(id => {
+    const checkbox = document.getElementById(id);
+    return checkbox?.checked;
+  });
 
   const obs = {
     resourceType: "Observation",
@@ -94,16 +88,7 @@ function generateFHIR() {
   document.getElementById('output').textContent = JSON.stringify(obs, null, 2);
 }
 
-// Download JSON file
-function downloadJSON() {
-  const blob = new Blob([document.getElementById('output').textContent], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'inspection.json';
-  a.click();
-}
-
-// Generate and download PDF
+// PDF Export
 function downloadPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
@@ -140,7 +125,16 @@ function downloadPDF() {
   doc.save('inspection.pdf');
 }
 
-// Handle image uploads
+// JSON Export
+function downloadJSON() {
+  const blob = new Blob([document.getElementById('output').textContent], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'inspection.json';
+  a.click();
+}
+
+// Photo Upload
 document.getElementById('photoUpload').addEventListener('change', function (e) {
   const preview = document.getElementById('photoPreview');
   const uploadStatus = document.getElementById('uploadStatus');
@@ -163,13 +157,13 @@ document.getElementById('photoUpload').addEventListener('change', function (e) {
   uploadStatus.textContent = `${e.target.files.length} image(s) uploaded.`;
 });
 
-// Handle language change
+// Language Switch
 document.getElementById('langSelect').addEventListener('change', async e => {
   currentLang = e.target.value;
   await loadTranslations(currentLang);
 });
 
-// Load map
+// Map + Location
 let mapInstance;
 function getLocation() {
   if (!navigator.geolocation) {
@@ -187,4 +181,38 @@ function getLocation() {
       } else {
         mapInstance = L.map('map').setView([lat, lng], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '© OpenStreetMap contribu
+          attribution: '© OpenStreetMap contributors'
+        }).addTo(mapInstance);
+      }
+
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`);
+        const data = await res.json();
+        document.getElementById("userAddress").textContent = `📍 ${data.display_name}`;
+      } catch (err) {
+        console.error("Reverse geocoding failed:", err);
+      }
+
+      document.getElementById("asthmaRisk").textContent = "Moderate (mock)";
+      document.getElementById("leadRisk").textContent = "Low (mock)";
+      document.getElementById("pm25").textContent = "12 µg/m³ (mock)";
+    },
+    error => {
+      alert("Unable to retrieve your location.");
+      console.error(error);
+    }
+  );
+}
+
+// Expose required functions globally for inline onclick handlers
+window.getLocation = getLocation;
+window.generateFHIR = generateFHIR;
+window.downloadJSON = downloadJSON;
+window.downloadPDF = downloadPDF;
+
+// Init
+window.addEventListener('DOMContentLoaded', async () => {
+  await loadTranslations(currentLang);
+  getLocation();
+  document.getElementById('dummyBanner').style.display = 'block';
+});
