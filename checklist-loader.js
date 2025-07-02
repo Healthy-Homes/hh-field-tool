@@ -1,5 +1,3 @@
-// checklist-loader.js
-
 function loadChecklist(csvText) {
   Papa.parse(csvText, {
     header: true,
@@ -7,7 +5,6 @@ function loadChecklist(csvText) {
     complete: function(results) {
       const checklistContainer = document.getElementById('inspectionForm');
       if (!checklistContainer) return;
-
       checklistContainer.innerHTML = '';
 
       results.data.forEach(item => {
@@ -25,9 +22,21 @@ function loadChecklist(csvText) {
         label.setAttribute('for', item.id);
         label.className = 'ml-2 text-sm';
 
-        const key = item.id;
-        const translated = translations[currentLang] && translations[currentLang].inspection && translations[currentLang].inspection[key];
-        label.textContent = translated || item.label || '[Missing label]';
+        const translationKey = `inspection.${item.id}`;
+        let text = translations[currentLang];
+        if (text) {
+          const parts = translationKey.split('.');
+          for (let part of parts) {
+            if (text[part]) {
+              text = text[part];
+            } else {
+              text = null;
+              break;
+            }
+          }
+        }
+
+        label.textContent = text || item.label || '[Missing label]';
 
         checkboxWrapper.appendChild(checkbox);
         checkboxWrapper.appendChild(label);
@@ -37,7 +46,13 @@ function loadChecklist(csvText) {
   });
 }
 
-fetch('data/checklist.csv')
-  .then(response => response.text())
-  .then(csvText => loadChecklist(csvText))
-  .catch(error => console.error('Error loading checklist:', error));
+function fetchChecklist() {
+  fetch('data/checklist.csv')
+    .then(response => response.text())
+    .then(csvText => loadChecklist(csvText))
+    .catch(error => console.error('Error loading checklist:', error));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  fetchChecklist();
+});
