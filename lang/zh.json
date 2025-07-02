@@ -1,20 +1,26 @@
 {
   "app": {
-    "title": "健康住宅實務應用程式"
+    "title": "健康住宅從業人員應用程式",
+    "intro": "本工具協助現場工作人員評估與住房相關的健康風險和社會需求。"
   },
   "language": {
-    "label": "語言",
-    "en": "English",
-    "zh": "中文"
+    "label": "語言："
   },
   "inspection": {
-    "title": "住宅檢查清單"
+    "title": "住房檢查清單",
+    "moldVisible": "可見黴菌",
+    "leakingPipes": "水損或漏水",
+    "noVentilation": "通風不良",
+    "pestDroppings": "害蟲跡象",
+    "electrical": "不安全的電氣系統",
+    "tripHazards": "絆倒危險",
+    "otherHazards": "其他風險",
+    "airPollutionSources": "室內空氣污染源（吸菸、化學物質）",
+    "petAllergens": "過量寵物過敏原（對敏感居民）",
+    "noGrabBars": "缺乏扶手、防滑設施"
   },
   "sdoh": {
-    "title": "健康社會決定因素"
-  },
-  "consent": {
-    "text": "我同意進行住房檢查以評估健康與安全狀況，了解這是自願的，並同意為紀錄目的拍攝照片。"
+    "title": "居民社會決定因素問卷"
   },
   "sdohOptions": {
     "housingStable": {
@@ -35,9 +41,12 @@
     },
     "languagePref": {
       "": "請選擇",
-      "english": "英語",
+      "english": "英文",
       "chinese": "中文",
       "other": "其他"
     }
+  },
+  "consent": {
+    "text": "我同意進行住房檢查以評估健康與安全狀況，了解這是自願的，並同意為紀錄目的拍攝照片。"
   }
 }
