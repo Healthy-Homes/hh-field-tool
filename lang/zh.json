@@ -15,12 +15,21 @@
     "electrical": "不安全的電氣系統",
     "tripHazards": "絆倒危險",
     "otherHazards": "其他風險",
+    "radonRisk": "可能的氡氣暴露",
     "airPollutionSources": "室內空氣污染源（吸菸、化學物質）",
     "petAllergens": "過量寵物過敏原（對敏感居民）",
-    "noGrabBars": "缺乏扶手、防滑設施"
+    "noGrabBars": "缺乏扶手、防滑設施",
+    "leadPaint": "可能含鉛油漆（1978年前的表面）",
+    "noSmokeAlarm": "缺失或失效的煙霧探測器",
+    "noCOAlarm": "沒有一氧化碳探測器"
   },
   "sdoh": {
-    "title": "居民社會決定因素問卷"
+    "title": "居民社會決定因素問卷",
+    "housingStable": "您的住房是否穩定？",
+    "utilityShutoff": "過去一年中，您的水電是否被停用？",
+    "foodInsecurity": "您多久會擔心糧食不足？",
+    "languagePref": "偏好的溝通語言為何？",
+    "incomeLevel": "您每月的家庭收入為多少？（可選）"
   },
   "sdohOptions": {
     "housingStable": {
@@ -47,6 +56,23 @@
     }
   },
   "consent": {
-    "text": "我同意進行住房檢查以評估健康與安全狀況，了解這是自願的，並同意為紀錄目的拍攝照片。"
+    "title": "同意與簽名",
+    "explained": "我同意進行住房檢查以評估健康與安全狀況，了解這是自願的，並同意為紀錄目的拍攝照片。",
+    "name": "居民姓名（視為同意確認）："
+  },
+  "env": {
+    "title": "環境背景",
+    "asthmaRisk": "氣喘風險",
+    "leadRisk": "鉛暴露風險",
+    "pm25": "PM2.5",
+    "useLocation": "📍 使用我的位置"
+  },
+  "photo": {
+    "label": "上傳照片（可選）"
+  },
+  "fhir": {
+    "outputTitle": "FHIR JSON 輸出",
+    "downloadJson": "下載 JSON",
+    "downloadPdf": "下載 PDF"
   }
 }
