@@ -57,31 +57,64 @@ function populateSelectOptions() {
 function generateFHIR() {
   const formData = {};
   document.querySelectorAll('#sdohForm select, #sdohForm input[type="text"], #sdohForm input[type="number"]').forEach(el => {
-    if (el.name && el.value !== '') {
+    if (el.name && el.value) {
       formData[el.name] = el.value;
     }
   });
 
-  const checklistIds = Array.from(document.querySelectorAll('#inspectionForm input[type="checkbox"]'))
-    .map(input => input.id);
+  const checklistIds = [
+    'moldVisible', 'leakingPipes', 'noVentilation',
+    'pestDroppings', 'electrical', 'tripHazards', 'otherHazards'
+  ];
 
   const checklistItems = checklistIds.filter(id => {
     const checkbox = document.getElementById(id);
     return checkbox?.checked;
   });
 
-  const obs = {
+  const observation = {
     resourceType: "Observation",
-    extension: Object.entries(formData).map(([k, v]) => ({ url: k, valueString: v })),
-    checklistFindings: checklistItems,
-    photos: uploadedImages.map(img => ({
-      name: img.name,
-      contentType: "image/jpeg",
-      data: img.data
+    status: "final",
+    code: {
+      coding: [{
+        system: "http://loinc.org",
+        code: "75275-8",
+        display: "Healthy homes environmental inspection"
+      }]
+    },
+    subject: {
+      display: document.getElementById("residentName").value || "Unknown Resident"
+    },
+    component: [],
+    photo: uploadedImages.map(img => ({
+      url: `data:${img.type};base64,${img.data.split(',')[1]}`,
+      title: img.name
     }))
   };
 
-  document.getElementById('output').textContent = JSON.stringify(obs, null, 2);
+  // Add SDOH fields as components
+  Object.entries(formData).forEach(([key, val]) => {
+    observation.component.push({
+      code: {
+        text: key
+      },
+      valueString: val
+    });
+  });
+
+  // Add checklist fields as components
+  checklistItems.forEach(item => {
+    observation.component.push({
+      code: {
+        text: item
+      },
+      valueBoolean: true
+    });
+  });
+
+  document.getElementById('output').textContent = JSON.stringify(observation, null, 2);
+  document.getElementById('downloadJsonBtn').disabled = false;
+  document.getElementById('downloadPdfBtn').disabled = false;
 }
 
 // PDF Export
@@ -94,27 +127,19 @@ function downloadPDF() {
   doc.text("Healthy Homes Assessment Summary", 10, 10);
   let y = 20;
 
-  if (data.extension?.length) {
-    doc.text("SDOH Responses:", 10, y);
+  if (data.component?.length) {
+    doc.text("Responses:", 10, y);
     y += 8;
-    data.extension.forEach(entry => {
-      doc.text(`${entry.url}: ${entry.valueString}`, 12, y);
+    data.component.forEach(entry => {
+      const label = entry.code?.text || "Unknown";
+      const val = entry.valueString || entry.valueBoolean || "—";
+      doc.text(`${label}: ${val}`, 12, y);
       y += 6;
     });
     y += 4;
   }
 
-  if (data.checklistFindings?.length) {
-    doc.text("Checklist Findings:", 10, y);
-    y += 8;
-    data.checklistFindings.forEach(item => {
-      doc.text(`- ${item}`, 12, y);
-      y += 6;
-    });
-  }
-
-  if (data.photos?.length) {
-    y += 8;
+  if (data.photo?.length) {
     doc.text("Photos embedded separately in JSON export.", 10, y);
   }
 
@@ -140,7 +165,11 @@ document.getElementById('photoUpload').addEventListener('change', function (e) {
   [...e.target.files].forEach(file => {
     const reader = new FileReader();
     reader.onload = function (e) {
-      uploadedImages.push({ name: file.name, data: e.target.result });
+      uploadedImages.push({
+        name: file.name,
+        type: file.type,
+        data: e.target.result
+      });
       const img = document.createElement('img');
       img.src = e.target.result;
       img.alt = file.name;
@@ -200,7 +229,7 @@ function getLocation() {
   );
 }
 
-// Expose required functions globally
+// Expose global functions
 window.getLocation = getLocation;
 window.generateFHIR = generateFHIR;
 window.downloadJSON = downloadJSON;
@@ -211,4 +240,6 @@ window.addEventListener('DOMContentLoaded', async () => {
   await loadTranslations(currentLang);
   getLocation();
   document.getElementById('dummyBanner').style.display = 'block';
+  document.getElementById('downloadJsonBtn').disabled = true;
+  document.getElementById('downloadPdfBtn').disabled = true;
 });
