@@ -1,48 +1,37 @@
+
+
 let currentLang = 'en';
+window.translations = { en: {}, zh: {} };
+window.uploadedImages = [];
 
-const translations = {
-  en: {},
-  zh: {}
-};
-
-const uploadedImages = [];
-
-// Load translation files
 async function loadTranslations(lang) {
   try {
     const response = await fetch(`lang/${lang}.json`);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    translations[lang] = await response.json();
-    console.log(`[i18n] Loaded ${lang} translations`, translations[lang]);
-    applyTranslations();
-    populateSelectOptions();
+    window.translations[lang] = await response.json();
+    console.log(`[i18n] Loaded ${lang} translations`);
   } catch (error) {
     console.error(`Failed to load translations for ${lang}:`, error);
-    translations[lang] = translations[lang] || {};
   }
 }
 
-// Apply translation text to elements
 function applyTranslations() {
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const keys = el.getAttribute('data-i18n').split('.');
-    let value = translations[currentLang];
+    let value = window.translations[currentLang];
     keys.forEach(k => value = value?.[k]);
     if (value) el.textContent = value;
   });
 }
 
-// Populate <select> elements
 function populateSelectOptions() {
   document.querySelectorAll('[data-i18n-options]').forEach(select => {
     const key = select.getAttribute('data-i18n-options');
-    const options = translations[currentLang]?.sdohOptions?.[key];
-
+    const options = window.translations[currentLang]?.sdohOptions?.[key];
     if (!options) {
       console.warn(`[dropdown] Missing options for key: sdohOptions.${key}`);
       return;
     }
-
     select.innerHTML = '';
     for (const val in options) {
       const opt = document.createElement('option');
@@ -53,24 +42,15 @@ function populateSelectOptions() {
   });
 }
 
-// Generate FHIR JSON
 function generateFHIR() {
   const formData = {};
-  document.querySelectorAll('#sdohForm select, #sdohForm input[type="text"], #sdohForm input[type="number"]').forEach(el => {
+  document.querySelectorAll('#inspectionForm input[type="checkbox"]:checked, #sdohForm input, #sdohForm select').forEach(el => {
     if (el.name && el.value) {
       formData[el.name] = el.value;
     }
   });
 
-  const checklistIds = [
-    'moldVisible', 'leakingPipes', 'noVentilation',
-    'pestDroppings', 'electrical', 'tripHazards', 'otherHazards'
-  ];
-
-  const checklistItems = checklistIds.filter(id => {
-    const checkbox = document.getElementById(id);
-    return checkbox?.checked;
-  });
+  const checklistItems = Array.from(document.querySelectorAll('#inspectionForm input[type="checkbox"]:checked')).map(cb => cb.id);
 
   const observation = {
     resourceType: "Observation",
@@ -86,28 +66,22 @@ function generateFHIR() {
       display: document.getElementById("residentName").value || "Unknown Resident"
     },
     component: [],
-    photo: uploadedImages.map(img => ({
+    photo: window.uploadedImages.map(img => ({
       url: `data:${img.type};base64,${img.data.split(',')[1]}`,
       title: img.name
     }))
   };
 
-  // Add SDOH fields as components
   Object.entries(formData).forEach(([key, val]) => {
     observation.component.push({
-      code: {
-        text: key
-      },
+      code: { text: key },
       valueString: val
     });
   });
 
-  // Add checklist fields as components
   checklistItems.forEach(item => {
     observation.component.push({
-      code: {
-        text: item
-      },
+      code: { text: item },
       valueBoolean: true
     });
   });
@@ -117,12 +91,10 @@ function generateFHIR() {
   document.getElementById('downloadPdfBtn').disabled = false;
 }
 
-// PDF Export
 function downloadPDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   const data = JSON.parse(document.getElementById('output').textContent || '{}');
-
   doc.setFontSize(12);
   doc.text("Healthy Homes Assessment Summary", 10, 10);
   let y = 20;
@@ -132,7 +104,7 @@ function downloadPDF() {
     y += 8;
     data.component.forEach(entry => {
       const label = entry.code?.text || "Unknown";
-      const val = entry.valueString || entry.valueBoolean || "—";
+      const val = entry.valueString ?? entry.valueBoolean ?? "—";
       doc.text(`${label}: ${val}`, 12, y);
       y += 6;
     });
@@ -146,7 +118,6 @@ function downloadPDF() {
   doc.save('inspection.pdf');
 }
 
-// JSON Export
 function downloadJSON() {
   const blob = new Blob([document.getElementById('output').textContent], { type: 'application/json' });
   const a = document.createElement('a');
@@ -155,17 +126,16 @@ function downloadJSON() {
   a.click();
 }
 
-// Photo Upload
 document.getElementById('photoUpload').addEventListener('change', function (e) {
   const preview = document.getElementById('photoPreview');
   const uploadStatus = document.getElementById('uploadStatus');
   preview.innerHTML = '';
-  uploadedImages.length = 0;
+  window.uploadedImages.length = 0;
 
   [...e.target.files].forEach(file => {
     const reader = new FileReader();
     reader.onload = function (e) {
-      uploadedImages.push({
+      window.uploadedImages.push({
         name: file.name,
         type: file.type,
         data: e.target.result
@@ -182,13 +152,13 @@ document.getElementById('photoUpload').addEventListener('change', function (e) {
   uploadStatus.textContent = `${e.target.files.length} image(s) uploaded.`;
 });
 
-// Language Switch
 document.getElementById('langSelect').addEventListener('change', async e => {
   currentLang = e.target.value;
   await loadTranslations(currentLang);
+  applyTranslations();
+  populateSelectOptions();
 });
 
-// Map + Location
 let mapInstance;
 function getLocation() {
   if (!navigator.geolocation) {
@@ -229,17 +199,16 @@ function getLocation() {
   );
 }
 
-// Expose global functions
-window.getLocation = getLocation;
-window.generateFHIR = generateFHIR;
-window.downloadJSON = downloadJSON;
-window.downloadPDF = downloadPDF;
-
-// Init
-window.addEventListener('DOMContentLoaded', async () => {
+async function initializeApp() {
   await loadTranslations(currentLang);
-  getLocation();
-  document.getElementById('dummyBanner').style.display = 'block';
+  applyTranslations();
+  populateSelectOptions();
+  document.getElementById('dummyBanner').textContent = '⚠️ Environmental context data is currently mock-only and not live.';
   document.getElementById('downloadJsonBtn').disabled = true;
   document.getElementById('downloadPdfBtn').disabled = true;
-});
+  getLocation();
+}
+
+window.addEventListener('DOMContentLoaded', initializeApp);
+
+
