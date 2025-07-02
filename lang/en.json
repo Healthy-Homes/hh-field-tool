@@ -1,21 +1,43 @@
 {
   "app": {
-    "title": "Healthy Homes Practitioner App",
-    "intro": "This tool helps field workers assess housing-related health risks and social needs."
+    "title": "Healthy Homes Practitioner App"
   },
   "language": {
-    "label": "Language:"
+    "label": "Language",
+    "en": "English",
+    "zh": "中文"
   },
   "inspection": {
     "title": "Home Inspection Checklist"
   },
   "sdoh": {
-    "title": "Resident SDOH Questionnaire"
+    "title": "Social Determinants of Health"
   },
-  "sdohOptions": {},
   "consent": {
-    "title": "Consent & Signature",
-    "explained": "I consent to a home inspection to assess health and safety conditions, understand this is voluntary, and agree that photos may be taken for documentation purposes.",
-    "name": "Resident Name (serves as consent confirmation):"
+    "text": "I consent to a home inspection to assess health and safety conditions, understand this is voluntary, and agree that photos may be taken for documentation purposes."
+  },
+  "sdohOptions": {
+    "housingStable": {
+      "": "Select",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "utilityShutoff": {
+      "": "Select",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "foodInsecurity": {
+      "": "Select",
+      "always": "Always",
+      "sometimes": "Sometimes",
+      "never": "Never"
+    },
+    "languagePref": {
+      "": "Select",
+      "english": "English",
+      "chinese": "Chinese",
+      "other": "Other"
+    }
   }
 }
