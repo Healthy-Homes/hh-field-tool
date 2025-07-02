@@ -1,54 +1,38 @@
-let currentLang = 'en';
-const translations = { en: {}, zh: {} };
 
-// Load translation files
-async function loadTranslations(lang) {
+document.addEventListener('DOMContentLoaded', () => {
+  initializeApp();
+});
+
+async function initializeApp() {
   try {
-    const response = await fetch(`lang/${lang}.json`);
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    translations[lang] = await response.json();
-    console.log(`[i18n] Loaded ${lang} translations`);
-  } catch (err) {
-    console.error(`[i18n] Failed to load ${lang} translations`, err);
+    await loadTranslations('en'); // Default language
+    document.getElementById('languageSelector')?.addEventListener('change', (e) => {
+      loadTranslations(e.target.value);
+    });
+
+    if (document.getElementById('useLocationBtn')) {
+      document.getElementById('useLocationBtn').addEventListener('click', () => {
+        navigator.geolocation.getCurrentPosition((position) => {
+          const { latitude, longitude } = position.coords;
+          document.getElementById('locationInfo').textContent = `Lat: ${latitude}, Lon: ${longitude}`;
+        });
+      });
+    }
+  } catch (e) {
+    console.error('[App Init] Failed to initialize app:', e);
   }
 }
 
-// Apply translations to the DOM
-function applyTranslations() {
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.getAttribute('data-i18n');
-    if (translations[currentLang][key]) {
-      el.textContent = translations[currentLang][key];
-    }
-  });
+async function loadTranslations(lang) {
+  try {
+    const res = await fetch(`lang/${lang}.json`);
+    const data = await res.json();
+
+    document.getElementById('appTitle')?.textContent = data.appTitle || '';
+    document.getElementById('consentText')?.textContent = data.consent || '';
+    document.getElementById('nameLabel')?.placeholder = data.fullName || '';
+    document.getElementById('locationInfo')?.textContent = '';
+  } catch (e) {
+    console.error(`[i18n] Failed to load ${lang} translations`, e);
+  }
 }
-
-// Handle language change
-document.addEventListener('DOMContentLoaded', async () => {
-  await loadTranslations(currentLang);
-  applyTranslations();
-  loadChecklist();  // Defined in checklist-loader.js
-  loadSDOH();       // Defined in sdoh-loader.js
-
-  document.getElementById('languageSelect').addEventListener('change', async (e) => {
-    currentLang = e.target.value;
-    await loadTranslations(currentLang);
-    applyTranslations();
-    loadChecklist();
-    loadSDOH();
-  });
-
-  document.getElementById('locationButton').addEventListener('click', () => {
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition(pos => {
-        const { latitude, longitude } = pos.coords;
-        document.getElementById('locationOutput').textContent = `Lat: ${latitude.toFixed(4)}, Lon: ${longitude.toFixed(4)}`;
-      }, err => {
-        console.error('[geo] Location error:', err);
-        document.getElementById('locationOutput').textContent = 'Unable to retrieve location.';
-      });
-    } else {
-      document.getElementById('locationOutput').textContent = 'Geolocation not supported.';
-    }
-  });
-});
