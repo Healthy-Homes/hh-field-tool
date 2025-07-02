@@ -1,3 +1,5 @@
+// checklist-loader.js
+
 function loadChecklist(csvText) {
   Papa.parse(csvText, {
     header: true,
@@ -22,7 +24,10 @@ function loadChecklist(csvText) {
         const label = document.createElement('label');
         label.setAttribute('for', item.id);
         label.className = 'ml-2 text-sm';
-        label.textContent = item.label || '[Missing label]';
+
+        const key = item.id;
+        const translated = translations[currentLang] && translations[currentLang].inspection && translations[currentLang].inspection[key];
+        label.textContent = translated || item.label || '[Missing label]';
 
         checkboxWrapper.appendChild(checkbox);
         checkboxWrapper.appendChild(label);
