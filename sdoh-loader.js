@@ -1,5 +1,3 @@
-// sdoh-loader.js
-
 function loadSDOH(csvText) {
   Papa.parse(csvText, {
     header: true,
@@ -17,9 +15,20 @@ function loadSDOH(csvText) {
         label.setAttribute('for', item.id);
         label.className = 'block text-sm font-medium';
 
-        const key = item.id;
-        const translated = translations[currentLang] && translations[currentLang].sdoh && translations[currentLang].sdoh[key];
-        label.textContent = translated || item.label || '[Missing label]';
+        const translationKey = `sdoh.${item.id}`;
+        let text = translations[currentLang];
+        if (text) {
+          const parts = translationKey.split('.');
+          for (let part of parts) {
+            if (text[part]) {
+              text = text[part];
+            } else {
+              text = null;
+              break;
+            }
+          }
+        }
+        label.textContent = text || item.label || '[Missing label]';
         wrapper.appendChild(label);
 
         if (item.type === 'select') {
@@ -32,11 +41,14 @@ function loadSDOH(csvText) {
           options.forEach(opt => {
             const option = document.createElement('option');
             option.value = opt;
-            const translatedOpt = translations[currentLang] &&
-                                  translations[currentLang].sdohOptions &&
-                                  translations[currentLang].sdohOptions[key] &&
-                                  translations[currentLang].sdohOptions[key][opt];
-            option.textContent = translatedOpt || opt;
+
+            // Try translated label from sdohOptions
+            let optLabel = opt;
+            let trans = translations[currentLang];
+            if (trans && trans.sdohOptions && trans.sdohOptions[item.id] && trans.sdohOptions[item.id][opt]) {
+              optLabel = trans.sdohOptions[item.id][opt];
+            }
+            option.textContent = optLabel;
             select.appendChild(option);
           });
 
@@ -57,7 +69,13 @@ function loadSDOH(csvText) {
   });
 }
 
-fetch('data/sdoh.csv')
-  .then(response => response.text())
-  .then(csvText => loadSDOH(csvText))
-  .catch(error => console.error('Error loading SDOH questions:', error));
+function fetchSDOH() {
+  fetch('data/sdoh.csv')
+    .then(response => response.text())
+    .then(csvText => loadSDOH(csvText))
+    .catch(error => console.error('Error loading SDOH questions:', error));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  fetchSDOH();
+});
