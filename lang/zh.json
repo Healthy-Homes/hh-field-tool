@@ -1,15 +1,13 @@
-
-
 {
   "app": {
-    "title": "健康住宅從業人員應用程式",
-    "intro": "本工具協助現場工作人員評估與住房相關的健康風險和社會需求。"
+    "title": "健康住宅實務應用程式",
+    "intro": "本工具協助實地工作者評估與住宅有關的健康風險與社會需求。"
   },
   "language": {
     "label": "語言："
   },
   "inspection": {
-    "title": "住房檢查清單",
+    "title": "住宅檢查清單",
     "moldVisible": "可見黴菌或潮濕",
     "leakingPipes": "水損或漏水",
     "noVentilation": "通風不良",
@@ -24,10 +22,10 @@
   "sdoh": {
     "title": "居民社會決定因素問卷",
     "housingStable": "您的住房是否穩定？",
-    "utilityShutoff": "過去一年中，您的水電是否被停用？",
-    "foodInsecurity": "您多久會擔心糧食不足？",
-    "languagePref": "偏好的溝通語言為何？",
-    "incomeLevel": "您每月的家庭收入為多少？（可選）"
+    "utilityShutoff": "過去一年內是否曾停水停電？",
+    "foodInsecurity": "您有多常擔心食物不足？",
+    "languagePref": "偏好使用哪種語言？",
+    "incomeLevel": "您的每月家庭收入為何？（選填）"
   },
   "sdohOptions": {
     "housingStable": {
@@ -42,7 +40,7 @@
     },
     "foodInsecurity": {
       "": "請選擇",
-      "always": "總是",
+      "always": "經常",
       "sometimes": "有時",
       "never": "從不"
     },
@@ -55,18 +53,18 @@
   },
   "consent": {
     "title": "同意與簽名",
-    "explained": "我同意進行住房檢查以評估健康與安全狀況，了解這是自願的，並同意為紀錄目的拍攝照片。",
-    "name": "居民姓名（視為同意確認）："
+    "consentText": "我同意進行住宅健康與安全檢查，了解此為自願性質，並同意拍照作為紀錄用途。",
+    "name": "居民姓名（作為確認同意）："
   },
   "env": {
     "title": "環境背景",
     "asthmaRisk": "氣喘風險",
-    "leadRisk": "鉛暴露風險",
-    "pm25": "PM2.5",
+    "leadRisk": "鉛風險",
+    "pm25": "細懸浮微粒（PM2.5）",
     "useLocation": "📍 使用我的位置"
   },
   "photo": {
-    "label": "上傳照片（可選）"
+    "label": "上傳照片（選填）"
   },
   "fhir": {
     "outputTitle": "FHIR JSON 輸出",
@@ -74,5 +72,3 @@
     "downloadPdf": "下載 PDF"
   }
 }
-
-
