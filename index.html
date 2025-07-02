@@ -4,84 +4,68 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Healthy Homes Practitioner App</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body class="bg-gray-50 text-gray-800">
-  <div class="max-w-3xl mx-auto px-4 py-6 space-y-8">
-    <header class="space-y-2">
-      <h1 class="text-2xl font-bold text-green-700" data-i18n="app.title"></h1>
-      <p class="text-sm text-gray-600" data-i18n="app.intro"></p>
-    </header>
+<body class="bg-gray-50 text-gray-900">
 
-    <section>
-      <label class="block text-sm font-medium text-gray-700">
-        <span data-i18n="language.label"></span>
-        <select id="langSelect" class="mt-1 block w-full rounded border-gray-300 shadow-sm">
-          <option value="en">English</option>
-          <option value="zh">繁體中文</option>
-        </select>
+  <main class="max-w-3xl mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4" data-i18n="title">Healthy Homes Practitioner App</h1>
+
+    <!-- Language Selector -->
+    <div class="mb-4">
+      <label for="langSelect" class="block text-sm font-medium" data-i18n="selectLanguage">Select Language</label>
+      <select id="langSelect" class="block w-full mt-1 border rounded p-2">
+        <option value="en">English</option>
+        <option value="zh">中文</option>
+      </select>
+    </div>
+
+    <!-- Consent -->
+    <div class="mb-4">
+      <label class="inline-flex items-center">
+        <input type="checkbox" id="consentCheckbox" class="form-checkbox mr-2" />
+        <span data-i18n="consentText">I consent to a home inspection to assess health and safety conditions, understand this is voluntary, and agree that photos may be taken for documentation purposes.</span>
       </label>
-    </section>
+      <input type="text" id="residentName" placeholder="Full Name" class="block mt-2 w-full p-2 border rounded" />
+    </div>
 
-    <form id="inspectionForm" class="space-y-4">
-      <h2 class="text-lg font-semibold text-green-700" data-i18n="inspection.title"></h2>
-      <!-- Dynamic checklist items injected here -->
-    </form>
+    <!-- Location Button -->
+    <div class="mb-4">
+      <button id="getLocationBtn" class="bg-blue-600 text-white px-4 py-2 rounded" data-i18n="useMyLocation">Use My Location</button>
+      <p id="addressDisplay" class="text-sm mt-2"></p>
+      <div id="map" class="h-48 mt-2 rounded border"></div>
+    </div>
 
-    <form id="sdohForm" class="space-y-4">
-      <h2 class="text-lg font-semibold text-green-700" data-i18n="sdoh.title"></h2>
-      <!-- Dynamic SDOH items injected here -->
-    </form>
+    <!-- Inspection Checklist -->
+    <h2 class="text-xl font-semibold mt-6 mb-2" data-i18n="inspectionChecklist">Inspection Checklist</h2>
+    <form id="inspectionForm" class="space-y-2"></form>
 
-    <section>
-      <h2 class="text-lg font-semibold text-green-700" data-i18n="consent.title"></h2>
-      <label class="block mt-2 text-sm font-medium text-gray-700">
-        <input type="checkbox" id="consentCheckbox" name="consentCheckbox" class="mr-2" />
-        <span data-i18n="consent.explained"></span>
-      </label>
-      <label class="block mt-2 text-sm font-medium text-gray-700" for="residentName" data-i18n="consent.name"></label>
-      <input type="text" id="residentName" name="residentName" class="mt-1 block w-full rounded border-gray-300 shadow-sm" />
-    </section>
+    <!-- SDOH Questions -->
+    <h2 class="text-xl font-semibold mt-6 mb-2" data-i18n="sdohQuestions">Social Determinants of Health</h2>
+    <form id="sdohForm" class="space-y-4"></form>
 
-    <section>
-      <h2 class="text-lg font-semibold text-green-700" data-i18n="location.title"></h2>
-      <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-2 mb-2 text-sm" id="dummyBanner"></div>
-      <button onclick="getLocation()" type="button" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded shadow hover:bg-blue-700" data-i18n="env.useLocation"></button>
-      <p id="userAddress" class="mt-2 text-sm text-gray-700"></p>
-      <div id="map" class="mt-4 h-60 rounded border border-gray-300"></div>
-    </section>
+    <!-- Photo Upload -->
+    <div class="mb-4">
+      <label for="photoUpload" class="block text-sm font-medium" data-i18n="uploadPhotos">Upload Photos (optional)</label>
+      <input type="file" id="photoUpload" accept="image/*" multiple class="mt-1 block w-full text-sm text-gray-500" />
+      <div id="photoPreview" class="grid grid-cols-3 gap-2 mt-2"></div>
+    </div>
 
-    <section>
-      <h2 class="text-lg font-semibold text-green-700" data-i18n="env.title"></h2>
-      <p class="text-sm"><strong data-i18n="env.asthmaRisk"></strong> <span id="asthmaRisk">-</span></p>
-      <p class="text-sm"><strong data-i18n="env.leadRisk"></strong> <span id="leadRisk">-</span></p>
-      <p class="text-sm"><strong data-i18n="env.pm25"></strong> <span id="pm25">-</span></p>
-    </section>
+    <!-- Export Buttons -->
+    <div class="mt-6 space-x-2">
+      <button id="generateBtn" class="bg-green-600 text-white px-4 py-2 rounded" data-i18n="generateFHIR">Generate FHIR JSON</button>
+      <button id="downloadJSON" class="bg-gray-700 text-white px-4 py-2 rounded hidden" data-i18n="downloadJSON">Download JSON</button>
+      <button id="downloadPDF" class="bg-gray-700 text-white px-4 py-2 rounded hidden" data-i18n="downloadPDF">Download PDF</button>
+    </div>
 
-    <section class="mb-4">
-      <label for="photoUpload" class="block text-sm font-medium text-gray-700" data-i18n="photo.label"></label>
-      <input type="file" id="photoUpload" name="photos" accept="image/*" multiple class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
-      <div id="photoPreview" class="mt-4 grid grid-cols-2 gap-2"></div>
-      <div id="uploadStatus" class="text-sm text-gray-600 mt-2"></div>
-    </section>
+    <!-- Output -->
+    <pre id="output" class="mt-6 p-4 bg-gray-100 rounded overflow-x-auto text-sm"></pre>
+  </main>
 
-    <section>
-      <h2 class="text-lg font-semibold text-green-700" data-i18n="fhir.outputTitle"></h2>
-      <pre id="output" class="mt-2 p-2 bg-gray-100 border rounded overflow-x-auto text-xs text-gray-800"></pre>
-      <div class="mt-2 flex gap-3 flex-wrap">
-        <button onclick="generateFHIR()" type="button" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Generate FHIR JSON</button>
-        <button onclick="downloadJSON()" id="downloadJsonBtn" type="button" class="px-4 py-2 bg-gray-800 text-white rounded shadow hover:bg-gray-900 disabled:opacity-50" data-i18n="fhir.downloadJson" disabled>Download JSON</button>
-        <button onclick="downloadPDF()" id="downloadPdfBtn" type="button" class="px-4 py-2 bg-gray-800 text-white rounded shadow hover:bg-gray-900 disabled:opacity-50" data-i18n="fhir.downloadPdf" disabled>Download PDF</button>
-      </div>
-    </section>
-  </div>
-
-  <script src="js/app.js"></script>
-  <script src="js/checklist-loader.js"></script>
-  <script src="js/sdoh-loader.js"></script>
+  <!-- Script Inclusions (corrected paths) -->
+  <script src="app.js"></script>
+  <script src="checklist-loader.js"></script>
+  <script src="sdoh-loader.js"></script>
 </body>
 </html>
