@@ -55,44 +55,7 @@ function populateSelectOptions() {
   });
 }
 
-// Capture SDOH responses into key-value pairs
-function getSDOHResponses() {
-  const sdohInputs = document.querySelectorAll('[data-sdoh]');
-  const formData = {};
-  sdohInputs.forEach(input => {
-    formData[input.name] = input.value || '';
-  });
-  return formData;
-}
-
-// Capture checked checklist items
-function getChecklistFindings() {
-  const checkboxes = document.querySelectorAll('[data-checklist]');
-  const checkedItems = [];
-  checkboxes.forEach(cb => {
-    if (cb.checked) checkedItems.push(cb.value);
-  });
-  return checkedItems;
-}
-
 // Generate FHIR JSON and show on screen
-function generateFHIR() {
-  const formData = getSDOHResponses();
-  const checklistItems = getChecklistFindings();
-
-  const obs = {
-    resourceType: "Observation",
-    extension: Object.entries(formData).map(([k, v]) => ({ url: k, valueString: v })),
-    checklistFindings: checklistItems,
-    photos: uploadedImages.map(img => ({
-      name: img.name,
-      contentType: "image/jpeg",
-      data: img.data
-    }))
-  };
-
-  document.getElementById('output').textContent = JSON.stringify(obs, null, 2);
-}
 function generateFHIR() {
   const formData = {};
   document.querySelectorAll('#sdohForm select, #sdohForm input[type="text"]').forEach(el => {
@@ -105,7 +68,7 @@ function generateFHIR() {
     'moldVisible', 'leakingPipes', 'noVentilation',
     'pestDroppings', 'electrical', 'tripHazards',
     'radonRisk', 'indoorAir', 'pets', 'grabBars',
-    'leadPaint', 'noSmokeAlarm', 'noCOAlarm'
+    'leadPaint', 'noSmokeAlarm', 'noCOAlarm', 'otherHazards'
   ];
 
   const checklistItems = checklist.filter(id => {
@@ -126,6 +89,7 @@ function generateFHIR() {
 
   document.getElementById('output').textContent = JSON.stringify(obs, null, 2);
 }
+
 // Download JSON file
 function downloadJSON() {
   const blob = new Blob([document.getElementById('output').textContent], { type: 'application/json' });
