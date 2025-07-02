@@ -1,20 +1,19 @@
-// Core logic for Healthy Homes Practitioner App
-
 let currentLang = 'en';
 const translations = { en: {}, zh: {} };
-const uploadedImages = [];
 
-// Load translations
+// Load translation files
 async function loadTranslations(lang) {
   try {
     const response = await fetch(`lang/${lang}.json`);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
     translations[lang] = await response.json();
-  } catch (e) {
-    console.error('Error loading translations:', e);
+    console.log(`[i18n] Loaded ${lang} translations`);
+  } catch (err) {
+    console.error(`[i18n] Failed to load ${lang} translations`, err);
   }
 }
 
-// Apply translations
+// Apply translations to the DOM
 function applyTranslations() {
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
@@ -24,39 +23,32 @@ function applyTranslations() {
   });
 }
 
-// Use My Location
-function getLocation() {
-  if (!navigator.geolocation) return;
-  navigator.geolocation.getCurrentPosition(async (pos) => {
-    const { latitude, longitude } = pos.coords;
-    const response = await fetch(\`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=\${latitude}&lon=\${longitude}\`);
-    const data = await response.json();
-    const address = data.display_name;
-    const locationDisplay = document.getElementById('locationDisplay');
-    if (locationDisplay) locationDisplay.textContent = address;
-  });
-}
-
-// Export
-function downloadJSON() {
-  const dataStr = JSON.stringify(generateFHIR(), null, 2);
-  const blob = new Blob([dataStr], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "inspection.json";
-  a.click();
-}
-
-// Dummy generateFHIR
-function generateFHIR() {
-  return { resourceType: "Observation", status: "final" };
-}
-
-// Init
-async function initializeApp() {
+// Handle language change
+document.addEventListener('DOMContentLoaded', async () => {
   await loadTranslations(currentLang);
   applyTranslations();
-}
+  loadChecklist();  // Defined in checklist-loader.js
+  loadSDOH();       // Defined in sdoh-loader.js
 
-document.addEventListener('DOMContentLoaded', initializeApp);
+  document.getElementById('languageSelect').addEventListener('change', async (e) => {
+    currentLang = e.target.value;
+    await loadTranslations(currentLang);
+    applyTranslations();
+    loadChecklist();
+    loadSDOH();
+  });
+
+  document.getElementById('locationButton').addEventListener('click', () => {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(pos => {
+        const { latitude, longitude } = pos.coords;
+        document.getElementById('locationOutput').textContent = `Lat: ${latitude.toFixed(4)}, Lon: ${longitude.toFixed(4)}`;
+      }, err => {
+        console.error('[geo] Location error:', err);
+        document.getElementById('locationOutput').textContent = 'Unable to retrieve location.';
+      });
+    } else {
+      document.getElementById('locationOutput').textContent = 'Geolocation not supported.';
+    }
+  });
+});
