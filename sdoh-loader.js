@@ -1,63 +1,54 @@
-document.addEventListener("DOMContentLoaded", () => {
-  Papa.parse("data/sdoh.csv", {
-    download: true,
-    header: true,
-    skipEmptyLines: true,
-    complete: function(results) {
-      const sdohForm = document.getElementById("sdohForm");
-      results.data.forEach(row => {
-        const id = row.id?.trim();
-        const enLabel = row.label_en?.trim();
-        const zhLabel = row.label_zh?.trim();
-        const type = row.type?.trim().toLowerCase();
-        const options = row.options?.split('|').map(opt => opt.trim()) || [];
 
-        if (!id || !type || !enLabel) return;
+async function loadSDOH() {
+  try {
+    const response = await fetch('data/sdoh.csv');
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const text = await response.text();
+    const rows = Papa.parse(text, { header: true, skipEmptyLines: true }).data;
 
-        // Label
-        const label = document.createElement("label");
-        label.setAttribute("for", id);
-        label.setAttribute("data-i18n", `sdoh.${id}`);
-        label.className = "block text-sm font-medium text-gray-700 mt-2";
-        label.textContent = enLabel;
-        sdohForm.appendChild(label);
+    const sdohForm = document.getElementById('sdohForm');
+    sdohForm.innerHTML = ''; // Clear existing entries
 
-        // Input field
-        if (type === "select") {
-          const select = document.createElement("select");
-          select.name = id;
-          select.id = id;
-          select.className = "block w-full rounded border-gray-300 shadow-sm";
-          select.setAttribute("data-i18n-options", id);
-          select.setAttribute("data-sdoh", "");
+    rows.forEach(row => {
+      const id = row.id?.trim();
+      const type = row.type?.trim().toLowerCase();
+      const label_en = row.label_en?.trim();
+      if (!id || !type || !label_en) return;
 
-          // Populate default options (so the dropdown isn't empty)
-          const optDefault = document.createElement("option");
-          optDefault.value = "";
-          optDefault.textContent = currentLang === "zh" ? "請選擇" : "Select";
-          select.appendChild(optDefault);
+      // Label
+      const label = document.createElement('label');
+      label.className = 'block text-sm font-medium text-gray-700';
+      label.htmlFor = id;
+      label.setAttribute('data-i18n', `sdoh.${id}`);
+      label.textContent = translations[currentLang]?.sdoh?.[id] || label_en;
+      sdohForm.appendChild(label);
 
-          options.forEach(val => {
-            const opt = document.createElement("option");
-            opt.value = val;
-            opt.textContent = val;
-            select.appendChild(opt);
-          });
+      if (type === 'select') {
+        const select = document.createElement('select');
+        select.id = id;
+        select.name = id;
+        select.setAttribute('data-i18n-options', id);
+        select.setAttribute('data-sdoh', '');
+        select.className = 'block w-full rounded border-gray-300 shadow-sm';
+        sdohForm.appendChild(select); // options filled via populateSelectOptions()
+      } else if (type === 'text' || type === 'number') {
+        const input = document.createElement('input');
+        input.type = type;
+        input.id = id;
+        input.name = id;
+        input.setAttribute('data-sdoh', '');
+        input.className = 'block w-full rounded border-gray-300 shadow-sm';
+        sdohForm.appendChild(input);
+      }
+    });
 
-          sdohForm.appendChild(select);
-        } else if (type === "number" || type === "text") {
-          const input = document.createElement("input");
-          input.type = type;
-          input.name = id;
-          input.id = id;
-          input.setAttribute("data-sdoh", "");
-          input.className = "block w-full rounded border-gray-300 shadow-sm";
-          sdohForm.appendChild(input);
-        }
-      });
+    populateSelectOptions();
+    applyTranslations();
+  } catch (err) {
+    console.error('[sdoh-loader] Failed to load SDOH:', err);
+    const sdohForm = document.getElementById('sdohForm');
+    sdohForm.innerHTML = '<p class="text-red-600 text-sm">⚠️ Failed to load sdoh.csv</p>';
+  }
+}
 
-      populateSelectOptions();  // re-translate dropdowns
-      applyTranslations();      // re-translate labels
-    }
-  });
-});
+window.addEventListener('DOMContentLoaded', loadSDOH);
