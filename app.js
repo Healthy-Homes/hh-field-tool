@@ -57,19 +57,15 @@ function populateSelectOptions() {
 function generateFHIR() {
   const formData = {};
   document.querySelectorAll('#sdohForm select, #sdohForm input[type="text"], #sdohForm input[type="number"]').forEach(el => {
-    if (el.name && el.value) {
+    if (el.name && el.value !== '') {
       formData[el.name] = el.value;
     }
   });
 
-  const checklist = [
-    'moldVisible', 'leakingPipes', 'noVentilation',
-    'pestDroppings', 'electrical', 'tripHazards',
-    'radonRisk', 'indoorAir', 'pets', 'grabBars',
-    'leadPaint', 'noSmokeAlarm', 'noCOAlarm', 'otherHazards'
-  ];
+  const checklistIds = Array.from(document.querySelectorAll('#inspectionForm input[type="checkbox"]'))
+    .map(input => input.id);
 
-  const checklistItems = checklist.filter(id => {
+  const checklistItems = checklistIds.filter(id => {
     const checkbox = document.getElementById(id);
     return checkbox?.checked;
   });
@@ -204,7 +200,7 @@ function getLocation() {
   );
 }
 
-// Expose required functions globally for inline onclick handlers
+// Expose required functions globally
 window.getLocation = getLocation;
 window.generateFHIR = generateFHIR;
 window.downloadJSON = downloadJSON;
