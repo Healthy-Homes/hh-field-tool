@@ -17,19 +17,10 @@
     "otherHazards": "Other risks"
   },
   "sdoh": {
-    "title": "Resident SDOH Questionnaire",
-    "housingStable": "Is your housing stable?",
-    "utilityShutoff": "Have your utilities been shut off in the past year?",
-    "foodInsecurity": "How often do you worry about running out of food?",
-    "languagePref": "Preferred language for communication?",
-    "incomeLevel": "What is your monthly household income? (optional)"
-  },
-  "sdohOptions": {
-    "housingStable": {
-      "": "Select",
-      "yes": "Yes",
-      "no": "No"
-    },
+  "title": "Resident SDOH Questionnaire"
+},
+  "sdohOptions": {}
+,
     "utilityShutoff": {
       "": "Select",
       "yes": "Yes",
