@@ -1,19 +1,19 @@
-// checklist-loader.js
+// checklist-loader.js using PapaParse
 async function loadChecklistCSV() {
   const response = await fetch('data/Final_Risk_List_CSV.csv');
   const text = await response.text();
-  const rows = text.trim().split('\n');
 
-  const headers = rows[0].split(',').map(h => h.trim());
+  const result = Papa.parse(text, {
+    header: true,
+    skipEmptyLines: true
+  });
+
   const checklistContainer = document.querySelector('#inspectionForm .grid');
   checklistContainer.innerHTML = '';
 
   const currentLang = document.getElementById('langSelect')?.value || 'en';
 
-  rows.slice(1).forEach(row => {
-    const cols = row.split(',').map(c => c.trim());
-    const item = Object.fromEntries(headers.map((h, i) => [h, cols[i]]));
-
+  result.data.forEach(item => {
     const label = document.createElement('label');
     label.className = 'flex items-center space-x-2';
 
