@@ -1,0 +1,12 @@
+id,type,label_en,label_zh,options
+foodInsecurity,select,In the past year did you worry that your food would run out before you got money to buy more?,在過去一年中，您是否擔心過在有錢買更多食物之前食物就會用完？,Often;Sometimes;Never
+housingStabilityAffordability,select,In the next 2 months how concerned are you about housing costs or losing your home?,在未來2個月內，您對住房費用或失去住房有多擔心？,Very concerned;Somewhat concerned;Not concerned
+housingQualityMaintenance,select,How would you rate your housing condition and ability to maintain it?,您如何評價您的住房狀況和維護能力？,Good condition/can maintain;Fair condition/difficult to maintain;Poor condition/cannot maintain
+utilityTransportBarriers,select,In the past year has lack of utilities or transportation prevented you from meeting basic needs?,在過去一年中，缺乏公用事業或交通工具是否阻止您滿足基本需求？,Yes;No;Prefer not to answer
+financialStrain,select,How difficult is it to afford basic needs like food housing and healthcare?,您支付食物、住房和醫療保健等基本需求有多困難？,Very difficult;Somewhat difficult;Not difficult
+employmentStatus,select,What is your current work status?,您目前的工作狀況是什麼？,Employed full-time;Employed part-time;Unemployed;Retired;Disabled;Student
+socialConnection,select,How often do you feel lonely or isolated?,您多久感到孤獨或孤立？,Often;Sometimes;Never
+educationLevel,select,What is your highest education level?,您的最高教育程度是什麼？,Less than high school;High school or equivalent;Some college;College degree or higher
+healthcareAccess,select,In the past year did lack of insurance or cost prevent you from getting needed medical care?,在過去一年中，缺乏保險或費用是否阻止您獲得所需的醫療照護？,Yes;No;Prefer not to answer
+neighborhoodSafety,select,How safe do you feel in your neighborhood?,您在社區中感到多安全？,Very safe;Somewhat safe;Not safe
+languageBarrier,select,Do you need an interpreter to communicate with healthcare providers?,您是否需要翻譯來與醫療服務提供者溝通？,Yes;No;Sometimes
