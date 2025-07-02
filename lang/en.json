@@ -1,20 +1,26 @@
 {
   "app": {
-    "title": "Healthy Homes Practitioner App"
+    "title": "Healthy Homes Practitioner App",
+    "intro": "This tool helps field workers assess housing-related health risks and social needs."
   },
   "language": {
-    "label": "Language",
-    "en": "English",
-    "zh": "中文"
+    "label": "Language:"
   },
   "inspection": {
-    "title": "Home Inspection Checklist"
+    "title": "Home Inspection Checklist",
+    "moldVisible": "Visible mold",
+    "leakingPipes": "Water damage or leaks",
+    "noVentilation": "Poor ventilation",
+    "pestDroppings": "Signs of pests",
+    "electrical": "Unsafe electrical systems",
+    "tripHazards": "Trip hazards",
+    "otherHazards": "Other risks",
+    "airPollutionSources": "Indoor air pollution sources (smoking, chemicals)",
+    "petAllergens": "Excessive pet allergens with sensitive residents",
+    "noGrabBars": "Lack of grab bars, non-slip surfaces"
   },
   "sdoh": {
-    "title": "Social Determinants of Health"
-  },
-  "consent": {
-    "text": "I consent to a home inspection to assess health and safety conditions, understand this is voluntary, and agree that photos may be taken for documentation purposes."
+    "title": "Resident SDOH Questionnaire"
   },
   "sdohOptions": {
     "housingStable": {
@@ -39,5 +45,8 @@
       "chinese": "Chinese",
       "other": "Other"
     }
+  },
+  "consent": {
+    "text": "I consent to a home inspection to assess health and safety conditions, understand this is voluntary, and agree that photos may be taken for documentation purposes."
   }
 }
