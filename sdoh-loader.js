@@ -1,3 +1,5 @@
+// sdoh-loader.js
+
 function loadSDOH(csvText) {
   Papa.parse(csvText, {
     header: true,
@@ -14,7 +16,10 @@ function loadSDOH(csvText) {
         const label = document.createElement('label');
         label.setAttribute('for', item.id);
         label.className = 'block text-sm font-medium';
-        label.textContent = item.label || '[Missing label]';
+
+        const key = item.id;
+        const translated = translations[currentLang] && translations[currentLang].sdoh && translations[currentLang].sdoh[key];
+        label.textContent = translated || item.label || '[Missing label]';
         wrapper.appendChild(label);
 
         if (item.type === 'select') {
@@ -27,7 +32,11 @@ function loadSDOH(csvText) {
           options.forEach(opt => {
             const option = document.createElement('option');
             option.value = opt;
-            option.textContent = opt;
+            const translatedOpt = translations[currentLang] &&
+                                  translations[currentLang].sdohOptions &&
+                                  translations[currentLang].sdohOptions[key] &&
+                                  translations[currentLang].sdohOptions[key][opt];
+            option.textContent = translatedOpt || opt;
             select.appendChild(option);
           });
 
