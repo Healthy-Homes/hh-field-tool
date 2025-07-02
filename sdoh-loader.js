@@ -1,35 +1,54 @@
-function loadSDOH() {
-  fetch('data/sdoh.csv')
-    .then(response => response.text())
-    .then(csv => {
-      const parsed = Papa.parse(csv, { header: true });
-      const sdohContainer = document.getElementById('sdohContainer');
+function loadSDOH(csvText) {
+  Papa.parse(csvText, {
+    header: true,
+    skipEmptyLines: true,
+    complete: function(results) {
+      const sdohContainer = document.getElementById('sdohForm');
+      if (!sdohContainer) return;
+
       sdohContainer.innerHTML = '';
-      parsed.data.forEach(item => {
-        if (!item.id || !item.en) return;
-        const div = document.createElement('div');
-        div.className = 'mb-2';
+
+      results.data.forEach(item => {
+        const wrapper = document.createElement('div');
+
         const label = document.createElement('label');
-        label.textContent = item[currentLang] || item.en;
         label.setAttribute('for', item.id);
-        const select = document.createElement('select');
-        select.id = item.id;
-        select.name = item.id;
-        select.className = 'block w-full mt-1';
-        const options = (item.options || '').split(';');
-        options.forEach(opt => {
-          const option = document.createElement('option');
-          option.value = opt.trim();
-          option.textContent = opt.trim();
-          select.appendChild(option);
-        });
-        div.appendChild(label);
-        div.appendChild(select);
-        sdohContainer.appendChild(div);
+        label.className = 'block text-sm font-medium';
+        label.textContent = item.label || '[Missing label]';
+        wrapper.appendChild(label);
+
+        if (item.type === 'select') {
+          const select = document.createElement('select');
+          select.id = item.id;
+          select.name = item.id;
+          select.className = 'mt-1 block w-full border p-2 rounded';
+
+          const options = item.options ? item.options.split(';') : [];
+          options.forEach(opt => {
+            const option = document.createElement('option');
+            option.value = opt;
+            option.textContent = opt;
+            select.appendChild(option);
+          });
+
+          wrapper.appendChild(select);
+        } else {
+          const input = document.createElement('input');
+          input.type = item.type || 'text';
+          input.id = item.id;
+          input.name = item.id;
+          input.placeholder = item.placeholder || '';
+          input.className = 'mt-1 block w-full border p-2 rounded';
+          wrapper.appendChild(input);
+        }
+
+        sdohContainer.appendChild(wrapper);
       });
-    })
-    .catch(err => {
-      console.error('[sdoh-loader] Failed to load SDOH:', err);
-      document.getElementById('sdohContainer').innerHTML = '<p class="text-red-500">⚠️ Failed to load sdoh.csv</p>';
-    });
+    }
+  });
 }
+
+fetch('data/sdoh.csv')
+  .then(response => response.text())
+  .then(csvText => loadSDOH(csvText))
+  .catch(error => console.error('Error loading SDOH questions:', error));
